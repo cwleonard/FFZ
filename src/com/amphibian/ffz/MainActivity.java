@@ -37,12 +37,7 @@ public class MainActivity extends Activity {
 		glView = new FFZSurfaceView(this);
 		setContentView(glView);
 		
-		if (player == null) {
-			Log.i("ffz", "creating media player");
-			player = MediaPlayer.create(this, R.raw.olive_twist_60);
-			player.setVolume(0.2f, 0.2f);
-			player.setLooping(true);
-		}
+		this.createMediaPlayer();
 		
 	}
 	
@@ -83,11 +78,18 @@ public class MainActivity extends Activity {
     protected void onResume() {
         super.onResume();
 		Log.i("ffz", "onResume called");
-        // The following call resumes a paused rendering thread.
-        // If you de-allocated graphic objects for onPause()
-        // this is a good place to re-allocate them.
-        player.start();
+		this.createMediaPlayer();
+    	player.start();
         glView.onResume();
+    }
+    
+    private void createMediaPlayer() {
+    	if (player == null) {
+    		Log.i("ffz", "creating media player");
+    		player = MediaPlayer.create(this, R.raw.olive_twist_60);
+    		player.setVolume(0.2f, 0.2f);
+    		player.setLooping(true);
+    	}
     }
 
 }
