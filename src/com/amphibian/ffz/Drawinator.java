@@ -352,19 +352,6 @@ public class Drawinator {
             //Matrix.multiplyMM(mMMatrix, 0, skewMatrix, 0, mMMatrix, 0);
             //Matrix.rotateM(mMMatrix, 0, 25f, 0, 0, 0);
             
-            
-            
-            
-            
-
-//            var sx = -0.5;
-//            var scale = 0.5;
-//            var shimg = window.ShadowCache[iid];
-//            ctx.scale(1, scale);
-//            ctx.transform(1, 0, sx, 1, 0, 0);
-//            ctx.drawImage(shimg, 0, 0);
-
-            
         	
         	Matrix.multiplyMM(eyeMatrix, 0, viewMatrix, 0, mMMatrix, 0);
         	Matrix.multiplyMM(mvpMatrix, 0, projMatrix, 0, eyeMatrix, 0);
