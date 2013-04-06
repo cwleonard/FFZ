@@ -31,8 +31,6 @@ public class Drawinator {
 	private final float[] mvpMatrix = new float[16];
 	private final float[] eyeMatrix = new float[16];
 
-	private FloatBuffer combinedBuffer;
-	
     private int mPositionHandle;
     private int mColorHandle;
     private int mMVPMatrixHandle;
@@ -246,6 +244,7 @@ public class Drawinator {
     
     float shadowColor[] = { 0.0f, 0.0f, 0.0f, 0.2f };
     
+    private int[] buffers = new int[1];
 
     public Drawinator() {
     	
@@ -255,9 +254,27 @@ public class Drawinator {
         
         ByteBuffer cb = ByteBuffer.allocateDirect(combinedData.length * BYTES_PER_FLOAT);
         cb.order(ByteOrder.nativeOrder());
-        combinedBuffer = cb.asFloatBuffer();
+        FloatBuffer combinedBuffer = cb.asFloatBuffer();
         combinedBuffer.put(combinedData);
         combinedBuffer.position(0);
+        
+    	// First, generate as many buffers as we need.
+    	// This will give us the OpenGL handles for these buffers.
+    	GLES20.glGenBuffers(1, buffers, 0);
+
+    	// Bind to the buffer. Future commands will affect this buffer
+    	// specifically.
+    	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[0]);
+
+    	// Transfer data from client memory to the buffer.
+    	// We can release the client memory after this call.
+    	GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER,
+    			combinedBuffer.capacity() * BYTES_PER_FLOAT,
+    			combinedBuffer, GLES20.GL_STATIC_DRAW);
+
+    	// IMPORTANT: Unbind from the buffer when we're done with it.
+    	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+
 
         
     }
@@ -307,6 +324,11 @@ public class Drawinator {
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
         GLES20.glEnable(GLES20.GL_BLEND);
         
+        
+        // bind to the buffer, we'll need it for a while
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[0]);
+        
+        
         Collections.sort(stuff, new Comparator<Sprite>() {
 
 			@Override
@@ -325,17 +347,15 @@ public class Drawinator {
         });
         for (Sprite sprite : stuff) {
 
-        	// coordinates
-        	combinedBuffer.position(sprite.getTexturePosition() * skip);
-            GLES20.glVertexAttribPointer(mPositionHandle, POSITION_DATA_SIZE,
-                                         GLES20.GL_FLOAT, false,
-                                         stride, combinedBuffer);
-        	
-            // textures
-			combinedBuffer.position((sprite.getTexturePosition() * skip) + POSITION_DATA_SIZE);
-            GLES20.glVertexAttribPointer(mTextureCoordinateHandle, TEXTURE_COORDINATE_DATA_SIZE,
-                                         GLES20.GL_FLOAT, false,
-                                         stride, combinedBuffer);
+        	// vertex coordinates
+        	int pos = (sprite.getTexturePosition() * skip) * BYTES_PER_FLOAT;
+    		GLES20.glVertexAttribPointer(mPositionHandle, POSITION_DATA_SIZE,
+    				GLES20.GL_FLOAT, false, stride, pos);        
+
+    		// texture coordinates
+        	pos = ((sprite.getTexturePosition() * skip) + POSITION_DATA_SIZE) * BYTES_PER_FLOAT;
+    		GLES20.glVertexAttribPointer(mTextureCoordinateHandle, TEXTURE_COORDINATE_DATA_SIZE,
+    				GLES20.GL_FLOAT, false, stride, pos);        
 
             // draw shadow? maybe? ========================================================
             
@@ -389,6 +409,9 @@ public class Drawinator {
 
         }
         
+    	// IMPORTANT: Unbind from the buffer when we're done with it.
+    	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(mPositionHandle);
         

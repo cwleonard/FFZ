@@ -10,6 +10,8 @@ import android.opengl.Matrix;
 
 public class Ground {
 
+	private final static int BYTES_PER_FLOAT = 4;
+	
 	private static final int TILE_SIZE = 100;
 	
 	private Tile[][] oTiles;
@@ -20,7 +22,9 @@ public class Ground {
 	private final float[] mvpMatrix = new float[16];
 	private final float[] eyeMatrix = new float[16];
 
-	private FloatBuffer everythingBuffer;
+	// these are pointers to the buffers in the GPU where we load the vertex and texture data
+	final int buffers[] = new int[1];
+
     private int mPositionHandle;
     private int mColorHandle;
     private int mMVPMatrixHandle;
@@ -32,7 +36,7 @@ public class Ground {
     
     
     private final int vertexCount = 6; // how many vertices does it take to draw the square?
-    private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
+    private final int vertexStride = COORDS_PER_VERTEX * BYTES_PER_FLOAT; // 4 bytes per vertex
 
     private final static int TEXTURE_STRIDE = 12;
     
@@ -631,19 +635,40 @@ public class Ground {
 	private int mTextureCoordinateHandle;
 	 
 	/** Size of the texture coordinate data in elements. */
-	private final int mTextureCoordinateDataSize = 2;
-	 
+	private final static int TEXTURE_COORD_DATA_SIZE = 2;
+    private final static int TX_STRIDE = TEXTURE_COORD_DATA_SIZE * BYTES_PER_FLOAT;
+
+	
     // Set color with red, green, blue and alpha (opacity) values
     float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    
+
+
     public Ground() {
-    	
+
     	Matrix.setIdentityM(mMMatrix, 0);
-    	
-        everythingBuffer = ByteBuffer.allocateDirect(everything.length * 4)
-        		.order(ByteOrder.nativeOrder()).asFloatBuffer();
-        everythingBuffer.put(everything).position(0);
-        
+
+    	FloatBuffer everythingBuffer = ByteBuffer
+    			.allocateDirect(everything.length * BYTES_PER_FLOAT)
+    			.order(ByteOrder.nativeOrder()).asFloatBuffer();
+    	everythingBuffer.put(everything).position(0);
+
+    	// First, generate as many buffers as we need.
+    	// This will give us the OpenGL handles for these buffers.
+    	GLES20.glGenBuffers(1, buffers, 0);
+
+    	// Bind to the buffer. Future commands will affect this buffer
+    	// specifically.
+    	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[0]);
+
+    	// Transfer data from client memory to the buffer.
+    	// We can release the client memory after this call.
+    	GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER,
+    			everythingBuffer.capacity() * BYTES_PER_FLOAT,
+    			everythingBuffer, GLES20.GL_STATIC_DRAW);
+
+    	// IMPORTANT: Unbind from the buffer when we're done with it.
+    	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+
     }
     
     
@@ -662,16 +687,12 @@ public class Ground {
         // get handle to vertex shader's vPosition member
         mPositionHandle = prog.getAttributeLocation("vPosition");
         
-
-        everythingBuffer.position(0);
-        // Enable a handle to the triangle vertices
+        // set the vertext pointer to the front of the buffer
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[0]);
         GLES20.glEnableVertexAttribArray(mPositionHandle);
-
-        // Prepare the triangle coordinate data
-        GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
-                                     GLES20.GL_FLOAT, false,
-                                     vertexStride, everythingBuffer);
-
+		GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
+				GLES20.GL_FLOAT, false, vertexStride, 0);        
+        
         // get handle to fragment shader's vColor member
         mColorHandle = prog.getUniformLocation("vColor");
         
@@ -689,6 +710,8 @@ public class Ground {
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
         GLES20.glEnable(GLES20.GL_BLEND);
 
+        GLES20.glEnableVertexAttribArray(mTextureCoordinateHandle);
+        
         // get handle to shape's transformation matrix
         mMVPMatrixHandle = prog.getUniformLocation("uMVPMatrix");
 
@@ -704,14 +727,14 @@ public class Ground {
 			
 				Matrix.translateM(mMMatrix, 0, TILE_SIZE, 0, 0);
 				
-		        // Pass in the texture coordinate information
+		        // set the texture pointer to the correct place in the buffer
 				// note: web ffz tile ids started at 1, where this is 0-based
-		        everythingBuffer.position(SQUARE_DATA_SIZE + ((oTiles[i][j].getId() - 1) * TEXTURE_STRIDE));
+				
+				int pos = SQUARE_DATA_SIZE + ((oTiles[i][j].getId() - 1) * TEXTURE_STRIDE);
 				GLES20.glVertexAttribPointer(mTextureCoordinateHandle,
-						mTextureCoordinateDataSize, GLES20.GL_FLOAT, false, 0,
-						everythingBuffer);
-		        GLES20.glEnableVertexAttribArray(mTextureCoordinateHandle);
-		        
+						TEXTURE_COORD_DATA_SIZE, GLES20.GL_FLOAT, false,
+						TX_STRIDE, pos * BYTES_PER_FLOAT);				
+				
 		        // translate!
 		        Matrix.multiplyMM(eyeMatrix, 0, viewMatrix, 0, mMMatrix, 0);
 		        Matrix.multiplyMM(mvpMatrix, 0, projMatrix, 0, eyeMatrix, 0);
@@ -728,6 +751,9 @@ public class Ground {
 			Matrix.translateM(mMMatrix, 0, -(oTiles[i].length * TILE_SIZE), 0, 0);
 			
 		}
+
+    	// IMPORTANT: Unbind from the buffer when we're done with it.
+    	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
 
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(mPositionHandle);
