@@ -4,7 +4,6 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import android.content.Context;
-import android.media.MediaPlayer;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
 
