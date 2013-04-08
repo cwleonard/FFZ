@@ -41,6 +41,7 @@ public class Engine {
 	private SocketIO socket;
 	
 	private ConvexPolygon testBlock;
+	private ConvexPolygon[] blockers;
 	
 	
 	private String fid = UUID.randomUUID().toString();
@@ -93,6 +94,8 @@ public class Engine {
 		} catch (Exception e) {
 			Log.e("ff", "json error", e);
 		}
+		
+		blockers = drawinator.getBlockers();
 
 		drawinator.getStuff().add(frog);
 
@@ -147,11 +150,21 @@ public class Engine {
 		frog.setDirection(deltaMove[0], deltaMove[1]);
 		
 		ConvexPolygon fPoly = frog.getBlocker(frog.x + deltaMove[0], frog.y + deltaMove[1]);
-		float[] mtv = fPoly.intersectsWith(testBlock);
+
 		// mtv will be all 0 if no collision, or if there is a collision it will contain
 		// the axis and overlap to move fPoly out of collision. MTV = Minimum Translation Vector
+
+		//TODO: put the ground blockers in the same array as below...
+		float[] mtv = fPoly.intersectsWith(testBlock);
 		deltaMove[0] += mtv[0] * mtv[2];			  
 		deltaMove[1] += mtv[1] * mtv[2];
+		
+		for (int i = 0; i < blockers.length; i++) {
+			mtv = fPoly.intersectsWith(blockers[i]);
+			deltaMove[0] += mtv[0] * mtv[2];			  
+			deltaMove[1] += mtv[1] * mtv[2];
+		}
+		
 		frog.move(deltaMove[0], deltaMove[1]);
 		
 		

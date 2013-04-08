@@ -26,8 +26,8 @@ public class Frog implements Sprite {
     
     public ConvexPolygon getBlocker(float x, float y) {
     	
-    	float[] c = { x, y };
-    	float[] p = { -50, 50, 50, 50, 50, -50, -50, -50 };
+    	float[] c = { x, y - 12.5f };
+    	float[] p = { -50, 25, 50, 25, 50, -25, -50, -25 };
     	return new ConvexPolygon(c, p);
     	
     }

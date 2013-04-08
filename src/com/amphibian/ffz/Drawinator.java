@@ -5,7 +5,10 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+
+import com.amphibian.ffz.geometry.ConvexPolygon;
 
 import android.content.Context;
 import android.opengl.GLES20;
@@ -287,6 +290,58 @@ public class Drawinator {
 	public List<Sprite> getStuff() {
 		return (List<Sprite>) stuff;
 	}
+    
+    public ConvexPolygon[] getBlockers() {
+    	
+    	ConvexPolygon[] blockers = new ConvexPolygon[stuff.size()];
+    	Iterator<? extends Sprite> i = stuff.iterator();
+    	int b = 0;
+    	while (i.hasNext()) {
+    		
+    		Sprite s = i.next();
+    		
+    		if (s.getVertexPosition() == 4) {
+        		float[] c = {s.getDrawX() - 5, s.getDrawY() - 124};
+        		float[] p = {
+        				-25,  21,
+        				 25,  21,
+        				 24, -18,
+        				-25, -18 
+        		};
+        		blockers[b] = new ConvexPolygon(c, p);
+
+			} else if (s.getVertexPosition() == 5) {
+				
+				float[] c = { s.getDrawX(), s.getDrawY() - 15f };
+				float[] p = {
+						-48, 18.5f,
+						48, 19.5f,
+						43, -22.5f,
+						-41, -21.5f 
+				};
+				blockers[b] = new ConvexPolygon(c, p);
+
+				// (-48, -18.5) , (48, -19.5) , (43, 22.5) , (-41, 21.5)
+
+			} else {
+        		float[] c = {s.getDrawX(), s.getDrawY()};
+        		float[] p = {
+        				-50,  50,
+        				 50,  50,
+        				 50, -50,
+        				-50, -50};
+        		blockers[b] = new ConvexPolygon(c, p);
+    			
+    		}
+    		
+    		
+    		
+    		b++;
+    		
+    	}
+    	return blockers;
+    	
+    }
 
 	public void draw(StandardProgram prog, Viewport vp) {
     	
