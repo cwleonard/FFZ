@@ -3,6 +3,7 @@ package com.amphibian.ffz;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -19,7 +20,8 @@ public class Drawinator {
 	private final static float SHADOW_SCALE = 0.7f;
 	
 	private final static int BYTES_PER_FLOAT = 4;
-	private final static int VERTICES_PER_OBJECT = 6;
+	private final static int BYTES_PER_SHORT = 2;
+	private final static int VERTICES_PER_OBJECT = 4;
 	
 	private final static int POSITION_DATA_SIZE = 3;
 	private final static int TEXTURE_COORDINATE_DATA_SIZE = 2;
@@ -49,8 +51,13 @@ public class Drawinator {
     	0f,    0f, 1f
     };
     
-    
+    private short drawOrder[] = { 0, 1, 2, 1, 3, 2 }; // order to draw vertices
+
+    private ShortBuffer drawListBuffer;
+
     static float combinedData[] = {
+
+
 
     	// jumping_left_1
     	-68f, 53f, 0.0f,   // vertex 0
@@ -59,12 +66,8 @@ public class Drawinator {
     	0.00390625f, 0.10546875f, // texture 1
     	68f, 53f, 0.0f,  // vertex 2
     	0.26953125f, 0.001953125f, // texture 2
-    	-68f, -53f, 0.0f,  // vertex 3
-    	0.00390625f, 0.10546875f, // texture 3
     	68f, -53f, 0.0f,  // vertex 4
     	0.26953125f, 0.10546875f, // texture 4
-    	68f, 53f, 0.0f,  // vertex 5
-    	0.26953125f, 0.001953125f,  // texture 5
 
 
     	// jumping_left_2
@@ -74,12 +77,8 @@ public class Drawinator {
     	0.2734375f, 0.095703125f, // texture 1
     	68.5f, 48f, 0.0f,  // vertex 2
     	0.541015625f, 0.001953125f, // texture 2
-    	-68.5f, -48f, 0.0f,  // vertex 3
-    	0.2734375f, 0.095703125f, // texture 3
     	68.5f, -48f, 0.0f,  // vertex 4
     	0.541015625f, 0.095703125f, // texture 4
-    	68.5f, 48f, 0.0f,  // vertex 5
-    	0.541015625f, 0.001953125f,  // texture 5
 
 
     	// jumping_right_1
@@ -89,12 +88,8 @@ public class Drawinator {
     	0.544921875f, 0.10546875f, // texture 1
     	68f, 53f, 0.0f,  // vertex 2
     	0.810546875f, 0.001953125f, // texture 2
-    	-68f, -53f, 0.0f,  // vertex 3
-    	0.544921875f, 0.10546875f, // texture 3
     	68f, -53f, 0.0f,  // vertex 4
     	0.810546875f, 0.10546875f, // texture 4
-    	68f, 53f, 0.0f,  // vertex 5
-    	0.810546875f, 0.001953125f,  // texture 5
 
 
     	// jumping_right_2
@@ -104,12 +99,8 @@ public class Drawinator {
     	0.00390625f, 0.201171875f, // texture 1
     	68.5f, 48f, 0.0f,  // vertex 2
     	0.271484375f, 0.107421875f, // texture 2
-    	-68.5f, -48f, 0.0f,  // vertex 3
-    	0.00390625f, 0.201171875f, // texture 3
     	68.5f, -48f, 0.0f,  // vertex 4
     	0.271484375f, 0.201171875f, // texture 4
-    	68.5f, 48f, 0.0f,  // vertex 5
-    	0.271484375f, 0.107421875f,  // texture 5
 
 
     	// pine_tree
@@ -119,12 +110,8 @@ public class Drawinator {
     	0.275390625f, 0.392578125f, // texture 1
     	100f, 146f, 0.0f,  // vertex 2
     	0.666015625f, 0.107421875f, // texture 2
-    	-100f, -146f, 0.0f,  // vertex 3
-    	0.275390625f, 0.392578125f, // texture 3
     	100f, -146f, 0.0f,  // vertex 4
     	0.666015625f, 0.392578125f, // texture 4
-    	100f, 146f, 0.0f,  // vertex 5
-    	0.666015625f, 0.107421875f,  // texture 5
 
 
     	// rock
@@ -134,12 +121,8 @@ public class Drawinator {
     	0.669921875f, 0.1865234375f, // texture 1
     	50f, 40.5f, 0.0f,  // vertex 2
     	0.865234375f, 0.107421875f, // texture 2
-    	-50f, -40.5f, 0.0f,  // vertex 3
-    	0.669921875f, 0.1865234375f, // texture 3
     	50f, -40.5f, 0.0f,  // vertex 4
     	0.865234375f, 0.1865234375f, // texture 4
-    	50f, 40.5f, 0.0f,  // vertex 5
-    	0.865234375f, 0.107421875f,  // texture 5
 
 
     	// sitting_down
@@ -149,12 +132,8 @@ public class Drawinator {
     	0.00390625f, 0.4931640625f, // texture 1
     	46f, 50.5f, 0.0f,  // vertex 2
     	0.18359375f, 0.39453125f, // texture 2
-    	-46f, -50.5f, 0.0f,  // vertex 3
-    	0.00390625f, 0.4931640625f, // texture 3
     	46f, -50.5f, 0.0f,  // vertex 4
     	0.18359375f, 0.4931640625f, // texture 4
-    	46f, 50.5f, 0.0f,  // vertex 5
-    	0.18359375f, 0.39453125f,  // texture 5
 
 
     	// sitting_left
@@ -164,12 +143,8 @@ public class Drawinator {
     	0.1875f, 0.4921875f, // texture 1
     	50f, 50f, 0.0f,  // vertex 2
     	0.3828125f, 0.39453125f, // texture 2
-    	-50f, -50f, 0.0f,  // vertex 3
-    	0.1875f, 0.4921875f, // texture 3
     	50f, -50f, 0.0f,  // vertex 4
     	0.3828125f, 0.4921875f, // texture 4
-    	50f, 50f, 0.0f,  // vertex 5
-    	0.3828125f, 0.39453125f,  // texture 5
 
 
     	// sitting_right
@@ -179,12 +154,8 @@ public class Drawinator {
     	0.38671875f, 0.4921875f, // texture 1
     	50f, 50f, 0.0f,  // vertex 2
     	0.58203125f, 0.39453125f, // texture 2
-    	-50f, -50f, 0.0f,  // vertex 3
-    	0.38671875f, 0.4921875f, // texture 3
     	50f, -50f, 0.0f,  // vertex 4
     	0.58203125f, 0.4921875f, // texture 4
-    	50f, 50f, 0.0f,  // vertex 5
-    	0.58203125f, 0.39453125f,  // texture 5
 
 
     	// sitting_up
@@ -194,12 +165,8 @@ public class Drawinator {
     	0.5859375f, 0.4853515625f, // texture 1
     	45.5f, 46.5f, 0.0f,  // vertex 2
     	0.763671875f, 0.39453125f, // texture 2
-    	-45.5f, -46.5f, 0.0f,  // vertex 3
-    	0.5859375f, 0.4853515625f, // texture 3
     	45.5f, -46.5f, 0.0f,  // vertex 4
     	0.763671875f, 0.4853515625f, // texture 4
-    	45.5f, 46.5f, 0.0f,  // vertex 5
-    	0.763671875f, 0.39453125f,  // texture 5
 
 
     	// tall_grass
@@ -209,12 +176,8 @@ public class Drawinator {
     	0.00390625f, 0.6376953125f, // texture 1
     	75f, 73f, 0.0f,  // vertex 2
     	0.296875f, 0.4951171875f, // texture 2
-    	-75f, -73f, 0.0f,  // vertex 3
-    	0.00390625f, 0.6376953125f, // texture 3
     	75f, -73f, 0.0f,  // vertex 4
     	0.296875f, 0.6376953125f, // texture 4
-    	75f, 73f, 0.0f,  // vertex 5
-    	0.296875f, 0.4951171875f,  // texture 5
 
 
     	// tree1
@@ -224,12 +187,9 @@ public class Drawinator {
     	0.30078125f, 0.9765625f, // texture 1
     	175f, 246.5f, 0.0f,  // vertex 2
     	0.984375f, 0.4951171875f, // texture 2
-    	-175f, -246.5f, 0.0f,  // vertex 3
-    	0.30078125f, 0.9765625f, // texture 3
     	175f, -246.5f, 0.0f,  // vertex 4
-    	0.984375f, 0.9765625f, // texture 4
-    	175f, 246.5f, 0.0f,  // vertex 5
-    	0.984375f, 0.4951171875f  // texture 5
+    	0.984375f, 0.9765625f // texture 4
+
 
     	
     };
@@ -247,12 +207,20 @@ public class Drawinator {
     
     float shadowColor[] = { 0.0f, 0.0f, 0.0f, 0.2f };
     
-    private int[] buffers = new int[1];
+    private int[] buffers = new int[2];
 
     public Drawinator() {
     	
     	Matrix.setIdentityM(mMMatrix, 0);
-        
+
+        ByteBuffer dlb = ByteBuffer.allocateDirect(
+        // (# of coordinate values * 2 bytes per short)
+                drawOrder.length * 2);
+        dlb.order(ByteOrder.nativeOrder());
+        drawListBuffer = dlb.asShortBuffer();
+        drawListBuffer.put(drawOrder).position(0);
+    	
+    	
         // initialize vertex byte buffer for shape coordinates
         
         ByteBuffer cb = ByteBuffer.allocateDirect(combinedData.length * BYTES_PER_FLOAT);
@@ -263,7 +231,7 @@ public class Drawinator {
         
     	// First, generate as many buffers as we need.
     	// This will give us the OpenGL handles for these buffers.
-    	GLES20.glGenBuffers(1, buffers, 0);
+    	GLES20.glGenBuffers(2, buffers, 0);
 
     	// Bind to the buffer. Future commands will affect this buffer
     	// specifically.
@@ -274,7 +242,7 @@ public class Drawinator {
     	GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER,
     			combinedBuffer.capacity() * BYTES_PER_FLOAT,
     			combinedBuffer, GLES20.GL_STATIC_DRAW);
-
+    	
     	// IMPORTANT: Unbind from the buffer when we're done with it.
     	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
 
@@ -380,9 +348,9 @@ public class Drawinator {
         GLES20.glEnable(GLES20.GL_BLEND);
         
         
-        // bind to the buffer, we'll need it for a while
+        // bind to the correct buffer
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[0]);
-        
+
         
         Collections.sort(stuff, new Comparator<Sprite>() {
 
@@ -402,6 +370,7 @@ public class Drawinator {
         });
         for (Sprite sprite : stuff) {
 
+
         	// vertex coordinates
         	int pos = (sprite.getTexturePosition() * skip) * BYTES_PER_FLOAT;
     		GLES20.glVertexAttribPointer(mPositionHandle, POSITION_DATA_SIZE,
@@ -412,6 +381,8 @@ public class Drawinator {
     		GLES20.glVertexAttribPointer(mTextureCoordinateHandle, TEXTURE_COORDINATE_DATA_SIZE,
     				GLES20.GL_FLOAT, false, stride, pos);        
 
+
+    		
             // draw shadow? maybe? ========================================================
             
             // Set color for drawing
@@ -436,7 +407,7 @@ public class Drawinator {
         	GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
 
         	// Draw 
-        	GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, VERTICES_PER_OBJECT);
+	        GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
 
         	
         	
@@ -460,7 +431,8 @@ public class Drawinator {
         	GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
 
         	// Draw 
-        	GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, VERTICES_PER_OBJECT);
+	        GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
+
 
         }
         
