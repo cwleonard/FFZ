@@ -4,13 +4,24 @@ public class Obstacle implements Sprite {
 
 	private int id;
 	
+	private String type;
+	
 	private float x;
 	private float y;
-	public int getId() {
-		return id;
+	
+	private float w;
+	private float h;
+	private float hh;
+	
+	public Obstacle() {
+		this.id = -1;
 	}
-	public void setId(int id) {
-		this.id = id;
+	
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 	public float getX() {
 		return x;
@@ -25,11 +36,14 @@ public class Obstacle implements Sprite {
 		this.y = y;
 	}
 	@Override
-	public int getVertexPosition() {
-		return id;
-	}
-	@Override
-	public int getTexturePosition() {
+	public int getBufferIndex() {
+		if (id == -1) {
+			Frame f = FrameDataManager.getInstance().getFrame(type);
+			this.id = f.getIndex();
+			this.w = f.getWidth();
+			this.h = f.getHeight();
+			this.hh = h / 2.0f;
+		}
 		return id;
 	}
 	@Override
@@ -40,6 +54,20 @@ public class Obstacle implements Sprite {
 	public float getDrawY() {
 		return y;
 	}
+	@Override
+	public void draw(Drawinator d) {
+		
+		d.setDrawPosition(x, y);
+		d.performDraw();
+		
+	}
 	
+	public float getBottom() {
+		return this.y - this.hh;
+	}
+	
+	public float getShadowY() {
+		return this.y - (this.hh * (1f - Drawinator.SHADOW_SCALE));
+	}
 	
 }

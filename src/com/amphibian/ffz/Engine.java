@@ -54,7 +54,6 @@ public class Engine {
 		//square = new Square();
 		frog = new Frog();
 		ground = new Ground();
-		drawinator = new Drawinator();
 
 		Ground.loadGLTexture(context);
 		Drawinator.loadGLTexture(context);
@@ -79,6 +78,15 @@ public class Engine {
 //		} catch (Exception e) {
 //			Log.e("ffz", "socket.io error", e);
 //		}
+
+		FrameDataManager fdman = FrameDataManager.getInstance();
+		
+		drawinator = new Drawinator(fdman.readVertexData(context));
+		
+		Frog.init();
+		frog.faceRight();
+		
+
 		
 		try {
 			

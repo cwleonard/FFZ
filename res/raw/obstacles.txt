@@ -1,1 +1,5 @@
-[{id: 4, x: 500, y:-550}, {id: 5, x: 300, y: -500}, {id: 4, x: 800, y:-800}, {id: 11, x: 900, y: -200}]
+[{type: 'pine_tree', x: 500, y:-550}, 
+{type: 'rock', x: 300, y: -500}, 
+{type: 'pine_tree', x: 800, y:-800}, 
+{type: 'tall_grass', x: 600, y:-600}, 
+{type: 'tree1', x: 900, y: -200}]

@@ -343,13 +343,13 @@ public class Obstacles {
         for (int i = 0; i < stuff.length; i++) {
 
             // Prepare the coordinate data
-            vertexBuffer.position(stuff[i].getId() * spriteStride);
+            vertexBuffer.position(stuff[i].getBufferIndex() * spriteStride);
             GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
                                          GLES20.GL_FLOAT, false,
                                          vertexStride, vertexBuffer);
 
             // set the texture position
-            textureBuffer.position(stuff[i].getId() * this.textureStride);
+            textureBuffer.position(stuff[i].getBufferIndex() * this.textureStride);
     		GLES20.glVertexAttribPointer(mTextureCoordinateHandle,
     				mTextureCoordinateDataSize, GLES20.GL_FLOAT, false, 0,
     				textureBuffer);

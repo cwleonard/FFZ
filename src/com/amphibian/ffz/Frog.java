@@ -1,5 +1,7 @@
 package com.amphibian.ffz;
 
+import android.util.Log;
+
 import com.amphibian.ffz.geometry.ConvexPolygon;
 
 public class Frog implements Sprite {
@@ -8,19 +10,31 @@ public class Frog implements Sprite {
 	
 	float x = 50f;
 	float y = -50f;
-	
+
 	private FrogPath fp;
-	
 
-
-
-    private int sprite = 6;
+    private int sprite;
     
-	 
+	private static int SIT_FACE_RIGHT;
+	private static int SIT_FACE_LEFT;
+	private static int SIT_FACE_DOWN;
+	private static int SIT_FACE_UP;
+
+	public static void init() {
+		
+		FrameDataManager fdm = FrameDataManager.getInstance();
+		SIT_FACE_RIGHT = fdm.getFrameIndex("sitting_right");
+		SIT_FACE_LEFT = fdm.getFrameIndex("sitting_left");
+		SIT_FACE_DOWN = fdm.getFrameIndex("sitting_down");
+		SIT_FACE_UP = fdm.getFrameIndex("sitting_up");
+		
+		Log.i("ffz", "SIT_FACE_RIGHT = " + SIT_FACE_RIGHT);
+		
+	}
 
     public Frog() {
     	
-        
+    	sprite = SIT_FACE_RIGHT;
         
     }
     
@@ -96,28 +110,23 @@ public class Frog implements Sprite {
     }
     
     public void faceDown() {
-    	this.sprite = 6;
+    	this.sprite = SIT_FACE_DOWN;
     }
     
     public void faceRight() {
-    	this.sprite = 8;
+    	this.sprite = SIT_FACE_RIGHT;
     }
     
     public void faceLeft() {
-    	this.sprite = 7;
+    	this.sprite = SIT_FACE_LEFT;
     }
     
     public void faceUp() {
-    	this.sprite = 9;
+    	this.sprite = SIT_FACE_UP;
     }
 
 	@Override
-	public int getVertexPosition() {
-		return sprite-6;
-	}
-
-	@Override
-	public int getTexturePosition() {
+	public int getBufferIndex() {
 		return sprite;
 	}
 
@@ -130,5 +139,20 @@ public class Frog implements Sprite {
 	public float getDrawY() {
 		return y;
 	}
+
+	@Override
+	public void draw(Drawinator d) {
+		d.setDrawPosition(x, y);
+		d.performDraw();
+	}
+	
+	public float getBottom() {
+		return y - 25f;
+	}
+	
+	public float getShadowY() {
+		return this.y - (25f * (1f - Drawinator.SHADOW_SCALE));
+	}
+
     
 }

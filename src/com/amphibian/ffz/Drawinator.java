@@ -9,18 +9,17 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
-import com.amphibian.ffz.geometry.ConvexPolygon;
-
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
+import com.amphibian.ffz.geometry.ConvexPolygon;
+
 public class Drawinator {
 
-	private final static float SHADOW_SCALE = 0.7f;
+	final static float SHADOW_SCALE = 0.7f;
 	
 	private final static int BYTES_PER_FLOAT = 4;
-	private final static int BYTES_PER_SHORT = 2;
 	private final static int VERTICES_PER_OBJECT = 4;
 	
 	private final static int POSITION_DATA_SIZE = 3;
@@ -43,7 +42,6 @@ public class Drawinator {
     private final int stride = COMBINED_DATA_SIZE * BYTES_PER_FLOAT;
     private final int skip = COMBINED_DATA_SIZE * VERTICES_PER_OBJECT;
     
-//            ctx.transform(1, 0, sx, 1, 0, 0);
 
     static float skewMatrix[] = {
     	1f, -0.5f, 0f,
@@ -55,145 +53,6 @@ public class Drawinator {
 
     private ShortBuffer drawListBuffer;
 
-    static float combinedData[] = {
-
-
-
-    	// jumping_left_1
-    	-68f, 53f, 0.0f,   // vertex 0
-    	0.00390625f, 0.001953125f, // texture 0
-    	-68f, -53f, 0.0f,  // vertex 1
-    	0.00390625f, 0.10546875f, // texture 1
-    	68f, 53f, 0.0f,  // vertex 2
-    	0.26953125f, 0.001953125f, // texture 2
-    	68f, -53f, 0.0f,  // vertex 4
-    	0.26953125f, 0.10546875f, // texture 4
-
-
-    	// jumping_left_2
-    	-68.5f, 48f, 0.0f,   // vertex 0
-    	0.2734375f, 0.001953125f, // texture 0
-    	-68.5f, -48f, 0.0f,  // vertex 1
-    	0.2734375f, 0.095703125f, // texture 1
-    	68.5f, 48f, 0.0f,  // vertex 2
-    	0.541015625f, 0.001953125f, // texture 2
-    	68.5f, -48f, 0.0f,  // vertex 4
-    	0.541015625f, 0.095703125f, // texture 4
-
-
-    	// jumping_right_1
-    	-68f, 53f, 0.0f,   // vertex 0
-    	0.544921875f, 0.001953125f, // texture 0
-    	-68f, -53f, 0.0f,  // vertex 1
-    	0.544921875f, 0.10546875f, // texture 1
-    	68f, 53f, 0.0f,  // vertex 2
-    	0.810546875f, 0.001953125f, // texture 2
-    	68f, -53f, 0.0f,  // vertex 4
-    	0.810546875f, 0.10546875f, // texture 4
-
-
-    	// jumping_right_2
-    	-68.5f, 48f, 0.0f,   // vertex 0
-    	0.00390625f, 0.107421875f, // texture 0
-    	-68.5f, -48f, 0.0f,  // vertex 1
-    	0.00390625f, 0.201171875f, // texture 1
-    	68.5f, 48f, 0.0f,  // vertex 2
-    	0.271484375f, 0.107421875f, // texture 2
-    	68.5f, -48f, 0.0f,  // vertex 4
-    	0.271484375f, 0.201171875f, // texture 4
-
-
-    	// pine_tree
-    	-100f, 146f, 0.0f,   // vertex 0
-    	0.275390625f, 0.107421875f, // texture 0
-    	-100f, -146f, 0.0f,  // vertex 1
-    	0.275390625f, 0.392578125f, // texture 1
-    	100f, 146f, 0.0f,  // vertex 2
-    	0.666015625f, 0.107421875f, // texture 2
-    	100f, -146f, 0.0f,  // vertex 4
-    	0.666015625f, 0.392578125f, // texture 4
-
-
-    	// rock
-    	-50f, 40.5f, 0.0f,   // vertex 0
-    	0.669921875f, 0.107421875f, // texture 0
-    	-50f, -40.5f, 0.0f,  // vertex 1
-    	0.669921875f, 0.1865234375f, // texture 1
-    	50f, 40.5f, 0.0f,  // vertex 2
-    	0.865234375f, 0.107421875f, // texture 2
-    	50f, -40.5f, 0.0f,  // vertex 4
-    	0.865234375f, 0.1865234375f, // texture 4
-
-
-    	// sitting_down
-    	-46f, 50.5f, 0.0f,   // vertex 0
-    	0.00390625f, 0.39453125f, // texture 0
-    	-46f, -50.5f, 0.0f,  // vertex 1
-    	0.00390625f, 0.4931640625f, // texture 1
-    	46f, 50.5f, 0.0f,  // vertex 2
-    	0.18359375f, 0.39453125f, // texture 2
-    	46f, -50.5f, 0.0f,  // vertex 4
-    	0.18359375f, 0.4931640625f, // texture 4
-
-
-    	// sitting_left
-    	-50f, 50f, 0.0f,   // vertex 0
-    	0.1875f, 0.39453125f, // texture 0
-    	-50f, -50f, 0.0f,  // vertex 1
-    	0.1875f, 0.4921875f, // texture 1
-    	50f, 50f, 0.0f,  // vertex 2
-    	0.3828125f, 0.39453125f, // texture 2
-    	50f, -50f, 0.0f,  // vertex 4
-    	0.3828125f, 0.4921875f, // texture 4
-
-
-    	// sitting_right
-    	-50f, 50f, 0.0f,   // vertex 0
-    	0.38671875f, 0.39453125f, // texture 0
-    	-50f, -50f, 0.0f,  // vertex 1
-    	0.38671875f, 0.4921875f, // texture 1
-    	50f, 50f, 0.0f,  // vertex 2
-    	0.58203125f, 0.39453125f, // texture 2
-    	50f, -50f, 0.0f,  // vertex 4
-    	0.58203125f, 0.4921875f, // texture 4
-
-
-    	// sitting_up
-    	-45.5f, 46.5f, 0.0f,   // vertex 0
-    	0.5859375f, 0.39453125f, // texture 0
-    	-45.5f, -46.5f, 0.0f,  // vertex 1
-    	0.5859375f, 0.4853515625f, // texture 1
-    	45.5f, 46.5f, 0.0f,  // vertex 2
-    	0.763671875f, 0.39453125f, // texture 2
-    	45.5f, -46.5f, 0.0f,  // vertex 4
-    	0.763671875f, 0.4853515625f, // texture 4
-
-
-    	// tall_grass
-    	-75f, 73f, 0.0f,   // vertex 0
-    	0.00390625f, 0.4951171875f, // texture 0
-    	-75f, -73f, 0.0f,  // vertex 1
-    	0.00390625f, 0.6376953125f, // texture 1
-    	75f, 73f, 0.0f,  // vertex 2
-    	0.296875f, 0.4951171875f, // texture 2
-    	75f, -73f, 0.0f,  // vertex 4
-    	0.296875f, 0.6376953125f, // texture 4
-
-
-    	// tree1
-    	-175f, 246.5f, 0.0f,   // vertex 0
-    	0.30078125f, 0.4951171875f, // texture 0
-    	-175f, -246.5f, 0.0f,  // vertex 1
-    	0.30078125f, 0.9765625f, // texture 1
-    	175f, 246.5f, 0.0f,  // vertex 2
-    	0.984375f, 0.4951171875f, // texture 2
-    	175f, -246.5f, 0.0f,  // vertex 4
-    	0.984375f, 0.9765625f // texture 4
-
-
-    	
-    };
-    
 	
 	/** This will be used to pass in the texture. */
 	private int mTextureUniformHandle;
@@ -201,6 +60,7 @@ public class Drawinator {
 	/** This will be used to pass in model texture coordinate information. */
 	private int mTextureCoordinateHandle;
 	 
+	private Viewport viewport;
 	 
     // Set color with red, green, blue and alpha (opacity) values
     float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -209,7 +69,7 @@ public class Drawinator {
     
     private int[] buffers = new int[2];
 
-    public Drawinator() {
+    public Drawinator(float[] vdata) {
     	
     	Matrix.setIdentityM(mMMatrix, 0);
 
@@ -223,10 +83,10 @@ public class Drawinator {
     	
         // initialize vertex byte buffer for shape coordinates
         
-        ByteBuffer cb = ByteBuffer.allocateDirect(combinedData.length * BYTES_PER_FLOAT);
+        ByteBuffer cb = ByteBuffer.allocateDirect(vdata.length * BYTES_PER_FLOAT);
         cb.order(ByteOrder.nativeOrder());
         FloatBuffer combinedBuffer = cb.asFloatBuffer();
-        combinedBuffer.put(combinedData);
+        combinedBuffer.put(vdata);
         combinedBuffer.position(0);
         
     	// First, generate as many buffers as we need.
@@ -268,7 +128,7 @@ public class Drawinator {
     		
     		Sprite s = i.next();
     		
-    		if (s.getVertexPosition() == 4) {
+    		if (s.getBufferIndex() == 4) {
         		float[] c = {s.getDrawX() - 5, s.getDrawY() - 124};
         		float[] p = {
         				-25,  21,
@@ -278,7 +138,7 @@ public class Drawinator {
         		};
         		blockers[b] = new ConvexPolygon(c, p);
 
-			} else if (s.getVertexPosition() == 5) {
+			} else if (s.getBufferIndex() == 5) {
 				
 				float[] c = { s.getDrawX(), s.getDrawY() - 15f };
 				float[] p = {
@@ -313,9 +173,8 @@ public class Drawinator {
 
 	public void draw(StandardProgram prog, Viewport vp) {
     	
-    	float[] projMatrix = vp.getProjMatrix();
-    	float[] viewMatrix = vp.getViewMatrix();
-    	
+		viewport = vp;
+		
         // get handle to vertex shader's vPosition member
         mPositionHandle = prog.getAttributeLocation("vPosition");
 
@@ -356,8 +215,10 @@ public class Drawinator {
 
 			@Override
 			public int compare(Sprite lhs, Sprite rhs) {
-				float lhsBottom = lhs.getDrawY() + combinedData[(lhs.getTexturePosition()*skip)+6];
-				float rhsBottom = rhs.getDrawY() + combinedData[(rhs.getTexturePosition()*skip)+6];
+//				float lhsBottom = lhs.getDrawY() + combinedData[(lhs.getBufferIndex()*skip)+6];
+//				float rhsBottom = rhs.getDrawY() + combinedData[(rhs.getBufferIndex()*skip)+6];
+				float lhsBottom = lhs.getBottom();
+				float rhsBottom = rhs.getBottom();
 				if (rhsBottom - lhsBottom < 0f) {
 					return -1;
 				} else if (rhsBottom - lhsBottom > 0f) {
@@ -370,17 +231,7 @@ public class Drawinator {
         });
         for (Sprite sprite : stuff) {
 
-
-        	// vertex coordinates
-        	int pos = (sprite.getTexturePosition() * skip) * BYTES_PER_FLOAT;
-    		GLES20.glVertexAttribPointer(mPositionHandle, POSITION_DATA_SIZE,
-    				GLES20.GL_FLOAT, false, stride, pos);        
-
-    		// texture coordinates
-        	pos = ((sprite.getTexturePosition() * skip) + POSITION_DATA_SIZE) * BYTES_PER_FLOAT;
-    		GLES20.glVertexAttribPointer(mTextureCoordinateHandle, TEXTURE_COORDINATE_DATA_SIZE,
-    				GLES20.GL_FLOAT, false, stride, pos);        
-
+        	setBufferPosition(sprite.getBufferIndex());
 
     		
             // draw shadow? maybe? ========================================================
@@ -388,28 +239,15 @@ public class Drawinator {
             // Set color for drawing
             GLES20.glUniform4fv(mColorHandle, 1, shadowColor, 0);
 
-            Matrix.setIdentityM(mMMatrix, 0);
-
-            
-            
-        	Matrix.translateM(mMMatrix, 0, sprite.getDrawX(), sprite.getDrawY()+(combinedData[(sprite.getTexturePosition()*skip)+6]*(1f-SHADOW_SCALE)), 0);
+//        	setDrawPosition(sprite.getDrawX(), sprite.getDrawY()+(combinedData[(sprite.getBufferIndex()*skip)+6]*(1f-SHADOW_SCALE)));
+        	setDrawPosition(sprite.getDrawX(), sprite.getShadowY());
 
             Matrix.scaleM(mMMatrix, 0, 1f, SHADOW_SCALE, 1f); // half the y axis, leave x and z alone
-            //Matrix.multiplyMM(mMMatrix, 0, skewMatrix, 0, mMMatrix, 0);
-            //Matrix.rotateM(mMMatrix, 0, 25f, 0, 0, 0);
             
-        	
-        	Matrix.multiplyMM(eyeMatrix, 0, viewMatrix, 0, mMMatrix, 0);
-        	Matrix.multiplyMM(mvpMatrix, 0, projMatrix, 0, eyeMatrix, 0);
 
+        	// we're all set up, draw it
+        	performDraw();
 
-        	// Apply the projection and view transformation
-        	GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
-
-        	// Draw 
-	        GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
-
-        	
         	
         
             // draw normal thing =============================================================
@@ -417,23 +255,8 @@ public class Drawinator {
             // Set color for drawing
             GLES20.glUniform4fv(mColorHandle, 1, color, 0);
 
-            
-        	// move to the correct location
-
-            Matrix.setIdentityM(mMMatrix, 0);
-        	Matrix.translateM(mMMatrix, 0, sprite.getDrawX(), sprite.getDrawY(), 0);
+            sprite.draw(this);
         	
-        	Matrix.multiplyMM(eyeMatrix, 0, viewMatrix, 0, mMMatrix, 0);
-        	Matrix.multiplyMM(mvpMatrix, 0, projMatrix, 0, eyeMatrix, 0);
-
-
-        	// Apply the projection and view transformation
-        	GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
-
-        	// Draw 
-	        GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
-
-
         }
         
     	// IMPORTANT: Unbind from the buffer when we're done with it.
@@ -442,7 +265,44 @@ public class Drawinator {
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(mPositionHandle);
         
-    }    
+    }
+	
+	
+	public void setBufferPosition(int p) {
+		
+		//Log.i("ffz", "setting buffer position " + p);
+		
+    	// vertex coordinates
+    	int pos = (p * skip) * BYTES_PER_FLOAT;
+		GLES20.glVertexAttribPointer(mPositionHandle, POSITION_DATA_SIZE,
+				GLES20.GL_FLOAT, false, stride, pos);
+
+		// texture coordinates
+    	pos = ((p * skip) + POSITION_DATA_SIZE) * BYTES_PER_FLOAT;
+		GLES20.glVertexAttribPointer(mTextureCoordinateHandle, TEXTURE_COORDINATE_DATA_SIZE,
+				GLES20.GL_FLOAT, false, stride, pos);
+
+	}
+	
+	public void setDrawPosition(float x, float y) {
+        Matrix.setIdentityM(mMMatrix, 0);
+    	Matrix.translateM(mMMatrix, 0, x, y, 0);
+	}
+	
+	public void performDraw() {
+		
+    	// set up the view matrix and projection matrix
+    	Matrix.multiplyMM(eyeMatrix, 0, viewport.getViewMatrix(), 0, mMMatrix, 0);
+    	Matrix.multiplyMM(mvpMatrix, 0, viewport.getProjMatrix(), 0, eyeMatrix, 0);
+    	
+    	// Apply the projection and view transformation
+    	GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+    	
+    	// Draw 
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
+        
+	}
+	
 
 	public static void loadGLTexture(Context context) {
 

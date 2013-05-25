@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
+import android.util.Log;
 
 public class TextureManager {
 	
@@ -79,7 +80,7 @@ public class TextureManager {
 			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
 			
 		} catch (Exception e) {
-			return;
+			Log.e("ffz", "unable to set texture", e);
 		}
 	}
 }
