@@ -1,5 +1,10 @@
 package com.amphibian.ffz;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.amphibian.ffz.geometry.ConvexPolygon;
+
 public class Obstacle implements Sprite {
 
 	private int id;
@@ -70,4 +75,18 @@ public class Obstacle implements Sprite {
 		return this.y - (this.hh * (1f - Drawinator.SHADOW_SCALE));
 	}
 	
+	public List<ConvexPolygon> getBlockers() {
+		
+		FrameDataManager fdm = FrameDataManager.getInstance();
+		
+		
+		
+    	float[] c = { x, y - 12.5f };
+    	float[] p = { -50, 25, 50, 25, 50, -25, -50, -25 };
+    	List<ConvexPolygon> b = new ArrayList<ConvexPolygon>();
+    	b.add(new ConvexPolygon(c, p));
+    	return b;
+
+	}
+
 }

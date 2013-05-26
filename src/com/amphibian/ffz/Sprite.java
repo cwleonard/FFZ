@@ -1,5 +1,9 @@
 package com.amphibian.ffz;
 
+import java.util.List;
+
+import com.amphibian.ffz.geometry.ConvexPolygon;
+
 public interface Sprite {
 
 	public int getBufferIndex();
@@ -13,5 +17,7 @@ public interface Sprite {
 	public float getBottom();
 	
 	public float getShadowY();
+	
+	public List<ConvexPolygon> getBlockers();
 	
 }

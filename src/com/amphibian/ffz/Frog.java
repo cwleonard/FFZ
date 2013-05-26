@@ -1,5 +1,8 @@
 package com.amphibian.ffz;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.util.Log;
 
 import com.amphibian.ffz.geometry.ConvexPolygon;
@@ -153,6 +156,17 @@ public class Frog implements Sprite {
 	public float getShadowY() {
 		return this.y - (25f * (1f - Drawinator.SHADOW_SCALE));
 	}
+	
+	public List<ConvexPolygon> getBlockers() {
+		
+    	float[] c = { x, y - 12.5f };
+    	float[] p = { -50, 25, 50, 25, 50, -25, -50, -25 };
+    	List<ConvexPolygon> b = new ArrayList<ConvexPolygon>();
+    	b.add(new ConvexPolygon(c, p));
+    	return b;
+
+	}
+	
 
     
 }

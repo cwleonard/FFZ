@@ -9,6 +9,7 @@ import java.util.Map;
 import android.content.Context;
 import android.util.Log;
 
+import com.amphibian.ffz.geometry.ConvexPolygon;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -19,6 +20,8 @@ public class FrameDataManager {
 	private static FrameDataManager instance;
 
 	private Map<String,Frame> frames;
+	
+	private Map<String, CollisionDataHolder> cPolys;
 	
 	private FrameDataManager() {
 		frames = new HashMap<String,Frame>();
@@ -67,7 +70,19 @@ public class FrameDataManager {
 				frames.put(f.getName(), f);
 				
 			}
+
+			collectionType = new TypeToken<List<CollisionDataHolder>>(){}.getType();
+			List<CollisionDataHolder> cList = gson.fromJson(new InputStreamReader(
+					context.getResources().openRawResource(R.raw.collisions)),
+					collectionType);
 			
+			for (int i = 0; i < cList.size(); i++) {
+				
+				CollisionDataHolder cdh = cList.get(i);
+				cPolys.put(cdh.getName(), cdh);
+				
+			}
+
 			
 		} catch (Exception e) {
 			Log.e("ffz", "vertex data read error", e);
@@ -90,6 +105,7 @@ public class FrameDataManager {
 		return i;
 	}
 	
+	
 	private class VertexDataHolder {
 		
 		private String name;
@@ -107,6 +123,32 @@ public class FrameDataManager {
 			this.vertexData = vertexData;
 		}
 		
+	}
+	
+	private class CollisionDataHolder {
+	
+		private String name;
+		private float[] anchor;
+		private float[][] polygons;
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public float[] getAnchor() {
+			return anchor;
+		}
+		public void setAnchor(float[] anchor) {
+			this.anchor = anchor;
+		}
+		public float[][] getPolygons() {
+			return polygons;
+		}
+		public void setPolygons(float[][] polygons) {
+			this.polygons = polygons;
+		}
+
 	}
 	
 }
