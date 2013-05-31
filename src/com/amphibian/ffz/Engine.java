@@ -41,7 +41,7 @@ public class Engine {
 	private SocketIO socket;
 	
 	private ConvexPolygon testBlock;
-	private ConvexPolygon[] blockers;
+	private List<ConvexPolygon> blockers;
 	
 	
 	private String fid = UUID.randomUUID().toString();
@@ -167,8 +167,8 @@ public class Engine {
 		deltaMove[0] += mtv[0] * mtv[2];			  
 		deltaMove[1] += mtv[1] * mtv[2];
 		
-		for (int i = 0; i < blockers.length; i++) {
-			mtv = fPoly.intersectsWith(blockers[i]);
+		for (int i = 0; i < blockers.size(); i++) {
+			mtv = fPoly.intersectsWith(blockers.get(i));
 			deltaMove[0] += mtv[0] * mtv[2];			  
 			deltaMove[1] += mtv[1] * mtv[2];
 		}

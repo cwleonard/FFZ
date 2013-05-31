@@ -17,6 +17,7 @@ public class Obstacle implements Sprite {
 	private float w;
 	private float h;
 	private float hh;
+	private float hw;
 	
 	public Obstacle() {
 		this.id = -1;
@@ -48,6 +49,7 @@ public class Obstacle implements Sprite {
 			this.w = f.getWidth();
 			this.h = f.getHeight();
 			this.hh = h / 2.0f;
+			this.hw = w / 2.0f;
 		}
 		return id;
 	}
@@ -75,17 +77,14 @@ public class Obstacle implements Sprite {
 		return this.y - (this.hh * (1f - Drawinator.SHADOW_SCALE));
 	}
 	
+	public float getShadowX() {
+		return this.x + (this.hw * 0.7f);
+	}
+	
 	public List<ConvexPolygon> getBlockers() {
 		
 		FrameDataManager fdm = FrameDataManager.getInstance();
-		
-		
-		
-    	float[] c = { x, y - 12.5f };
-    	float[] p = { -50, 25, 50, 25, 50, -25, -50, -25 };
-    	List<ConvexPolygon> b = new ArrayList<ConvexPolygon>();
-    	b.add(new ConvexPolygon(c, p));
-    	return b;
+		return fdm.getPolygons(x, y, type);
 
 	}
 

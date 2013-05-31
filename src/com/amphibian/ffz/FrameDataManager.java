@@ -2,6 +2,7 @@ package com.amphibian.ffz;
 
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class FrameDataManager {
 	
 	private FrameDataManager() {
 		frames = new HashMap<String,Frame>();
+		cPolys = new HashMap<String,CollisionDataHolder>();
 	}
 	
 	public static synchronized FrameDataManager getInstance() {
@@ -79,7 +81,9 @@ public class FrameDataManager {
 			for (int i = 0; i < cList.size(); i++) {
 				
 				CollisionDataHolder cdh = cList.get(i);
-				cPolys.put(cdh.getName(), cdh);
+				if (cdh != null) {
+					cPolys.put(cdh.getName(), cdh);
+				}
 				
 			}
 
@@ -105,6 +109,21 @@ public class FrameDataManager {
 		return i;
 	}
 	
+	public List<ConvexPolygon> getPolygons(float x, float y, String n) {
+		
+		List<ConvexPolygon> s = new ArrayList<ConvexPolygon>();
+		CollisionDataHolder cdh = cPolys.get(n);
+		if (cdh != null) {
+			float[] c = { x, y };
+			float[][] z = cdh.getPolygons();
+			for (int i = 0; i < z.length; i++) {
+				ConvexPolygon p = new ConvexPolygon(cdh.polygons[i]);
+				s.add(p);
+			}
+		}
+		return s;
+		
+	}
 	
 	private class VertexDataHolder {
 		

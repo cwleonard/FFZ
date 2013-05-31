@@ -35,6 +35,33 @@ public class ConvexPolygon {
 		}
 		
 	}
+
+	public ConvexPolygon(float[] p, float offsetX, float offsetY) {
+		
+		float maxX = Float.MIN_VALUE;
+		float minX = Float.MAX_VALUE;
+		float maxY = Float.MIN_VALUE;
+		float minY = Float.MAX_VALUE;
+		
+		for (int i = 0; i < p.length; i = i + 2) {
+			float[] q = new float[2];
+			q[x] = p[i] + offsetX;
+			q[y] = p[i+1] + offsetY;
+			
+			if (q[x] > maxX) maxX = q[x];
+			if (q[x] < minX) minX = q[x];
+
+			if (q[y] > maxY) maxY = q[y];
+			if (q[y] < minY) minY = q[y];
+
+			points.add(q);
+		}
+		
+		this.center[x] = (maxX - minX) / 2;
+		this.center[y] = (maxY - minY) / 2;
+		
+	}
+	
 	
 	public int getNumberOfSides() {
 		return points.size();

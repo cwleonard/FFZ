@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -44,9 +45,10 @@ public class Drawinator {
     
 
     static float skewMatrix[] = {
-    	1f, -0.5f, 0f,
-    	0f,    1f, 0f,
-    	0f,    0f, 1f
+    	1f,    0f, 0f, 0f,
+      0.5f,    1f, 0f, 0f,
+    	0f,    0f, 1f, 0f,
+    	0f,    0f, 1f, 1f
     };
     
     private short drawOrder[] = { 0, 1, 2, 1, 3, 2 }; // order to draw vertices
@@ -119,52 +121,50 @@ public class Drawinator {
 		return (List<Sprite>) stuff;
 	}
     
-    public ConvexPolygon[] getBlockers() {
+    public List<ConvexPolygon> getBlockers() {
     	
-    	ConvexPolygon[] blockers = new ConvexPolygon[stuff.size()];
+    	//ConvexPolygon[] blockers = new ConvexPolygon[stuff.size()];
+    	List<ConvexPolygon> blockers = new ArrayList<ConvexPolygon>();
     	Iterator<? extends Sprite> i = stuff.iterator();
-    	int b = 0;
     	while (i.hasNext()) {
     		
     		Sprite s = i.next();
+    		blockers.addAll(s.getBlockers());
     		
-    		if (s.getBufferIndex() == 4) {
-        		float[] c = {s.getDrawX() - 5, s.getDrawY() - 124};
-        		float[] p = {
-        				-25,  21,
-        				 25,  21,
-        				 24, -18,
-        				-25, -18 
-        		};
-        		blockers[b] = new ConvexPolygon(c, p);
-
-			} else if (s.getBufferIndex() == 5) {
-				
-				float[] c = { s.getDrawX(), s.getDrawY() - 15f };
-				float[] p = {
-						-48, 18.5f,
-						48, 19.5f,
-						43, -22.5f,
-						-41, -21.5f 
-				};
-				blockers[b] = new ConvexPolygon(c, p);
-
-				// (-48, -18.5) , (48, -19.5) , (43, 22.5) , (-41, 21.5)
-
-			} else {
-        		float[] c = {s.getDrawX(), s.getDrawY()};
-        		float[] p = {
-        				-50,  50,
-        				 50,  50,
-        				 50, -50,
-        				-50, -50};
-        		blockers[b] = new ConvexPolygon(c, p);
-    			
-    		}
+//    		if (s.getBufferIndex() == 4) {
+//        		float[] c = {s.getDrawX() - 5, s.getDrawY() - 124};
+//        		float[] p = {
+//        				-25,  21,
+//        				 25,  21,
+//        				 24, -18,
+//        				-25, -18 
+//        		};
+//        		blockers[b] = new ConvexPolygon(c, p);
+//
+//			} else if (s.getBufferIndex() == 5) {
+//				
+//				float[] c = { s.getDrawX(), s.getDrawY() - 15f };
+//				float[] p = {
+//						-48, 18.5f,
+//						48, 19.5f,
+//						43, -22.5f,
+//						-41, -21.5f 
+//				};
+//				blockers[b] = new ConvexPolygon(c, p);
+//
+//				// (-48, -18.5) , (48, -19.5) , (43, 22.5) , (-41, 21.5)
+//
+//			} else {
+//        		float[] c = {s.getDrawX(), s.getDrawY()};
+//        		float[] p = {
+//        				-50,  50,
+//        				 50,  50,
+//        				 50, -50,
+//        				-50, -50};
+//        		blockers[b] = new ConvexPolygon(c, p);
+//    			
+//    		}
     		
-    		
-    		
-    		b++;
     		
     	}
     	return blockers;
@@ -240,9 +240,10 @@ public class Drawinator {
             GLES20.glUniform4fv(mColorHandle, 1, shadowColor, 0);
 
 //        	setDrawPosition(sprite.getDrawX(), sprite.getDrawY()+(combinedData[(sprite.getBufferIndex()*skip)+6]*(1f-SHADOW_SCALE)));
-        	setDrawPosition(sprite.getDrawX(), sprite.getShadowY());
+        	setDrawPosition(sprite.getShadowX(), sprite.getShadowY());
 
             Matrix.scaleM(mMMatrix, 0, 1f, SHADOW_SCALE, 1f); // half the y axis, leave x and z alone
+            Matrix.multiplyMM(mMMatrix, 0, mMMatrix, 0, skewMatrix, 0);
             
 
         	// we're all set up, draw it

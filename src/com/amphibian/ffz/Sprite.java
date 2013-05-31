@@ -16,6 +16,7 @@ public interface Sprite {
 	
 	public float getBottom();
 	
+	public float getShadowX();
 	public float getShadowY();
 	
 	public List<ConvexPolygon> getBlockers();

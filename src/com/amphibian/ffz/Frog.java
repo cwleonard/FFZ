@@ -150,7 +150,11 @@ public class Frog implements Sprite {
 	}
 	
 	public float getBottom() {
-		return y - 25f;
+		return y - 50f;
+	}
+	
+	public float getShadowX() {
+		return this.x + 25f;
 	}
 	
 	public float getShadowY() {
