@@ -117,7 +117,7 @@ public class FrameDataManager {
 			float[] c = { x, y };
 			float[][] z = cdh.getPolygons();
 			for (int i = 0; i < z.length; i++) {
-				ConvexPolygon p = new ConvexPolygon(cdh.polygons[i]);
+				ConvexPolygon p = new ConvexPolygon(cdh.polygons[i], x, y);
 				s.add(p);
 			}
 		}
