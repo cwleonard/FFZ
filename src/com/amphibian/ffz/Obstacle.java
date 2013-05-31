@@ -1,6 +1,5 @@
 package com.amphibian.ffz;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.amphibian.ffz.geometry.ConvexPolygon;
@@ -19,6 +18,18 @@ public class Obstacle implements Sprite {
 	private float hh;
 	private float hw;
 	
+	public Obstacle(String t) {
+		
+		Frame f = FrameDataManager.getInstance().getFrame(t);
+		this.type = t;
+		this.id = f.getIndex();
+		this.w = f.getWidth();
+		this.h = f.getHeight();
+		this.hh = h / 2.0f;
+		this.hw = w / 2.0f;
+		
+	}
+
 	public Obstacle() {
 		this.id = -1;
 	}
@@ -43,14 +54,6 @@ public class Obstacle implements Sprite {
 	}
 	@Override
 	public int getBufferIndex() {
-		if (id == -1) {
-			Frame f = FrameDataManager.getInstance().getFrame(type);
-			this.id = f.getIndex();
-			this.w = f.getWidth();
-			this.h = f.getHeight();
-			this.hh = h / 2.0f;
-			this.hw = w / 2.0f;
-		}
 		return id;
 	}
 	@Override

@@ -12,8 +12,10 @@ import android.content.Context;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.amphibian.ffz.data.ObstacleDeserializer;
 import com.amphibian.ffz.geometry.ConvexPolygon;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 public class Engine {
@@ -48,6 +50,10 @@ public class Engine {
 	
 	public Engine(Context context) {
 		
+		Gson gson = new GsonBuilder()
+			.registerTypeAdapter(Obstacle.class, new ObstacleDeserializer())
+			.create();
+
 		lastUpdate = SystemClock.uptimeMillis();
 		cycle = SystemClock.uptimeMillis();
 		//triangle = new Triangle();
@@ -89,8 +95,6 @@ public class Engine {
 
 		
 		try {
-			
-			Gson gson = new Gson();
 			
 			Tile[][] tiles = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.area)), Tile[][].class);
 			ground.setTiles(tiles);
