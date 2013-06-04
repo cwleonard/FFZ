@@ -3,6 +3,8 @@ package com.amphibian.ffz.geometry;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
+
 public class ConvexPolygon {
 
 	private final static int x = 0;
@@ -38,27 +40,27 @@ public class ConvexPolygon {
 
 	public ConvexPolygon(float[] p, float offsetX, float offsetY) {
 		
-		float maxX = Float.MIN_VALUE;
-		float minX = Float.MAX_VALUE;
-		float maxY = Float.MIN_VALUE;
-		float minY = Float.MAX_VALUE;
-		
+//		float maxX = Float.MIN_VALUE;
+//		float minX = Float.MAX_VALUE;
+//		float maxY = Float.MIN_VALUE;
+//		float minY = Float.MAX_VALUE;
+
 		for (int i = 0; i < p.length; i = i + 2) {
 			float[] q = new float[2];
 			q[x] = p[i] + offsetX;
 			q[y] = p[i+1] + offsetY;
 			
-			if (q[x] > maxX) maxX = q[x];
-			if (q[x] < minX) minX = q[x];
-
-			if (q[y] > maxY) maxY = q[y];
-			if (q[y] < minY) minY = q[y];
+//			if (q[x] > maxX) maxX = q[x];
+//			if (q[x] < minX) minX = q[x];
+//
+//			if (q[y] > maxY) maxY = q[y];
+//			if (q[y] < minY) minY = q[y];
 
 			points.add(q);
 		}
 		
-		this.center[x] = (maxX - minX) / 2;
-		this.center[y] = (maxY - minY) / 2;
+		this.center[x] = 0;
+		this.center[y] = 0;
 		
 	}
 	
@@ -112,12 +114,13 @@ public class ConvexPolygon {
     			else if (tmp < minA)
     				minA = tmp;
     		}
-    		/* correct for offset */
+
+    		// correct for offset
     		tmp = this.center[x] * axis[x] + this.center[y] * axis[y];
     		minA += tmp;
     		maxA += tmp;
 
-    		/* project polygon B onto axis to determine the min/max */
+    		// project polygon B onto axis to determine the min/max
     		minB = other.points.get(0)[x] * axis[x] + other.points.get(0)[y] * axis[y];
     		maxB = minB;
     		for (int i = 1; i < other.getNumberOfSides(); i++)
@@ -128,12 +131,13 @@ public class ConvexPolygon {
     			else if (tmp < minB)
     				minB = tmp;
     		}
-    		/* correct for offset */
+    		
+    		// correct for offset
     		tmp = other.center[x] * axis[x] + other.center[y] * axis[y];
     		minB += tmp;
     		maxB += tmp;
 
-    		/* test if lines intersect, if not, return false */
+    		// test if lines intersect, if not, return false
     		if (maxA < minB || minA > maxB) {
     			return new float[3];
     		} else {
@@ -183,7 +187,8 @@ public class ConvexPolygon {
     			else if (tmp < minA)
     				minA = tmp;
     		}
-    		/* correct for offset */
+    		
+    		// correct for offset
     		tmp = this.center[x] * axis[x] + this.center[y] * axis[y];
     		minA += tmp;
     		maxA += tmp;
@@ -228,7 +233,11 @@ public class ConvexPolygon {
     	cacb[x] = this.center[x] - other.center[x];
     	cacb[y] = this.center[y] - other.center[y];
     	float dot = smallest[x] * cacb[x] + smallest[y] * cacb[y];
-    	if (dot < 0) {
+    	//Log.i("ffz", "dot = " + dot);
+    	if (dot == 0.0f) {
+    		// do nothing
+    	} else if (dot < 0.0f) {
+    		//Log.i("ffz", "reversing push, dot = " + dot + ", smallest[0] = " + smallest[0] + ", smallest[1] = " + smallest[1]);
     		smallest[0] = -smallest[0];
     		smallest[1] = -smallest[1];
     	}
