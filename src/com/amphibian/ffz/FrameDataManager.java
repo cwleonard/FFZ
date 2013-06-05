@@ -1,9 +1,12 @@
 package com.amphibian.ffz;
 
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -24,9 +27,12 @@ public class FrameDataManager {
 	
 	private Map<String, CollisionDataHolder> cPolys;
 	
+	private List<Class> toInit;
+	
 	private FrameDataManager() {
 		frames = new HashMap<String,Frame>();
 		cPolys = new HashMap<String,CollisionDataHolder>();
+		toInit = new ArrayList<Class>();
 	}
 	
 	public static synchronized FrameDataManager getInstance() {
@@ -36,7 +42,17 @@ public class FrameDataManager {
 		return instance;
 	}
 	
-	public float[] readVertexData(Context context) {
+	
+	
+	public Drawinator init(Context context) {
+		
+		Drawinator d = new Drawinator(this.readVertexData(context));
+		this.performInitializations();
+		return d;
+		
+	}
+	
+	private float[] readVertexData(Context context) {
 		
 		frames.clear();
 		
@@ -122,6 +138,32 @@ public class FrameDataManager {
 			}
 		}
 		return s;
+		
+	}
+	
+	public void add(Class c) {
+		this.toInit.add(c);
+	}
+
+	private void performInitializations() {
+		
+		Iterator i = this.toInit.iterator();
+		while (i.hasNext()) {
+			
+			try {
+			
+				Class c = (Class) i.next();
+				
+				Log.d("ffz", "initializing " + c.getCanonicalName());
+				
+				Method m = c.getMethod("init", null);
+				m.invoke(null, null);
+				
+			} catch (Exception e) {
+				Log.e("ffz", "error initializing", e);
+			}
+			
+		}
 		
 	}
 	

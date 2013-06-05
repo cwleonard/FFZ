@@ -43,7 +43,6 @@ public class Frog implements Sprite {
     
     public ConvexPolygon getBlocker(float x, float y) {
     	
-    	//float[] c = { x, y - 12.5f };
     	float[] p = { -50, 25, 50, 25, 50, -25, -50, -25 };
     	return new ConvexPolygon(p, x, y - 12.5f);
     	
@@ -163,10 +162,8 @@ public class Frog implements Sprite {
 	
 	public List<ConvexPolygon> getBlockers() {
 		
-    	float[] c = { x, y - 12.5f };
-    	float[] p = { -50, 25, 50, 25, 50, -25, -50, -25 };
     	List<ConvexPolygon> b = new ArrayList<ConvexPolygon>();
-    	b.add(new ConvexPolygon(c, p));
+    	b.add(this.getBlocker(x, y));
     	return b;
 
 	}

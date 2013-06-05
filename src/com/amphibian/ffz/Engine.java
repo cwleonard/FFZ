@@ -86,13 +86,10 @@ public class Engine {
 //		}
 
 		FrameDataManager fdman = FrameDataManager.getInstance();
+		fdman.add(Frog.class);
+		drawinator = fdman.init(context);
 		
-		drawinator = new Drawinator(fdman.readVertexData(context));
-		
-		Frog.init();
 		frog.faceRight();
-		
-
 		
 		try {
 			

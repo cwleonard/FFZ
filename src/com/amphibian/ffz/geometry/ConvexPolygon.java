@@ -38,31 +38,52 @@ public class ConvexPolygon {
 		
 	}
 
+	/**
+	 * Centroid-calculating constructor.
+	 * 
+	 * @param p array of points relative to the given offset. every 2 elements is one point.
+	 * @param offsetX
+	 * @param offsetY
+	 */
 	public ConvexPolygon(float[] p, float offsetX, float offsetY) {
-		
-//		float maxX = Float.MIN_VALUE;
-//		float minX = Float.MAX_VALUE;
-//		float maxY = Float.MIN_VALUE;
-//		float minY = Float.MAX_VALUE;
+		this(p, offsetX, offsetY, false);
+	}
 
+	public ConvexPolygon(float[] p, float offsetX, float offsetY, boolean b) {
+
+		if (b) Log.i("ffz", "offset " + offsetX + ", " + offsetY);
+
+		float cx = 0.0f;
+		float cy = 0.0f;
+
+		// create new points relative to the origin
+		float[] pp = new float[p.length];
 		for (int i = 0; i < p.length; i = i + 2) {
-			float[] q = new float[2];
-			q[x] = p[i] + offsetX;
-			q[y] = p[i+1] + offsetY;
-			
-//			if (q[x] > maxX) maxX = q[x];
-//			if (q[x] < minX) minX = q[x];
-//
-//			if (q[y] > maxY) maxY = q[y];
-//			if (q[y] < minY) minY = q[y];
-
-			points.add(q);
+			pp[i] = p[i] + offsetX;
+			pp[i+1] = p[i+1] + offsetY;
 		}
 		
-		this.center[x] = 0;
-		this.center[y] = 0;
-		
+		// find the centroid
+		for (int i = 0; i < pp.length; i = i + 2) {
+			if (b) Log.i("ffz", "point " + pp[i] +", " + pp[i+1]);
+			cx += pp[i];
+			cy += pp[i+1];
+		}
+		float k = (pp.length / 2.0f);
+		this.center[x] = cx / k;
+		this.center[y] = cy / k;
+		if (b) Log.i("ffz", "centeroid at " + center[x] + ", " + center[y]);
+
+		// create new points relative to the centroid
+		for (int i = 0; i < pp.length; i = i + 2) {
+			float[] q = new float[2];
+			q[x] = pp[i] - this.center[x];
+			q[y] = pp[i+1] - this.center[y];
+			points.add(q);
+		}
+	
 	}
+
 	
 	
 	public int getNumberOfSides() {
@@ -237,12 +258,12 @@ public class ConvexPolygon {
     	if (dot == 0.0f) {
     		// do nothing
     	} else if (dot < 0.0f) {
-    		//Log.i("ffz", "reversing push, dot = " + dot + ", smallest[0] = " + smallest[0] + ", smallest[1] = " + smallest[1]);
     		smallest[0] = -smallest[0];
     		smallest[1] = -smallest[1];
     	}
     	
     	smallest[2] = overlap + 0.001f;
+    	
 		return smallest;
 		
 	}
