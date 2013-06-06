@@ -126,10 +126,11 @@ public class Engine {
 		
 		float stickX = 0;
 		float stickY = 0;
+		boolean oButton = false;
 		
 		OuyaController c1 = OuyaController.getControllerByPlayer(0);
 		if (c1 != null) {
-			boolean a = c1.getButton(OuyaController.BUTTON_A);
+			oButton = c1.getButton(OuyaController.BUTTON_O);
 			stickX = c1.getAxisValue(OuyaController.AXIS_LS_X);
 			stickY = -c1.getAxisValue(OuyaController.AXIS_LS_Y);
 			if (Math.abs(stickX) < 0.25f) {
@@ -152,6 +153,8 @@ public class Engine {
 			viewport.moveCamera(moveX2, -moveY2);
 			
 		}
+
+		frog.ribbit(oButton);
 		
 		float[] deltaMove = frog.getMovement(delta, stickX, stickY);
 
