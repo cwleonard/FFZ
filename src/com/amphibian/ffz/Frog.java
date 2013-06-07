@@ -38,6 +38,8 @@ public class Frog implements Sprite {
 	private boolean ribbit = false;
 	private int frameIndex = 0;
 
+	private Tongue t;
+	
 	public static void init() {
 		
 		FrameDataManager fdm = FrameDataManager.getInstance();
@@ -56,12 +58,15 @@ public class Frog implements Sprite {
 		rightFrames = new int[] { JUMPING_RIGHT_1, JUMPING_RIGHT_2, SIT_FACE_RIGHT };
 		leftFrames = new int[] { JUMPING_LEFT_1, JUMPING_LEFT_2, SIT_FACE_LEFT };
 		
+		Tongue.init();
+		
 	}
 
     public Frog() {
     	
     	sprite = SIT_FACE_RIGHT;
     	frames = rightFrames;
+    	t = new Tongue(this);
         
     }
     
@@ -217,6 +222,10 @@ public class Frog implements Sprite {
 		d.setMode(Drawinator.NORMAL_MODE);
 		d.setDrawPosition(this.getDrawX(), this.getDrawY());
 		d.performDraw();
+		
+		if (this.ribbit) {
+			t.draw(d);
+		}
 
 	}
 	
