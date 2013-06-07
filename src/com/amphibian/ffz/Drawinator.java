@@ -13,11 +13,15 @@ import java.util.List;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 import com.amphibian.ffz.geometry.ConvexPolygon;
 
 public class Drawinator {
 
+	public static final int SHADOW_MODE = 0;
+	public static final int NORMAL_MODE = 1;
+	
 	final static float SHADOW_SCALE = 0.7f;
 	
 	private final static int BYTES_PER_FLOAT = 4;
@@ -65,7 +69,7 @@ public class Drawinator {
 	private Viewport viewport;
 	 
     // Set color with red, green, blue and alpha (opacity) values
-    float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float normalColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
     
     float shadowColor[] = { 0.0f, 0.0f, 0.0f, 0.2f };
     
@@ -231,31 +235,6 @@ public class Drawinator {
         });
         for (Sprite sprite : stuff) {
 
-        	setBufferPosition(sprite.getBufferIndex());
-
-    		
-            // draw shadow? maybe? ========================================================
-            
-            // Set color for drawing
-            GLES20.glUniform4fv(mColorHandle, 1, shadowColor, 0);
-
-//        	setDrawPosition(sprite.getDrawX(), sprite.getDrawY()+(combinedData[(sprite.getBufferIndex()*skip)+6]*(1f-SHADOW_SCALE)));
-        	setDrawPosition(sprite.getShadowX(), sprite.getShadowY());
-
-            Matrix.scaleM(mMMatrix, 0, 1f, SHADOW_SCALE, 1f); // half the y axis, leave x and z alone
-            Matrix.multiplyMM(mMMatrix, 0, mMMatrix, 0, skewMatrix, 0);
-            
-
-        	// we're all set up, draw it
-        	performDraw();
-
-        	
-        
-            // draw normal thing =============================================================
-            
-            // Set color for drawing
-            GLES20.glUniform4fv(mColorHandle, 1, color, 0);
-
             sprite.draw(this);
         	
         }
@@ -283,6 +262,29 @@ public class Drawinator {
 		GLES20.glVertexAttribPointer(mTextureCoordinateHandle, TEXTURE_COORDINATE_DATA_SIZE,
 				GLES20.GL_FLOAT, false, stride, pos);
 
+	}
+	
+	public void setMode(int m) {
+		
+		if (m == SHADOW_MODE) {
+			
+			this.setColor(shadowColor);
+			
+            Matrix.scaleM(mMMatrix, 0, 1f, SHADOW_SCALE, 1f); // half the y axis, leave x and z alone
+            Matrix.multiplyMM(mMMatrix, 0, mMMatrix, 0, skewMatrix, 0);
+			
+		} else if (m == NORMAL_MODE) {
+			
+			this.setColor(normalColor);
+			
+		} else {
+			Log.e("ffz", "unknown drawing mode " + m);
+		}
+		
+	}
+	
+	public void setColor(float[] c) {
+		GLES20.glUniform4fv(mColorHandle, 1, c, 0);
 	}
 	
 	public void setDrawPosition(float x, float y) {

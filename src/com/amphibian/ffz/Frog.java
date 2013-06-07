@@ -207,8 +207,17 @@ public class Frog implements Sprite {
 
 	@Override
 	public void draw(Drawinator d) {
-		d.setDrawPosition(x, y);
+		
+		d.setBufferPosition(this.getBufferIndex());
+		
+		d.setDrawPosition(this.getShadowX(), this.getShadowY());
+		d.setMode(Drawinator.SHADOW_MODE);
 		d.performDraw();
+		
+		d.setMode(Drawinator.NORMAL_MODE);
+		d.setDrawPosition(this.getDrawX(), this.getDrawY());
+		d.performDraw();
+
 	}
 	
 	public float getBottom() {

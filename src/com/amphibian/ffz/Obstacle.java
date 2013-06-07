@@ -67,6 +67,13 @@ public class Obstacle implements Sprite {
 	@Override
 	public void draw(Drawinator d) {
 		
+		d.setBufferPosition(this.getBufferIndex());
+		
+		d.setDrawPosition(this.getShadowX(), this.getShadowY());
+		d.setMode(Drawinator.SHADOW_MODE);
+		d.performDraw();
+		
+		d.setMode(Drawinator.NORMAL_MODE);
 		d.setDrawPosition(x, y);
 		d.performDraw();
 		
