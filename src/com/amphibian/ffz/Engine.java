@@ -156,28 +156,35 @@ public class Engine {
 
 		frog.ribbit(oButton);
 		
-		float[] deltaMove = frog.getMovement(delta, stickX, stickY);
+		//float[] deltaMove = frog.getMovement(delta, stickX, stickY);
 
-		// set direction intent before possible collision
-		frog.setDirection(deltaMove[0], deltaMove[1]);
+		frog.getMovement(delta, stickX, stickY);
 		
-		ConvexPolygon fPoly = frog.getBlocker(frog.x + deltaMove[0], frog.y + deltaMove[1]);
+		// set direction intent before possible collision
+		//frog.setDirection(deltaMove[0], deltaMove[1]);
+		
+		//ConvexPolygon fPoly = frog.getBlocker(frog.x + deltaMove[0], frog.y + deltaMove[1]);
+		ConvexPolygon fPoly = frog.getBlockers().get(0);
 
 		// mtv will be all 0 if no collision, or if there is a collision it will contain
 		// the axis and overlap to move fPoly out of collision. MTV = Minimum Translation Vector
 
 		//TODO: put the ground blockers in the same array as below...
 		float[] mtv = fPoly.intersectsWith(testBlock);
-		deltaMove[0] += mtv[0] * mtv[2];			  
-		deltaMove[1] += mtv[1] * mtv[2];
+		float[] correction = new float[] { mtv[0] * mtv[2], mtv[1] * mtv[2] };
+		//deltaMove[0] += mtv[0] * mtv[2];			  
+		//deltaMove[1] += mtv[1] * mtv[2];
 		
 		for (int i = 0; i < blockers.size(); i++) {
 			mtv = fPoly.intersectsWith(blockers.get(i));
-			deltaMove[0] += mtv[0] * mtv[2];			  
-			deltaMove[1] += mtv[1] * mtv[2];
+			//deltaMove[0] += mtv[0] * mtv[2];			  
+			//deltaMove[1] += mtv[1] * mtv[2];
+			correction[0] += mtv[0] * mtv[2];
+			correction[1] += mtv[1] * mtv[2];
 		}
 		
-		frog.move(deltaMove[0], deltaMove[1]);
+		//frog.move(deltaMove[0], deltaMove[1]);
+		frog.move(correction[0], correction[1]);
 		
 		
 		OuyaController c2 = OuyaController.getControllerByPlayer(1);

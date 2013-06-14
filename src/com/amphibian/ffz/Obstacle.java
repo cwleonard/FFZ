@@ -102,6 +102,12 @@ public class Obstacle implements Sprite {
 	public void move(float dx, float dy) {
 		// TODO let these move someday
 	}
+
+	@Override
+	public boolean checkMovement() {
+		// TODO return true if these move
+		return false;
+	}
 	
 	
 

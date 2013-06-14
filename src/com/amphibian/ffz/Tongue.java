@@ -188,4 +188,10 @@ public class Tongue implements Sprite {
 		// TODO let these move someday
 	}
 
+	@Override
+	public boolean checkMovement() {
+		// TODO return true sometimes
+		return false;
+	}
+
 }

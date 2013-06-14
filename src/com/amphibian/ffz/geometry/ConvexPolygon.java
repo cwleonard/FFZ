@@ -1,6 +1,7 @@
 package com.amphibian.ffz.geometry;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import android.util.Log;
@@ -84,7 +85,23 @@ public class ConvexPolygon {
 	
 	}
 
+	public void move(float dx, float dy) {
+		
+		this.center[x] += dx;
+		this.center[y] += dy;
+		
+	}
 	
+	public void rotate(float rads) {
+		
+		Iterator<float[]> i = this.points.iterator();
+		while (i.hasNext()) {
+			float[] p = i.next();
+    		p[x] = (float) (Math.cos(rads) * p[x] - Math.sin(rads) * p[y]);
+    		p[y] = (float) (Math.sin(rads) * p[x] + Math.cos(rads) * p[y]);
+    	}
+		
+	}
 	
 	public int getNumberOfSides() {
 		return points.size();

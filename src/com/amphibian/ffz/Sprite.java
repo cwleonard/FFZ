@@ -18,6 +18,8 @@ public interface Sprite {
 	
 	public void move(float dx, float dy);
 	
+	public boolean checkMovement();
+	
 	public float getShadowX();
 	public float getShadowY();
 	

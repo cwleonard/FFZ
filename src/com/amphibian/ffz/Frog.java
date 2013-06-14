@@ -14,7 +14,7 @@ public class Frog implements Sprite {
 	
 	private static float BASE_SPEED = 0.25f;
 	
-	float x = 50f;
+	float x =  50f;
 	float y = -50f;
 
 	private FrogPath fp;
@@ -96,8 +96,9 @@ public class Frog implements Sprite {
     
     public ConvexPolygon getBlocker(float x, float y) {
     	
-    	float[] p = { -50, 25, 50, 25, 50, -25, -50, -25 };
-    	return new ConvexPolygon(p, x, y - 12.5f);
+    	//float[] p = { -50, 25, 50, 25, 50, -25, -50, -25 };
+    	//return new ConvexPolygon(p, x, y - 12.5f);
+    	return blockPoly;
     	
     }
     
@@ -148,6 +149,9 @@ public class Frog implements Sprite {
 			elapsed -= 200;
 		}
 		
+		this.setDirection(m[0], m[1]);
+		this.move(m[0], m[1]);
+		
 		return m;
 		
 	}
@@ -189,6 +193,7 @@ public class Frog implements Sprite {
 	public void move(float dx, float dy) {
     	this.x += dx;
     	this.y += dy;
+    	this.blockPoly.move(dx, dy);
     }
     
     public void faceDown() {
@@ -282,9 +287,14 @@ public class Frog implements Sprite {
 	public List<ConvexPolygon> getBlockers() {
 		
     	List<ConvexPolygon> b = new ArrayList<ConvexPolygon>();
-    	b.add(this.getBlocker(x, y));
+    	b.add(blockPoly);
     	return b;
 
+	}
+
+	@Override
+	public boolean checkMovement() {
+		return true;
 	}
 	
 
