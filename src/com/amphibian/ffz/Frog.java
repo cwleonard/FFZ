@@ -7,6 +7,11 @@ import com.amphibian.ffz.geometry.ConvexPolygon;
 
 public class Frog implements Sprite {
 
+	public final static int UP = 0;
+	public final static int DOWN = 1;
+	public final static int LEFT = 2;
+	public final static int RIGHT = 3;
+	
 	private static float BASE_SPEED = 0.3f;
 	
 	float x = 50f;
@@ -15,6 +20,8 @@ public class Frog implements Sprite {
 	private FrogPath fp;
 
     private int sprite;
+    
+    private int direction;
     
 	private static int SIT_FACE_RIGHT;
 	private static int SIT_FACE_LEFT;
@@ -64,8 +71,7 @@ public class Frog implements Sprite {
 
     public Frog() {
     	
-    	sprite = SIT_FACE_RIGHT;
-    	frames = rightFrames;
+    	this.faceRight();
     	t = new Tongue(this);
         
     }
@@ -165,20 +171,28 @@ public class Frog implements Sprite {
     
     public void faceDown() {
     	this.sprite = SIT_FACE_DOWN;
+    	this.direction = DOWN;
     }
     
     public void faceRight() {
     	this.sprite = SIT_FACE_RIGHT;
     	this.frames = rightFrames;
+    	this.direction = RIGHT;
     }
     
     public void faceLeft() {
     	this.sprite = SIT_FACE_LEFT;
     	this.frames = leftFrames;
+    	this.direction = LEFT;
     }
     
     public void faceUp() {
     	this.sprite = SIT_FACE_UP;
+    	this.direction = UP;
+    }
+    
+    public int getDirection() {
+    	return this.direction;
     }
 
 	@Override

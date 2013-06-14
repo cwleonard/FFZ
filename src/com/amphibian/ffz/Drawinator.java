@@ -57,7 +57,10 @@ public class Drawinator {
     
     private short drawOrder[] = { 0, 1, 2, 1, 3, 2 }; // order to draw vertices
 
+    private short drawOrder2[] = { 3, 2, 1, 2, 1, 0 }; // horizontal flip order
+    
     private ShortBuffer drawListBuffer;
+    private ShortBuffer drawListBuffer2;
 
 	
 	/** This will be used to pass in the texture. */
@@ -85,7 +88,14 @@ public class Drawinator {
         dlb.order(ByteOrder.nativeOrder());
         drawListBuffer = dlb.asShortBuffer();
         drawListBuffer.put(drawOrder).position(0);
-    	
+
+        ByteBuffer dlb2 = ByteBuffer.allocateDirect(
+        // (# of coordinate values * 2 bytes per short)
+                drawOrder2.length * 2);
+        dlb2.order(ByteOrder.nativeOrder());
+        drawListBuffer2 = dlb2.asShortBuffer();
+        drawListBuffer2.put(drawOrder2).position(0);
+
     	
         // initialize vertex byte buffer for shape coordinates
         
@@ -290,6 +300,10 @@ public class Drawinator {
 	public void setDrawPosition(float x, float y) {
         Matrix.setIdentityM(mMMatrix, 0);
     	Matrix.translateM(mMMatrix, 0, x, y, 0);
+	}
+	
+	public void setScale(float sx, float sy) {
+		Matrix.scaleM(mMMatrix, 0, sx, sy, 1);
 	}
 	
 	public void performDraw() {

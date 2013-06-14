@@ -11,25 +11,37 @@ public class Tongue implements Sprite {
 
 	private static float OFFSET = 23.0f;
 	
-	private static int END_TONGUE;
-	private static int TONGUE;
+	private static int END_TONGUE_RIGHT;
+	private static int END_TONGUE_LEFT;
+	private static int END_TONGUE_UP;
+	private static int END_TONGUE_DOWN;
+	private static int TONGUE_PART_UD;
+	private static int TONGUE_PART_LR;
 
 	private float x;
 	private float y;
 	
-	private static float w;
-	private static float h;
+	private static float pw;
+	private static float ew;
+	private static float ph;
+	private static float eh;
 	
 	private Frog frog;
 	
 	public static void init() {
 		
 		FrameDataManager fdm = FrameDataManager.getInstance();
-		END_TONGUE = fdm.getFrameIndex("end_tounge");
-		TONGUE = fdm.getFrameIndex("middle_tounge");
+		END_TONGUE_RIGHT = fdm.getFrameIndex("end_tongue_right");
+		END_TONGUE_LEFT = fdm.getFrameIndex("end_tongue_left");
+		END_TONGUE_UP = fdm.getFrameIndex("end_tongue_up");
+		END_TONGUE_DOWN = fdm.getFrameIndex("end_tongue_down");
+		TONGUE_PART_LR = fdm.getFrameIndex("middle_tongue_lr");
+		TONGUE_PART_UD = fdm.getFrameIndex("middle_tongue_ud");
 		
-		w = fdm.getFrame("end_tounge").getWidth();
-		h = fdm.getFrame("end_tounge").getHeight();
+		pw = fdm.getFrame("middle_tongue_lr").getWidth();
+		ew = fdm.getFrame("end_tongue_right").getWidth();
+		ph = fdm.getFrame("middle_tongue_lr").getHeight();
+		eh = fdm.getFrame("end_tongue_right").getHeight();
 		
 		
 	}
@@ -54,13 +66,20 @@ public class Tongue implements Sprite {
 	}
 	@Override
 	public int getBufferIndex() {
-		return END_TONGUE;
+		return END_TONGUE_RIGHT;
 	}
 	
 	@Override
 	public float getDrawX() {
 		
-		return frog.getDrawX() + OFFSET;
+		float fx = frog.getDrawX();
+		if (frog.getDirection() == Frog.LEFT) {
+			return fx - OFFSET;
+		} else if (frog.getDirection() == Frog.RIGHT) {
+			return fx + OFFSET;
+		} else {
+			return fx;
+		}
 		
 	}
 	
@@ -68,10 +87,27 @@ public class Tongue implements Sprite {
 	public float getDrawY() {
 		return frog.getDrawY();
 	}
+	
 	@Override
 	public void draw(Drawinator d) {
 		
-		d.setBufferPosition(TONGUE);
+		float m = 1.0f;
+		float n = 1.0f;
+		if (frog.getDirection() == Frog.LEFT) {
+			d.setBufferPosition(TONGUE_PART_LR);
+			m = -1.0f;
+			n = 0.0f;
+		} else if (frog.getDirection() == Frog.RIGHT) {
+			d.setBufferPosition(TONGUE_PART_LR);
+			n = 0.0f;
+		} else if (frog.getDirection() == Frog.DOWN) {
+			d.setBufferPosition(TONGUE_PART_UD);
+			m = 0.0f;
+			n = -1.0f;
+		} else if (frog.getDirection() == Frog.UP) {
+			d.setBufferPosition(TONGUE_PART_UD);
+			m = 0.0f;
+		}
 		
 //		d.setDrawPosition(this.getShadowX(), this.getShadowY());
 //		d.setMode(Drawinator.SHADOW_MODE);
@@ -79,17 +115,27 @@ public class Tongue implements Sprite {
 		
 		d.setMode(Drawinator.NORMAL_MODE);
 
+		float th = 0;
 		float tw = 0;
 		for (int i = 0; i < 10; i++) {
 		
-			d.setDrawPosition(this.getDrawX() + tw, this.getDrawY());
+			d.setDrawPosition(this.getDrawX() + tw, this.getDrawY() + th);
 			d.performDraw();
-			tw += w;
+			tw += (pw * m);
+			th += (ph * n);
 			
 		}
 
-		d.setBufferPosition(END_TONGUE);
-		d.setDrawPosition(this.getDrawX() + tw, this.getDrawY());
+		if (frog.getDirection() == Frog.LEFT) {
+			d.setBufferPosition(END_TONGUE_LEFT);
+		} else if (frog.getDirection() == Frog.RIGHT) {
+			d.setBufferPosition(END_TONGUE_RIGHT);
+		} else if (frog.getDirection() == Frog.UP) {
+			d.setBufferPosition(END_TONGUE_UP);
+		} else if (frog.getDirection() == Frog.DOWN) {
+			d.setBufferPosition(END_TONGUE_DOWN);
+		}
+		d.setDrawPosition(this.getDrawX() + tw - (pw*m) + (ew*m), this.getDrawY() + th - (ph*n) + (eh*n));
 		d.performDraw();
 
 		
