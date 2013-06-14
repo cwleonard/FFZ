@@ -12,7 +12,7 @@ public class Frog implements Sprite {
 	public final static int LEFT = 2;
 	public final static int RIGHT = 3;
 	
-	private static float BASE_SPEED = 0.3f;
+	private static float BASE_SPEED = 0.25f;
 	
 	float x = 50f;
 	float y = -50f;
@@ -23,10 +23,14 @@ public class Frog implements Sprite {
     
     private int direction;
     
+    private ConvexPolygon blockPoly;
+    
 	private static int SIT_FACE_RIGHT;
 	private static int SIT_FACE_LEFT;
 	private static int SIT_FACE_DOWN;
 	private static int SIT_FACE_UP;
+	private static int JUMPING_UP;
+	private static int JUMPING_DOWN;
 	private static int JUMPING_LEFT_1;
 	private static int JUMPING_LEFT_2;
 	private static int JUMPING_RIGHT_1;
@@ -39,6 +43,8 @@ public class Frog implements Sprite {
 	
 	private static int[] rightFrames;
 	private static int[] leftFrames;
+	private static int[] upFrames;
+	private static int[] downFrames;
 	
 	private long elapsed;
 	private boolean moving = false;
@@ -54,6 +60,8 @@ public class Frog implements Sprite {
 		SIT_FACE_LEFT = fdm.getFrameIndex("sitting_left");
 		SIT_FACE_DOWN = fdm.getFrameIndex("sitting_down");
 		SIT_FACE_UP = fdm.getFrameIndex("sitting_up");
+		JUMPING_UP = fdm.getFrameIndex("frog_jumping_up");
+		JUMPING_DOWN = fdm.getFrameIndex("frog_jumping_down");
 		JUMPING_LEFT_1 = fdm.getFrameIndex("jumping_left_1");
 		JUMPING_LEFT_2 = fdm.getFrameIndex("jumping_left_2");
 		JUMPING_RIGHT_1 = fdm.getFrameIndex("jumping_right_1");
@@ -64,6 +72,8 @@ public class Frog implements Sprite {
 		
 		rightFrames = new int[] { JUMPING_RIGHT_1, JUMPING_RIGHT_2, SIT_FACE_RIGHT };
 		leftFrames = new int[] { JUMPING_LEFT_1, JUMPING_LEFT_2, SIT_FACE_LEFT };
+		upFrames = new int[] { JUMPING_UP, SIT_FACE_UP };
+		downFrames = new int[] { JUMPING_DOWN, SIT_FACE_DOWN };
 		
 		Tongue.init();
 		
@@ -73,7 +83,15 @@ public class Frog implements Sprite {
     	
     	this.faceRight();
     	t = new Tongue(this);
+    	this.initBlocker();
         
+    }
+    
+    private void initBlocker() {
+
+    	float[] p = { -50, 25, 50, 25, 50, -25, -50, -25 };
+    	blockPoly = new ConvexPolygon(p, x, y - 12.5f);
+
     }
     
     public ConvexPolygon getBlocker(float x, float y) {
@@ -146,6 +164,7 @@ public class Frog implements Sprite {
 
 	public void setDirection(float x, float y) {
 
+		int oldDirection = this.getDirection();
 		if (Math.abs(x) > Math.abs(y)) {
 			if (x < 0) {
 				this.faceLeft();
@@ -161,16 +180,20 @@ public class Frog implements Sprite {
 				this.faceDown();
 			}
 		}
+		if (this.getDirection() != oldDirection) {
+			this.frameIndex = 0;
+		}
 		
 	}
 	
-	public void move(float x, float y) {
-    	this.x += x;
-    	this.y += y;
+	public void move(float dx, float dy) {
+    	this.x += dx;
+    	this.y += dy;
     }
     
     public void faceDown() {
     	this.sprite = SIT_FACE_DOWN;
+    	this.frames = downFrames;
     	this.direction = DOWN;
     }
     
@@ -188,6 +211,7 @@ public class Frog implements Sprite {
     
     public void faceUp() {
     	this.sprite = SIT_FACE_UP;
+    	this.frames = upFrames;
     	this.direction = UP;
     }
     

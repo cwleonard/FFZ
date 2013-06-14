@@ -3,8 +3,6 @@ package com.amphibian.ffz;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.util.Log;
-
 import com.amphibian.ffz.geometry.ConvexPolygon;
 
 public class Tongue implements Sprite {
@@ -21,10 +19,14 @@ public class Tongue implements Sprite {
 	private float x;
 	private float y;
 	
-	private static float pw;
-	private static float ew;
-	private static float ph;
-	private static float eh;
+	private static float lr_part_w;
+	private static float lr_part_h;
+	private static float ud_part_w;
+	private static float ud_part_h;
+	private static float lr_end_w;
+	private static float lr_end_h;
+	private static float ud_end_w;
+	private static float ud_end_h;
 	
 	private Frog frog;
 	
@@ -38,10 +40,14 @@ public class Tongue implements Sprite {
 		TONGUE_PART_LR = fdm.getFrameIndex("middle_tongue_lr");
 		TONGUE_PART_UD = fdm.getFrameIndex("middle_tongue_ud");
 		
-		pw = fdm.getFrame("middle_tongue_lr").getWidth();
-		ew = fdm.getFrame("end_tongue_right").getWidth();
-		ph = fdm.getFrame("middle_tongue_lr").getHeight();
-		eh = fdm.getFrame("end_tongue_right").getHeight();
+		lr_part_w = fdm.getFrame("middle_tongue_lr").getWidth();
+		lr_part_h = fdm.getFrame("middle_tongue_lr").getHeight();
+		ud_part_w = fdm.getFrame("middle_tongue_ud").getWidth();
+		ud_part_h = fdm.getFrame("middle_tongue_ud").getHeight();
+		lr_end_w = fdm.getFrame("end_tongue_right").getWidth();
+		lr_end_h = fdm.getFrame("end_tongue_right").getHeight();
+		ud_end_w = fdm.getFrame("end_tongue_up").getWidth();
+		ud_end_h = fdm.getFrame("end_tongue_up").getHeight();
 		
 		
 	}
@@ -91,21 +97,39 @@ public class Tongue implements Sprite {
 	@Override
 	public void draw(Drawinator d) {
 		
+		float pw = 0.0f, ph = 0.0f;
+		float ew = 0.0f, eh = 0.0f; 
 		float m = 1.0f;
 		float n = 1.0f;
 		if (frog.getDirection() == Frog.LEFT) {
 			d.setBufferPosition(TONGUE_PART_LR);
+			pw = lr_part_w;
+			ph = lr_part_h;
+			ew = lr_end_w;
+			eh = lr_end_h;
 			m = -1.0f;
 			n = 0.0f;
 		} else if (frog.getDirection() == Frog.RIGHT) {
 			d.setBufferPosition(TONGUE_PART_LR);
+			pw = lr_part_w;
+			ph = lr_part_h;
+			ew = lr_end_w;
+			eh = lr_end_h;
 			n = 0.0f;
 		} else if (frog.getDirection() == Frog.DOWN) {
 			d.setBufferPosition(TONGUE_PART_UD);
+			pw = ud_part_w;
+			ph = ud_part_h;
+			ew = ud_end_w;
+			eh = ud_end_h;
 			m = 0.0f;
 			n = -1.0f;
 		} else if (frog.getDirection() == Frog.UP) {
 			d.setBufferPosition(TONGUE_PART_UD);
+			pw = ud_part_w;
+			ph = ud_part_h;
+			ew = ud_end_w;
+			eh = ud_end_h;
 			m = 0.0f;
 		}
 		
@@ -157,6 +181,11 @@ public class Tongue implements Sprite {
 		
 		return  new ArrayList<ConvexPolygon>();
 
+	}
+
+	@Override
+	public void move(float dx, float dy) {
+		// TODO let these move someday
 	}
 
 }

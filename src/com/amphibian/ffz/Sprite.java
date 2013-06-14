@@ -16,6 +16,8 @@ public interface Sprite {
 	
 	public float getBottom();
 	
+	public void move(float dx, float dy);
+	
 	public float getShadowX();
 	public float getShadowY();
 	

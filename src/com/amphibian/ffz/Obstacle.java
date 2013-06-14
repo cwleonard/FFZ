@@ -98,4 +98,11 @@ public class Obstacle implements Sprite {
 
 	}
 
+	@Override
+	public void move(float dx, float dy) {
+		// TODO let these move someday
+	}
+	
+	
+
 }
