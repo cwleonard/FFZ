@@ -4,6 +4,7 @@ import io.socket.SocketIO;
 
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -156,9 +157,43 @@ public class Engine {
 
 		frog.ribbit(oButton);
 		
+		// move things that might move
+		frog.getMovement(delta, stickX, stickY);
+		
 		//float[] deltaMove = frog.getMovement(delta, stickX, stickY);
 
-		frog.getMovement(delta, stickX, stickY);
+		List<Sprite> sprites = drawinator.getStuff();
+		Iterator<Sprite> si = sprites.iterator();
+		while (si.hasNext()) {
+			
+			Sprite s = si.next();
+			if (s.checkMovement()) {
+				
+				List<ConvexPolygon> blist = s.getBlockers();
+				Iterator<ConvexPolygon> pi = blist.iterator();
+				while (pi.hasNext()) {
+					
+					ConvexPolygon poly = pi.next();
+					
+					//TODO: put the ground blockers in the same array as below...
+					float[] mtv = poly.intersectsWith(testBlock);
+					float[] correction = new float[] { mtv[0] * mtv[2], mtv[1] * mtv[2] };
+					
+					for (int i = 0; i < blockers.size(); i++) {
+						mtv = poly.intersectsWith(blockers.get(i));
+						correction[0] += mtv[0] * mtv[2];
+						correction[1] += mtv[1] * mtv[2];
+					}
+
+					s.move(correction[0], correction[1]);
+
+				}
+				
+			}
+			
+		}
+		
+		/*
 		
 		// set direction intent before possible collision
 		//frog.setDirection(deltaMove[0], deltaMove[1]);
@@ -186,6 +221,7 @@ public class Engine {
 		//frog.move(deltaMove[0], deltaMove[1]);
 		frog.move(correction[0], correction[1]);
 		
+		*/
 		
 		OuyaController c2 = OuyaController.getControllerByPlayer(1);
 		if (c2 != null) {
