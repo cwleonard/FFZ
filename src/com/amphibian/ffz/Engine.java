@@ -108,6 +108,12 @@ public class Engine {
 		blockers = drawinator.getBlockers();
 
 		drawinator.getStuff().add(frog);
+		
+		
+		InputSource is1 = new OuyaInputSource(OuyaController.getControllerByPlayer(0));
+		frog.setInputSource(is1);
+		
+		
 
 	}
 	
@@ -131,15 +137,16 @@ public class Engine {
 		
 		OuyaController c1 = OuyaController.getControllerByPlayer(0);
 		if (c1 != null) {
-			oButton = c1.getButton(OuyaController.BUTTON_O);
-			stickX = c1.getAxisValue(OuyaController.AXIS_LS_X);
-			stickY = -c1.getAxisValue(OuyaController.AXIS_LS_Y);
-			if (Math.abs(stickX) < 0.25f) {
-				stickX = 0;
-			}
-			if (Math.abs(stickY) < 0.25f) {
-				stickY = 0;
-			}
+			
+//			oButton = c1.getButton(OuyaController.BUTTON_O);
+//			stickX = c1.getAxisValue(OuyaController.AXIS_LS_X);
+//			stickY = -c1.getAxisValue(OuyaController.AXIS_LS_Y);
+//			if (Math.abs(stickX) < 0.25f) {
+//				stickX = 0;
+//			}
+//			if (Math.abs(stickY) < 0.25f) {
+//				stickY = 0;
+//			}
 			
 			float axisX2 = c1.getAxisValue(OuyaController.AXIS_RS_X);
 			float axisY2 = -c1.getAxisValue(OuyaController.AXIS_RS_Y);
@@ -155,10 +162,11 @@ public class Engine {
 			
 		}
 
-		frog.ribbit(oButton);
+		//frog.ribbit(oButton);
 		
 		// move things that might move
-		frog.getMovement(delta, stickX, stickY);
+		frog.update(delta);
+		//frog.getMovement(delta, stickX, stickY);
 		
 		//float[] deltaMove = frog.getMovement(delta, stickX, stickY);
 
@@ -243,18 +251,18 @@ public class Engine {
 
 		if (frog2 != null) {
 			
-			float[] deltaMove2 = frog2.getMovement(delta, stickX, stickY);
-
-			// set direction intent before possible collision
-			frog2.setDirection(deltaMove2[0], deltaMove2[1]);
-			
-			ConvexPolygon fPoly2 = frog2.getBlocker(frog2.x + deltaMove2[0], frog2.y + deltaMove2[1]);
-			float[] mtv2 = fPoly2.intersectsWith(testBlock);
-			// mtv will be all 0 if no collision, or if there is a collision it will contain
-			// the axis and overlap to move fPoly out of collision. MTV = Minimum Translation Vector
-			deltaMove2[0] += mtv2[0] * mtv2[2];			  
-			deltaMove2[1] += mtv2[1] * mtv2[2];
-			frog2.move(deltaMove2[0], deltaMove2[1]);
+//			float[] deltaMove2 = frog2.getMovement(delta, stickX, stickY);
+//
+//			// set direction intent before possible collision
+//			frog2.setDirection(deltaMove2[0], deltaMove2[1]);
+//			
+//			ConvexPolygon fPoly2 = frog2.getBlocker(frog2.x + deltaMove2[0], frog2.y + deltaMove2[1]);
+//			float[] mtv2 = fPoly2.intersectsWith(testBlock);
+//			// mtv will be all 0 if no collision, or if there is a collision it will contain
+//			// the axis and overlap to move fPoly out of collision. MTV = Minimum Translation Vector
+//			deltaMove2[0] += mtv2[0] * mtv2[2];			  
+//			deltaMove2[1] += mtv2[1] * mtv2[2];
+//			frog2.move(deltaMove2[0], deltaMove2[1]);
 			
 		}
 		

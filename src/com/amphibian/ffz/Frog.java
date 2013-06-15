@@ -25,6 +25,8 @@ public class Frog implements Sprite {
     
     private ConvexPolygon blockPoly;
     
+    private InputSource inputSource;
+    
 	private static int SIT_FACE_RIGHT;
 	private static int SIT_FACE_LEFT;
 	private static int SIT_FACE_DOWN;
@@ -106,7 +108,22 @@ public class Frog implements Sprite {
 		this.fp = fp;
 	}
 	
-	public float[] getMovement(long delta, float stickX, float stickY) {
+	public InputSource getInputSource() {
+		return inputSource;
+	}
+
+	public void setInputSource(InputSource inputSource) {
+		this.inputSource = inputSource;
+	}
+
+	public void update(long delta) {
+		
+		getMovement(delta, this.inputSource.getStickX(), this.inputSource.getStickY());
+		this.ribbit(this.inputSource.isButton3Pressed());
+		
+	}
+
+	private void getMovement(long delta, float stickX, float stickY) {
 		
 		float[] m = new float[2];
 		if (fp != null) { // this frog has a path set, follow it!
@@ -152,7 +169,7 @@ public class Frog implements Sprite {
 		this.setDirection(m[0], m[1]);
 		this.move(m[0], m[1]);
 		
-		return m;
+		//return m;
 		
 	}
 	
@@ -160,11 +177,6 @@ public class Frog implements Sprite {
 		this.ribbit = b;
 	}
 	
-	public void update(long delta) {
-		
-		//TODO: update something
-		
-	}
 
 	public void setDirection(float x, float y) {
 
