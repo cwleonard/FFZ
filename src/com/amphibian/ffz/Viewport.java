@@ -5,10 +5,14 @@ import android.opengl.Matrix;
 
 public class Viewport {
 
+	private final static float SPEED = 0.4f;
+	
 	private int height;
 	
 	private int width;
 	
+    private InputSource inputSource;
+
 	private float[] cameraCoords = new float[2];
 	
     private final float[] projMatrix = new float[16];
@@ -71,10 +75,31 @@ public class Viewport {
 		return cameraCoords;
 	}
 
+	public void update(long delta) {
+		
+		if (inputSource != null) {
+
+			float dx = delta * SPEED * this.inputSource.getStick2X();
+			float dy = delta * SPEED * this.inputSource.getStick2Y();
+
+			moveCamera(dx, dy);
+			
+		}
+		
+	}
+	
     public void moveCamera(float x, float y) {
     	cameraCoords[0] += x;
     	cameraCoords[1] += y;
     	Matrix.translateM(viewMatrix, 0, -x, y, 0);
     }
+
+	public InputSource getInputSource() {
+		return inputSource;
+	}
+
+	public void setInputSource(InputSource inputSource) {
+		this.inputSource = inputSource;
+	}
 	
 }

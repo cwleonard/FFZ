@@ -108,6 +108,12 @@ public class Obstacle implements Sprite {
 		// TODO return true if these move
 		return false;
 	}
+
+	@Override
+	public void update(long delta) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 

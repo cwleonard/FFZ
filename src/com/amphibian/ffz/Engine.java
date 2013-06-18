@@ -46,6 +46,8 @@ public class Engine {
 	private ConvexPolygon testBlock;
 	private List<ConvexPolygon> blockers;
 	
+	private InputSource input1;
+	private InputSource input2;
 	
 	private String fid = UUID.randomUUID().toString();
 	
@@ -61,6 +63,7 @@ public class Engine {
 		//square = new Square();
 		frog = new Frog();
 		ground = new Ground();
+
 
 		Ground.loadGLTexture(context);
 		Drawinator.loadGLTexture(context);
@@ -110,8 +113,6 @@ public class Engine {
 		drawinator.getStuff().add(frog);
 		
 		
-		InputSource is1 = new OuyaInputSource(OuyaController.getControllerByPlayer(0));
-		frog.setInputSource(is1);
 		
 		
 
@@ -120,6 +121,7 @@ public class Engine {
 	public void createViewport(int height, int width) {
 		
 		viewport = new Viewport(height, width);
+		viewport.setInputSource(new OuyaInputSource(OuyaController.getControllerByPlayer(0)));
 		
 	}
 	
@@ -127,51 +129,44 @@ public class Engine {
 		
 		// how long has it been?
 		long delta = SystemClock.uptimeMillis() - lastUpdate;
-		
-		
-		// player 1 (frog)
-		
-		float stickX = 0;
-		float stickY = 0;
-		boolean oButton = false;
-		
-		OuyaController c1 = OuyaController.getControllerByPlayer(0);
-		if (c1 != null) {
-			
-//			oButton = c1.getButton(OuyaController.BUTTON_O);
-//			stickX = c1.getAxisValue(OuyaController.AXIS_LS_X);
-//			stickY = -c1.getAxisValue(OuyaController.AXIS_LS_Y);
-//			if (Math.abs(stickX) < 0.25f) {
-//				stickX = 0;
-//			}
-//			if (Math.abs(stickY) < 0.25f) {
-//				stickY = 0;
-//			}
-			
-			float axisX2 = c1.getAxisValue(OuyaController.AXIS_RS_X);
-			float axisY2 = -c1.getAxisValue(OuyaController.AXIS_RS_Y);
-			float moveX2 = delta * 0.4f * axisX2;
-			float moveY2 = delta * 0.4f * axisY2;
-			if (Math.abs(axisX2) < 0.25f) {
-				moveX2 = 0;
-			}
-			if (Math.abs(axisY2) < 0.25f) {
-				moveY2 = 0;
-			}
-			viewport.moveCamera(moveX2, -moveY2);
-			
-		}
 
-		//frog.ribbit(oButton);
+		
+		if (input1 == null) {
+			OuyaController oc1 = OuyaController.getControllerByPlayer(0);
+			if (oc1 != null) {
+				input1 = new OuyaInputSource(oc1);
+				frog.setInputSource(input1);
+			}
+		}
+		if (input2 == null) {
+			OuyaController oc2 = OuyaController.getControllerByPlayer(1);
+			if (oc2 != null) {
+				if (frog2 == null) {
+					frog2 = new Frog();
+					input2 = new OuyaInputSource(oc2);
+					frog2.setInputSource(input2);
+					drawinator.getStuff().add(frog2);
+				}
+			}
+		}
+		
+		
+		
+		
+		List<Sprite> sprites = drawinator.getStuff();
 		
 		// move things that might move
-		frog.update(delta);
-		//frog.getMovement(delta, stickX, stickY);
-		
-		//float[] deltaMove = frog.getMovement(delta, stickX, stickY);
-
-		List<Sprite> sprites = drawinator.getStuff();
 		Iterator<Sprite> si = sprites.iterator();
+		while (si.hasNext()) {
+			Sprite s = si.next();
+			s.update(delta);
+		}
+		viewport.update(delta);
+		
+		
+		
+		// now check for collisions. we may have to back some things off
+		si = sprites.iterator();
 		while (si.hasNext()) {
 			
 			Sprite s = si.next();
@@ -201,72 +196,9 @@ public class Engine {
 			
 		}
 		
-		/*
 		
-		// set direction intent before possible collision
-		//frog.setDirection(deltaMove[0], deltaMove[1]);
-		
-		//ConvexPolygon fPoly = frog.getBlocker(frog.x + deltaMove[0], frog.y + deltaMove[1]);
-		ConvexPolygon fPoly = frog.getBlockers().get(0);
-
-		// mtv will be all 0 if no collision, or if there is a collision it will contain
-		// the axis and overlap to move fPoly out of collision. MTV = Minimum Translation Vector
-
-		//TODO: put the ground blockers in the same array as below...
-		float[] mtv = fPoly.intersectsWith(testBlock);
-		float[] correction = new float[] { mtv[0] * mtv[2], mtv[1] * mtv[2] };
-		//deltaMove[0] += mtv[0] * mtv[2];			  
-		//deltaMove[1] += mtv[1] * mtv[2];
-		
-		for (int i = 0; i < blockers.size(); i++) {
-			mtv = fPoly.intersectsWith(blockers.get(i));
-			//deltaMove[0] += mtv[0] * mtv[2];			  
-			//deltaMove[1] += mtv[1] * mtv[2];
-			correction[0] += mtv[0] * mtv[2];
-			correction[1] += mtv[1] * mtv[2];
-		}
-		
-		//frog.move(deltaMove[0], deltaMove[1]);
-		frog.move(correction[0], correction[1]);
-		
-		*/
-		
-		OuyaController c2 = OuyaController.getControllerByPlayer(1);
-		if (c2 != null) {
-			if (frog2 == null) {
-				frog2 = new Frog();
-				drawinator.getStuff().add(frog2);
-			}
-			boolean a = c2.getButton(OuyaController.BUTTON_A);
-			stickX = c2.getAxisValue(OuyaController.AXIS_LS_X);
-			stickY = -c2.getAxisValue(OuyaController.AXIS_LS_Y);
-			if (Math.abs(stickX) < 0.25f) {
-				stickX = 0;
-			}
-			if (Math.abs(stickY) < 0.25f) {
-				stickY = 0;
-			}
-		}
 		
 
-		if (frog2 != null) {
-			
-//			float[] deltaMove2 = frog2.getMovement(delta, stickX, stickY);
-//
-//			// set direction intent before possible collision
-//			frog2.setDirection(deltaMove2[0], deltaMove2[1]);
-//			
-//			ConvexPolygon fPoly2 = frog2.getBlocker(frog2.x + deltaMove2[0], frog2.y + deltaMove2[1]);
-//			float[] mtv2 = fPoly2.intersectsWith(testBlock);
-//			// mtv will be all 0 if no collision, or if there is a collision it will contain
-//			// the axis and overlap to move fPoly out of collision. MTV = Minimum Translation Vector
-//			deltaMove2[0] += mtv2[0] * mtv2[2];			  
-//			deltaMove2[1] += mtv2[1] * mtv2[2];
-//			frog2.move(deltaMove2[0], deltaMove2[1]);
-			
-		}
-		
-		
 
 		// center the frog, if possible
 		float cMoveX = 0f;

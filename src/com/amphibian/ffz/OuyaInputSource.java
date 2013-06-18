@@ -48,32 +48,70 @@ public class OuyaInputSource implements InputSource {
 	
 	@Override
 	public float getStickX() {
-		return filterStick(c.getAxisValue(OuyaController.AXIS_LS_X));
+		if (c != null) {
+			if (c.getButton(OuyaController.BUTTON_DPAD_LEFT)) {
+				return -1.0f;
+			} else if (c.getButton(OuyaController.BUTTON_DPAD_RIGHT)) {
+				return 1.0f;
+			} else {
+				return filterStick(c.getAxisValue(OuyaController.AXIS_LS_X));
+			}
+		} else {
+			return 0.0f;
+		}
 	}
 
 	@Override
 	public float getStickY() {
-		return filterStick(-c.getAxisValue(OuyaController.AXIS_LS_Y));
+		if (c != null) {
+			if (c.getButton(OuyaController.BUTTON_DPAD_DOWN)) {
+				return -1.0f;
+			} else if (c.getButton(OuyaController.BUTTON_DPAD_UP)) {
+				return 1.0f;
+			} else {
+				return filterStick(-c.getAxisValue(OuyaController.AXIS_LS_Y));
+			}
+		} else {
+			return 0.0f;
+		}
+	}
+
+	@Override
+	public float getStick2X() {
+		if (c != null) {
+			return filterStick(c.getAxisValue(OuyaController.AXIS_RS_X));
+		} else {
+			return 0.0f;
+		}
+	}
+
+	@Override
+	public float getStick2Y() {
+		if (c != null) {
+			return filterStick(-c.getAxisValue(OuyaController.AXIS_RS_Y));
+		} else {
+			return 0.0f;
+		}
 	}
 
 	@Override
 	public boolean isButton1Pressed() {
-		return c.getButton(OuyaController.BUTTON_Y);
+		return (c != null ? c.getButton(OuyaController.BUTTON_Y) : false);
 	}
 
 	@Override
 	public boolean isButton2Pressed() {
-		return c.getButton(OuyaController.BUTTON_A);
+		return (c != null ? c.getButton(OuyaController.BUTTON_A) : false);
 	}
 
 	@Override
 	public boolean isButton3Pressed() {
-		return c.getButton(OuyaController.BUTTON_O);
+		return (c != null ? c.getButton(OuyaController.BUTTON_O) : false);
 	}
 
 	@Override
 	public boolean isButton4Pressed() {
-		return c.getButton(OuyaController.BUTTON_U);
+		return (c != null ? c.getButton(OuyaController.BUTTON_U) : false);
 	}
 
 }

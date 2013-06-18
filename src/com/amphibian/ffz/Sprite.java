@@ -25,4 +25,6 @@ public interface Sprite {
 	
 	public List<ConvexPolygon> getBlockers();
 	
+	public void update(long delta);
+	
 }

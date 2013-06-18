@@ -194,4 +194,11 @@ public class Tongue implements Sprite {
 		return false;
 	}
 
+	@Override
+	public void update(long delta) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
 }

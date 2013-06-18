@@ -57,8 +57,6 @@ public class Drawinator {
     
     private short drawOrder[] = { 0, 1, 2, 1, 3, 2 }; // order to draw vertices
 
-    private short drawOrder2[] = { 3, 2, 1, 2, 1, 0 }; // horizontal flip order
-    
     private ShortBuffer drawListBuffer;
     private ShortBuffer drawListBuffer2;
 
@@ -89,12 +87,6 @@ public class Drawinator {
         drawListBuffer = dlb.asShortBuffer();
         drawListBuffer.put(drawOrder).position(0);
 
-        ByteBuffer dlb2 = ByteBuffer.allocateDirect(
-        // (# of coordinate values * 2 bytes per short)
-                drawOrder2.length * 2);
-        dlb2.order(ByteOrder.nativeOrder());
-        drawListBuffer2 = dlb2.asShortBuffer();
-        drawListBuffer2.put(drawOrder2).position(0);
 
     	
         // initialize vertex byte buffer for shape coordinates
@@ -144,41 +136,6 @@ public class Drawinator {
     		
     		Sprite s = i.next();
     		blockers.addAll(s.getBlockers());
-    		
-//    		if (s.getBufferIndex() == 4) {
-//        		float[] c = {s.getDrawX() - 5, s.getDrawY() - 124};
-//        		float[] p = {
-//        				-25,  21,
-//        				 25,  21,
-//        				 24, -18,
-//        				-25, -18 
-//        		};
-//        		blockers[b] = new ConvexPolygon(c, p);
-//
-//			} else if (s.getBufferIndex() == 5) {
-//				
-//				float[] c = { s.getDrawX(), s.getDrawY() - 15f };
-//				float[] p = {
-//						-48, 18.5f,
-//						48, 19.5f,
-//						43, -22.5f,
-//						-41, -21.5f 
-//				};
-//				blockers[b] = new ConvexPolygon(c, p);
-//
-//				// (-48, -18.5) , (48, -19.5) , (43, 22.5) , (-41, 21.5)
-//
-//			} else {
-//        		float[] c = {s.getDrawX(), s.getDrawY()};
-//        		float[] p = {
-//        				-50,  50,
-//        				 50,  50,
-//        				 50, -50,
-//        				-50, -50};
-//        		blockers[b] = new ConvexPolygon(c, p);
-//    			
-//    		}
-    		
     		
     	}
     	return blockers;

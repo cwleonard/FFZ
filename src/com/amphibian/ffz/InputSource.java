@@ -14,5 +14,8 @@ public interface InputSource {
 
 	public boolean isButton4Pressed();
 
+	public float getStick2X();
+	
+	public float getStick2Y();
 	
 }
