@@ -269,7 +269,11 @@ public class Frog implements Sprite {
 
 	@Override
 	public void draw(Drawinator d) {
-		
+
+		if (this.ribbit && this.direction == UP) {
+			t.draw(d);
+		}
+
 		d.setBufferPosition(this.getBufferIndex());
 		
 		d.setDrawPosition(this.getShadowX(), this.getShadowY());
@@ -280,7 +284,7 @@ public class Frog implements Sprite {
 		d.setDrawPosition(this.getDrawX(), this.getDrawY());
 		d.performDraw();
 		
-		if (this.ribbit) {
+		if (this.ribbit && this.direction != UP) {
 			t.draw(d);
 		}
 
