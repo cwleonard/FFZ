@@ -17,6 +17,8 @@ public class Viewport {
 	
     private final float[] projMatrix = new float[16];
     private final float[] viewMatrix = new float[16];
+    
+    private Sprite follow;
 
     public Viewport(int h, int w) {
     	
@@ -101,5 +103,37 @@ public class Viewport {
 	public void setInputSource(InputSource inputSource) {
 		this.inputSource = inputSource;
 	}
-	
+
+	public Sprite getFollow() {
+		return follow;
+	}
+
+	public void setFollow(Sprite follow) {
+		this.follow = follow;
+	}
+
+	/**
+	 * If a follow Sprite is set, center the camera on it
+	 */
+	public void center() {
+		
+		if (follow != null) {
+
+			float cMoveX = 0f;
+			float cMoveY = 0f;
+			if (-follow.getDrawY() > cameraCoords[1]) {
+				cMoveY = (-follow.getDrawY()) - cameraCoords[1];
+			} else if (cameraCoords[1] > (height/2)) {
+				cMoveY = -cameraCoords[1] - follow.getDrawY();
+			}
+			if (follow.getDrawX() > cameraCoords[0]) {
+				cMoveX = follow.getDrawX() - cameraCoords[0];
+			} else if (cameraCoords[0] > (width/2)) {
+				cMoveX = -(cameraCoords[0] - follow.getDrawX());
+			}
+			moveCamera(cMoveX, cMoveY);
+			
+		}
+		
+	}
 }

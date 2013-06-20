@@ -119,8 +119,10 @@ public class Frog implements Sprite {
 	public void update(long delta) {
 		
 		if (inputSource != null) {
-			getMovement(delta, this.inputSource.getStickX(), this.inputSource.getStickY());
 			this.ribbit(this.inputSource.isButton3Pressed());
+			if (!this.ribbit) {
+				getMovement(delta, this.inputSource.getStickX(), this.inputSource.getStickY());
+			}
 		}
 		
 	}

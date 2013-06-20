@@ -128,7 +128,6 @@ public class Engine {
 	public void createViewport(int height, int width) {
 		
 		viewport = new Viewport(height, width);
-		viewport.setInputSource(new OuyaInputSource(OuyaController.getControllerByPlayer(0)));
 		
 	}
 	
@@ -143,6 +142,8 @@ public class Engine {
 			if (oc1 != null) {
 				input1 = new OuyaInputSource(oc1);
 				frog.setInputSource(input1);
+				viewport.setInputSource(new OuyaInputSource(OuyaController.getControllerByPlayer(0)));
+				viewport.setFollow(frog);
 			}
 		}
 		if (input2 == null) {
@@ -201,23 +202,7 @@ public class Engine {
 		}
 		
 		
-		
-
-
-		// center the frog, if possible
-		float cMoveX = 0f;
-		float cMoveY = 0f;
-		if (-frog.y > viewport.getCameraCoords()[1]) {
-			cMoveY = (-frog.y) - viewport.getCameraCoords()[1];
-		} else if (viewport.getCameraCoords()[1] > (viewport.getHeight()/2)) {
-			cMoveY = -viewport.getCameraCoords()[1] - frog.y;
-		}
-		if (frog.x > viewport.getCameraCoords()[0]) {
-			cMoveX = frog.x - viewport.getCameraCoords()[0];
-		} else if (viewport.getCameraCoords()[0] > (viewport.getWidth()/2)) {
-			cMoveX = -(viewport.getCameraCoords()[0] - frog.x);
-		}
-		viewport.moveCamera(cMoveX, cMoveY);
+		viewport.center();
 		
 
 		/*
