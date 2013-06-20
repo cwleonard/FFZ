@@ -4,6 +4,9 @@ import io.socket.SocketIO;
 
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -45,13 +48,17 @@ public class Engine {
 	
 	private ConvexPolygon testBlock;
 	private List<ConvexPolygon> blockers;
+	private List<Sprite> sprites;
 	
 	private InputSource input1;
 	private InputSource input2;
 	
 	private String fid = UUID.randomUUID().toString();
 	
+
 	public Engine(Context context) {
+		
+		sprites = new ArrayList<Sprite>();
 		
 		Gson gson = new GsonBuilder()
 			.registerTypeAdapter(Obstacle.class, new ObstacleDeserializer())
@@ -102,15 +109,15 @@ public class Engine {
 			
 			Type collectionType = new TypeToken<List<Obstacle>>(){}.getType();
 			List<Obstacle> obs = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.obstacles)), collectionType);
-			drawinator.setStuff(obs);
+			sprites.addAll(obs);
 			
 		} catch (Exception e) {
 			Log.e("ff", "json error", e);
 		}
 		
-		blockers = drawinator.getBlockers();
+		blockers = getBlockers();
 
-		drawinator.getStuff().add(frog);
+		sprites.add(frog);
 		
 		
 		
@@ -145,15 +152,12 @@ public class Engine {
 					frog2 = new Frog();
 					input2 = new OuyaInputSource(oc2);
 					frog2.setInputSource(input2);
-					drawinator.getStuff().add(frog2);
+					sprites.add(frog2);
 				}
 			}
 		}
 		
 		
-		
-		
-		List<Sprite> sprites = drawinator.getStuff();
 		
 		// move things that might move
 		Iterator<Sprite> si = sprites.iterator();
@@ -232,6 +236,23 @@ public class Engine {
 		socket.emit("frogmove", o);
 		*/
 		
+		// order the sprites so they draw correctly
+        Collections.sort(sprites, new Comparator<Sprite>() {
+			@Override
+			public int compare(Sprite lhs, Sprite rhs) {
+				float lhsBottom = lhs.getBottom();
+				float rhsBottom = rhs.getBottom();
+				if (rhsBottom - lhsBottom < 0f) {
+					return -1;
+				} else if (rhsBottom - lhsBottom > 0f) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+        });
+
+		
 
 		// we're done. update the time.
 		lastUpdate = SystemClock.uptimeMillis();
@@ -258,7 +279,7 @@ public class Engine {
 		//square.draw(prog, viewport);
 
 		//obstacles.draw(prog, viewport);
-		drawinator.draw(prog, viewport);
+		drawinator.draw(sprites, prog, viewport);
 		
 		frameCounter++;
 		
@@ -273,7 +294,21 @@ public class Engine {
 		return frog;
 	}
 
-	
+    public List<ConvexPolygon> getBlockers() {
+    	
+    	//ConvexPolygon[] blockers = new ConvexPolygon[stuff.size()];
+    	List<ConvexPolygon> blockers = new ArrayList<ConvexPolygon>();
+    	Iterator<? extends Sprite> i = sprites.iterator();
+    	while (i.hasNext()) {
+    		
+    		Sprite s = i.next();
+    		blockers.addAll(s.getBlockers());
+    		
+    	}
+    	return blockers;
+    	
+    }
+
 	
 	
 }

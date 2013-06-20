@@ -32,7 +32,6 @@ public class Drawinator {
 
 	private final static int COMBINED_DATA_SIZE = POSITION_DATA_SIZE + TEXTURE_COORDINATE_DATA_SIZE;
 	
-	private List<? extends Sprite> stuff;
 	
 	private static TextureManager tm;
 	
@@ -58,7 +57,6 @@ public class Drawinator {
     private short drawOrder[] = { 0, 1, 2, 1, 3, 2 }; // order to draw vertices
 
     private ShortBuffer drawListBuffer;
-    private ShortBuffer drawListBuffer2;
 
 	
 	/** This will be used to pass in the texture. */
@@ -118,31 +116,10 @@ public class Drawinator {
         
     }
     
-	public void setStuff(List<? extends Sprite> stuff) {
-		this.stuff = stuff;
-	}
 	
-    @SuppressWarnings("unchecked")
-	public List<Sprite> getStuff() {
-		return (List<Sprite>) stuff;
-	}
     
-    public List<ConvexPolygon> getBlockers() {
-    	
-    	//ConvexPolygon[] blockers = new ConvexPolygon[stuff.size()];
-    	List<ConvexPolygon> blockers = new ArrayList<ConvexPolygon>();
-    	Iterator<? extends Sprite> i = stuff.iterator();
-    	while (i.hasNext()) {
-    		
-    		Sprite s = i.next();
-    		blockers.addAll(s.getBlockers());
-    		
-    	}
-    	return blockers;
-    	
-    }
 
-	public void draw(StandardProgram prog, Viewport vp) {
+	public void draw(List<Sprite> sprites, StandardProgram prog, Viewport vp) {
     	
 		viewport = vp;
 		
@@ -182,28 +159,8 @@ public class Drawinator {
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[0]);
 
         
-        Collections.sort(stuff, new Comparator<Sprite>() {
-
-			@Override
-			public int compare(Sprite lhs, Sprite rhs) {
-//				float lhsBottom = lhs.getDrawY() + combinedData[(lhs.getBufferIndex()*skip)+6];
-//				float rhsBottom = rhs.getDrawY() + combinedData[(rhs.getBufferIndex()*skip)+6];
-				float lhsBottom = lhs.getBottom();
-				float rhsBottom = rhs.getBottom();
-				if (rhsBottom - lhsBottom < 0f) {
-					return -1;
-				} else if (rhsBottom - lhsBottom > 0f) {
-					return 1;
-				} else {
-					return 0;
-				}
-			}
-        	
-        });
-        for (Sprite sprite : stuff) {
-
+        for (Sprite sprite : sprites) {
             sprite.draw(this);
-        	
         }
         
     	// IMPORTANT: Unbind from the buffer when we're done with it.
