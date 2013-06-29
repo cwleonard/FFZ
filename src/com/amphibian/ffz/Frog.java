@@ -254,7 +254,6 @@ public class Frog implements Sprite {
     	return this.direction;
     }
 
-	@Override
 	public int getBufferIndex() {
 		if (!moving && t == null) {
 			return sprite;

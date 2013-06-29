@@ -6,8 +6,6 @@ import com.amphibian.ffz.geometry.ConvexPolygon;
 
 public interface Sprite {
 
-	public int getBufferIndex();
-	
 	public float getDrawX();
 	
 	public float getDrawY();

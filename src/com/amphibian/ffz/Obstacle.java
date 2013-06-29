@@ -60,10 +60,6 @@ public class Obstacle implements Sprite {
 		this.y = y;
 	}
 	@Override
-	public int getBufferIndex() {
-		return id;
-	}
-	@Override
 	public float getDrawX() {
 		return x;
 	}
@@ -74,7 +70,7 @@ public class Obstacle implements Sprite {
 	@Override
 	public void draw(Drawinator d) {
 		
-		d.setBufferPosition(this.getBufferIndex());
+		d.setBufferPosition(this.id);
 		
 		d.setDrawPosition(this.getShadowX(), this.getShadowY());
 		d.setMode(Drawinator.SHADOW_MODE);

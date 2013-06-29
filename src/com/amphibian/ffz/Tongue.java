@@ -74,10 +74,6 @@ public class Tongue implements Sprite {
 	public void setY(float y) {
 		this.y = y;
 	}
-	@Override
-	public int getBufferIndex() {
-		return END_TONGUE_RIGHT;
-	}
 	
 	@Override
 	public float getDrawX() {
