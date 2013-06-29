@@ -5,9 +5,7 @@ import io.socket.SocketIO;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -78,8 +76,8 @@ public class Engine {
 			.registerTypeAdapter(Obstacle.class, new ObstacleDeserializer())
 			.create();
 
-		lastUpdate = SystemClock.uptimeMillis();
-		cycle = SystemClock.uptimeMillis();
+		lastUpdate = SystemClock.elapsedRealtime();
+		cycle = SystemClock.elapsedRealtime();
 		//triangle = new Triangle();
 		//square = new Square();
 		frog = new Frog();
@@ -115,6 +113,7 @@ public class Engine {
 		
 		frog.faceRight();
 		frog.setEngine(this);
+		frog.setInputSource(new TouchInputSource(frog));
 		
 		try {
 			
@@ -165,6 +164,9 @@ public class Engine {
 	public void createViewport(int height, int width) {
 		
 		viewport = new Viewport(height, width);
+		if (frog != null) {
+			viewport.setFollow(frog);
+		}
 		
 	}
 	
@@ -173,8 +175,9 @@ public class Engine {
 		this.updateSprites();
 		
 		// how long has it been?
-		long delta = SystemClock.elapsedRealtime() - lastUpdate;
-
+		long now = SystemClock.elapsedRealtime();
+		long delta = now - lastUpdate;
+		lastUpdate = now;
 		
 		if (input1 == null) {
 			OuyaController oc1 = OuyaController.getControllerByPlayer(0);
@@ -260,10 +263,6 @@ public class Engine {
 		Collections.sort(sprites, spriteSorter);
 		//Arrays.sort(sprites, spriteSorter);
 		
-		
-
-		// we're done. update the time.
-		lastUpdate = SystemClock.elapsedRealtime();
 		
 	}
 	

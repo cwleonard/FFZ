@@ -3,6 +3,8 @@ package com.amphibian.ffz;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
+
 import com.amphibian.ffz.geometry.ConvexPolygon;
 
 public class Frog implements Sprite {
@@ -288,12 +290,12 @@ public class Frog implements Sprite {
 
 		d.setBufferPosition(this.getBufferIndex());
 		
-		d.setDrawPosition(this.getShadowX(), this.getShadowY());
+		d.setDrawPosition(this.getShadowX(), this.getShadowY(), -0.99f);
 		d.setMode(Drawinator.SHADOW_MODE);
 		d.performDraw();
 		
 		d.setMode(Drawinator.NORMAL_MODE);
-		d.setDrawPosition(this.getDrawX(), this.getDrawY());
+		d.setDrawPosition(this.getDrawX(), this.getDrawY(), -0.9f);
 		d.performDraw();
 		
 

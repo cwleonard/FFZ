@@ -39,7 +39,7 @@ public class FFZRenderer implements Renderer {
 		}
 		
 		
-		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
 
 	    // Calculate the projection and view transformation
@@ -91,6 +91,11 @@ public class FFZRenderer implements Renderer {
 	public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 		
 		GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+		
+		
+		GLES20.glEnable( GLES20.GL_DEPTH_TEST );
+		GLES20.glDepthFunc( GLES20.GL_LEQUAL );
+		GLES20.glDepthMask( true );
 		
 //		if (engine == null) {
 			engine = new Engine(context);

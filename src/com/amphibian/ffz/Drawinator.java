@@ -47,7 +47,7 @@ public class Drawinator {
     	1f,    0f, 0f, 0f,
       0.5f,    1f, 0f, 0f,
     	0f,    0f, 1f, 0f,
-    	0f,    0f, 1f, 1f
+    	0f,    0f, 0f, 1f
     };
     
     private short drawOrder[] = { 0, 1, 2, 1, 3, 2 }; // order to draw vertices
@@ -179,8 +179,6 @@ public class Drawinator {
 	
 	public void setBufferPosition(int p) {
 		
-		//Log.i("ffz", "setting buffer position " + p);
-		
     	// vertex coordinates
     	int pos = (p * skip) * BYTES_PER_FLOAT;
 		GLES20.glVertexAttribPointer(mPositionHandle, POSITION_DATA_SIZE,
@@ -220,7 +218,12 @@ public class Drawinator {
         Matrix.setIdentityM(mMMatrix, 0);
     	Matrix.translateM(mMMatrix, 0, x, y, 0);
 	}
-	
+
+	public void setDrawPosition(float x, float y, float z) {
+        Matrix.setIdentityM(mMMatrix, 0);
+    	Matrix.translateM(mMMatrix, 0, x, y, z);
+	}
+
 	public void setScale(float sx, float sy) {
 		Matrix.scaleM(mMMatrix, 0, sx, sy, 1);
 	}
