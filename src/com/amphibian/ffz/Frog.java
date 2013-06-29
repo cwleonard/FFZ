@@ -23,7 +23,10 @@ public class Frog implements Sprite {
     
     private int direction;
     
-    private ConvexPolygon blockPoly;
+    private Engine engine;
+    
+    private ConvexPolygon mainBlocker;
+    private List<ConvexPolygon> blockPolys;
     
     private InputSource inputSource;
     
@@ -50,7 +53,6 @@ public class Frog implements Sprite {
 	
 	private long elapsed;
 	private boolean moving = false;
-	private boolean ribbit = false;
 	private int frameIndex = 0;
 
 	private Tongue t;
@@ -84,7 +86,7 @@ public class Frog implements Sprite {
     public Frog() {
     	
     	this.faceRight();
-    	t = new Tongue(this);
+    	//t = new Tongue(this);
     	this.initBlocker();
         
     }
@@ -92,18 +94,20 @@ public class Frog implements Sprite {
     private void initBlocker() {
 
     	float[] p = { -50, 25, 50, 25, 50, -25, -50, -25 };
-    	blockPoly = new ConvexPolygon(p, x, y - 12.5f);
+    	blockPolys = new ArrayList<ConvexPolygon>();
+    	mainBlocker = new ConvexPolygon(p, x, y - 12.5f);
+    	blockPolys.add(mainBlocker);
 
     }
     
-    public ConvexPolygon getBlocker(float x, float y) {
-    	
-    	//float[] p = { -50, 25, 50, 25, 50, -25, -50, -25 };
-    	//return new ConvexPolygon(p, x, y - 12.5f);
-    	return blockPoly;
-    	
-    }
-    
+	public Engine getEngine() {
+		return engine;
+	}
+
+	public void setEngine(Engine engine) {
+		this.engine = engine;
+	}
+
 	public void setFrogPath(FrogPath fp) {
 		this.fp = fp;
 	}
@@ -120,7 +124,7 @@ public class Frog implements Sprite {
 		
 		if (inputSource != null) {
 			this.ribbit(this.inputSource.isButton3Pressed());
-			if (!this.ribbit) {
+			if (t == null) {
 				getMovement(delta, this.inputSource.getStickX(), this.inputSource.getStickY());
 			}
 		}
@@ -178,7 +182,17 @@ public class Frog implements Sprite {
 	}
 	
 	public void ribbit(boolean b) {
-		this.ribbit = b;
+		if (t == null && b) {
+			t = new Tongue(this);
+			if (engine != null) {
+				engine.addSprite(t);
+			}
+		} else if (t != null && !b) {
+			if (engine != null) {
+				engine.removeSprite(t);
+			}
+			t = null;
+		}
 	}
 	
 
@@ -209,7 +223,7 @@ public class Frog implements Sprite {
 	public void move(float dx, float dy) {
     	this.x += dx;
     	this.y += dy;
-    	this.blockPoly.move(dx, dy);
+    	this.mainBlocker.move(dx, dy);
     }
     
     public void faceDown() {
@@ -242,9 +256,9 @@ public class Frog implements Sprite {
 
 	@Override
 	public int getBufferIndex() {
-		if (!moving && !ribbit) {
+		if (!moving && t == null) {
 			return sprite;
-		} else if (ribbit) {
+		} else if (t != null) {
 			if (this.sprite == SIT_FACE_RIGHT) {
 				return OPEN_MOUTH_RIGHT;
 			} else if (this.sprite == SIT_FACE_LEFT) {
@@ -272,9 +286,6 @@ public class Frog implements Sprite {
 	@Override
 	public void draw(Drawinator d) {
 
-		if (this.ribbit && this.direction == UP) {
-			t.draw(d);
-		}
 
 		d.setBufferPosition(this.getBufferIndex());
 		
@@ -286,9 +297,6 @@ public class Frog implements Sprite {
 		d.setDrawPosition(this.getDrawX(), this.getDrawY());
 		d.performDraw();
 		
-		if (this.ribbit && this.direction != UP) {
-			t.draw(d);
-		}
 
 	}
 	
@@ -306,9 +314,7 @@ public class Frog implements Sprite {
 	
 	public List<ConvexPolygon> getBlockers() {
 		
-    	List<ConvexPolygon> b = new ArrayList<ConvexPolygon>();
-    	b.add(blockPoly);
-    	return b;
+    	return blockPolys;
 
 	}
 

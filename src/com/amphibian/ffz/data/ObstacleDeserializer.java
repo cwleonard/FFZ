@@ -21,9 +21,7 @@ public class ObstacleDeserializer implements JsonDeserializer<Obstacle> {
 		float x = o.get("x").getAsFloat();
 		float y = o.get("y").getAsFloat();
 		
-		Obstacle obstacle = new Obstacle(otype);
-		obstacle.setX(x);
-		obstacle.setY(y);
+		Obstacle obstacle = new Obstacle(otype, x, y);
 		
 		return obstacle;
 		

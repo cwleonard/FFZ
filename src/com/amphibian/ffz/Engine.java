@@ -5,6 +5,7 @@ import io.socket.SocketIO;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -44,21 +45,34 @@ public class Engine {
 	
 	private StandardProgram prog;
 	
+	private SpriteSorter spriteSorter;
+	
 	private SocketIO socket;
 	
 	private ConvexPolygon testBlock;
 	private List<ConvexPolygon> blockers;
+	
 	private List<Sprite> sprites;
+	
+	private List<Sprite> newSprites;
+	private List<Sprite> remSprites;
 	
 	private InputSource input1;
 	private InputSource input2;
 	
 	private String fid = UUID.randomUUID().toString();
 	
+	
+	float[] correction = new float[2];
+
 
 	public Engine(Context context) {
 		
-		sprites = new ArrayList<Sprite>();
+		spriteSorter = new SpriteSorter();
+		
+		sprites = new ArrayList<Sprite>(100);
+		newSprites = new ArrayList<Sprite>(50);
+		remSprites = new ArrayList<Sprite>(50);
 		
 		Gson gson = new GsonBuilder()
 			.registerTypeAdapter(Obstacle.class, new ObstacleDeserializer())
@@ -69,7 +83,6 @@ public class Engine {
 		//triangle = new Triangle();
 		//square = new Square();
 		frog = new Frog();
-		ground = new Ground();
 
 
 		Ground.loadGLTexture(context);
@@ -101,28 +114,52 @@ public class Engine {
 		drawinator = fdman.init(context);
 		
 		frog.faceRight();
+		frog.setEngine(this);
 		
 		try {
 			
 			Tile[][] tiles = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.area)), Tile[][].class);
-			ground.setTiles(tiles);
+			//ground = new Ground(tiles);
+			ground = new Ground(tiles);
+			//ground.setTiles(tiles);
 			
 			Type collectionType = new TypeToken<List<Obstacle>>(){}.getType();
 			List<Obstacle> obs = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.obstacles)), collectionType);
+			
 			sprites.addAll(obs);
 			
 		} catch (Exception e) {
 			Log.e("ff", "json error", e);
 		}
-		
+
 		blockers = getBlockers();
 
-		sprites.add(frog);
+
+		addSprite(frog);
 		
 		
 		
 		
 
+	}
+	
+	public void addSprite(Sprite s) {
+		this.newSprites.add(s);
+	}
+	
+	public void removeSprite(Sprite s) {
+		this.remSprites.add(s);
+	}
+	
+	private void updateSprites() {
+		if (newSprites.size() > 0) {
+			this.sprites.addAll(newSprites);
+			this.newSprites.clear();
+		}
+		if (remSprites.size() > 0) {
+			this.sprites.removeAll(remSprites);
+			this.remSprites.clear();
+		}
 	}
 	
 	public void createViewport(int height, int width) {
@@ -133,8 +170,10 @@ public class Engine {
 	
 	public void update() {
 		
+		this.updateSprites();
+		
 		// how long has it been?
-		long delta = SystemClock.uptimeMillis() - lastUpdate;
+		long delta = SystemClock.elapsedRealtime() - lastUpdate;
 
 		
 		if (input1 == null) {
@@ -153,17 +192,14 @@ public class Engine {
 					frog2 = new Frog();
 					input2 = new OuyaInputSource(oc2);
 					frog2.setInputSource(input2);
-					sprites.add(frog2);
+					addSprite(frog2);
 				}
 			}
 		}
 		
 		
-		
 		// move things that might move
-		Iterator<Sprite> si = sprites.iterator();
-		while (si.hasNext()) {
-			Sprite s = si.next();
+		for (Sprite s : sprites) {
 			s.update(delta);
 		}
 		viewport.update(delta);
@@ -171,10 +207,8 @@ public class Engine {
 		
 		
 		// now check for collisions. we may have to back some things off
-		si = sprites.iterator();
-		while (si.hasNext()) {
+		for (Sprite s: sprites) {
 			
-			Sprite s = si.next();
 			if (s.checkMovement()) {
 				
 				List<ConvexPolygon> blist = s.getBlockers();
@@ -185,10 +219,11 @@ public class Engine {
 					
 					//TODO: put the ground blockers in the same array as below...
 					float[] mtv = poly.intersectsWith(testBlock);
-					float[] correction = new float[] { mtv[0] * mtv[2], mtv[1] * mtv[2] };
+					correction[0] = mtv[0] * mtv[2];
+					correction[1] = mtv[1] * mtv[2];//= new float[] { mtv[0] * mtv[2], mtv[1] * mtv[2] };
 					
-					for (int i = 0; i < blockers.size(); i++) {
-						mtv = poly.intersectsWith(blockers.get(i));
+					for (int j = 0; j < blockers.size(); j++) {
+						mtv = poly.intersectsWith(blockers.get(j));
 						correction[0] += mtv[0] * mtv[2];
 						correction[1] += mtv[1] * mtv[2];
 					}
@@ -222,37 +257,28 @@ public class Engine {
 		*/
 		
 		// order the sprites so they draw correctly
-        Collections.sort(sprites, new Comparator<Sprite>() {
-			@Override
-			public int compare(Sprite lhs, Sprite rhs) {
-				float lhsBottom = lhs.getBottom();
-				float rhsBottom = rhs.getBottom();
-				if (rhsBottom - lhsBottom < 0f) {
-					return -1;
-				} else if (rhsBottom - lhsBottom > 0f) {
-					return 1;
-				} else {
-					return 0;
-				}
-			}
-        });
-
+		Collections.sort(sprites, spriteSorter);
+		//Arrays.sort(sprites, spriteSorter);
+		
 		
 
 		// we're done. update the time.
-		lastUpdate = SystemClock.uptimeMillis();
+		lastUpdate = SystemClock.elapsedRealtime();
 		
 	}
 	
 	public void draw() {
 
-		long delta = SystemClock.uptimeMillis() - cycle;
+		long now = SystemClock.elapsedRealtime();
+		long delta = now - cycle;
+		cycle = now;
 		secondCounter += delta;
 		if (secondCounter > 5000) {
 			float se = ((float)secondCounter/1000f);
-//			Log.i("ffz", "frames = " + frameCounter);
-//			Log.i("ffz", "seconds elapsed = " + se);
-			Log.i("ffz", frameCounter / se + " FPS");
+			//Log.d("ffz", "frames = " + frameCounter);
+			//Log.d("ffz", "seconds elapsed = " + se);
+			Log.d("ffz", frameCounter / se + " FPS");
+			Log.d("ffz", "there are " + this.sprites.size() + " sprites");
 			secondCounter = 0;
 			frameCounter = 0;
 		}
@@ -270,9 +296,6 @@ public class Engine {
 		
 		//triangle.draw(viewport.getProjMatrix(), viewport.getViewMatrix());
 		
-		cycle = SystemClock.uptimeMillis();
-		
-		
 	}
 
 	public Frog getFrog() {
@@ -283,12 +306,8 @@ public class Engine {
     	
     	//ConvexPolygon[] blockers = new ConvexPolygon[stuff.size()];
     	List<ConvexPolygon> blockers = new ArrayList<ConvexPolygon>();
-    	Iterator<? extends Sprite> i = sprites.iterator();
-    	while (i.hasNext()) {
-    		
-    		Sprite s = i.next();
+    	for (Sprite s : sprites) {
     		blockers.addAll(s.getBlockers());
-    		
     	}
     	return blockers;
     	

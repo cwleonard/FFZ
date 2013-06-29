@@ -18,15 +18,22 @@ public class Obstacle implements Sprite {
 	private float hh;
 	private float hw;
 	
-	public Obstacle(String t) {
+	private List<ConvexPolygon> blockers;
+	
+	public Obstacle(String t, float x, float y) {
 		
-		Frame f = FrameDataManager.getInstance().getFrame(t);
+		FrameDataManager fdm = FrameDataManager.getInstance();
+		Frame f = fdm.getFrame(t);
 		this.type = t;
 		this.id = f.getIndex();
 		this.w = f.getWidth();
 		this.h = f.getHeight();
 		this.hh = h / 2.0f;
 		this.hw = w / 2.0f;
+		this.x = x;
+		this.y = y;
+		
+		blockers = fdm.getPolygons(x, y, type);
 		
 	}
 
@@ -93,8 +100,7 @@ public class Obstacle implements Sprite {
 	
 	public List<ConvexPolygon> getBlockers() {
 		
-		FrameDataManager fdm = FrameDataManager.getInstance();
-		return fdm.getPolygons(x, y, type);
+		return blockers;
 
 	}
 

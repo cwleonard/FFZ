@@ -6,23 +6,38 @@ import javax.microedition.khronos.opengles.GL10;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
+import android.os.SystemClock;
+import android.util.Log;
 
 public class FFZRenderer implements Renderer {
 
 	private Context context;
+	
+	private int frames  = 0;
+	private long lastTime;
 	
 	private Engine engine;
 
     public FFZRenderer(Context c) {
     	this.context = c;
     	
-    	
+    	lastTime = SystemClock.elapsedRealtime();
 
     	
     }
     
 	@Override
 	public void onDrawFrame(GL10 unused) {
+		
+		long now = SystemClock.elapsedRealtime();
+		long frameTime = now - lastTime;
+		lastTime = now;
+
+		if (frames == 1000) {
+			Log.d("ffz", "frame time = " + frameTime);
+			frames = 0;
+		}
+		
 		
 		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
@@ -39,6 +54,11 @@ public class FFZRenderer implements Renderer {
 		//square.draw(projMatrix, viewMatrix);
 		
 		engine.draw();
+		
+		
+		
+		
+		frames++;
 
 	}
 

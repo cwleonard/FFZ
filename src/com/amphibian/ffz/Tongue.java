@@ -7,7 +7,8 @@ import com.amphibian.ffz.geometry.ConvexPolygon;
 
 public class Tongue implements Sprite {
 
-	private static float OFFSET = 23.0f;
+	private static float OFFSET_X = 23.0f;
+	private static float OFFSET_Y = 5.0f;
 	
 	private static int END_TONGUE_RIGHT;
 	private static int END_TONGUE_LEFT;
@@ -18,6 +19,8 @@ public class Tongue implements Sprite {
 
 	private float x;
 	private float y;
+	
+	private List<ConvexPolygon> blockers;
 	
 	private static float lr_part_w;
 	private static float lr_part_h;
@@ -55,6 +58,7 @@ public class Tongue implements Sprite {
 	public Tongue(Frog f) {
 		
 		frog = f;
+		blockers = new ArrayList<ConvexPolygon>();
 
 	}
 
@@ -80,9 +84,9 @@ public class Tongue implements Sprite {
 		
 		float fx = frog.getDrawX();
 		if (frog.getDirection() == Frog.LEFT) {
-			return fx - OFFSET;
+			return fx - OFFSET_X;
 		} else if (frog.getDirection() == Frog.RIGHT) {
-			return fx + OFFSET;
+			return fx + OFFSET_X;
 		} else {
 			return fx;
 		}
@@ -91,7 +95,12 @@ public class Tongue implements Sprite {
 	
 	@Override
 	public float getDrawY() {
-		return frog.getDrawY();
+		float fy = frog.getDrawY();
+		if (frog.getDirection() == Frog.LEFT || frog.getDirection() == Frog.RIGHT) {
+			return fy + OFFSET_Y;
+		} else {
+			return fy;
+		}
 	}
 	
 	@Override
@@ -166,7 +175,11 @@ public class Tongue implements Sprite {
 	}
 	
 	public float getBottom() {
-		return this.y;
+		if (frog.getDirection() == Frog.UP) {
+			return frog.getBottom() + 0.01f;
+		} else {
+			return frog.getBottom();
+		}
 	}
 	
 	public float getShadowY() {
@@ -179,7 +192,7 @@ public class Tongue implements Sprite {
 	
 	public List<ConvexPolygon> getBlockers() {
 		
-		return  new ArrayList<ConvexPolygon>();
+		return blockers;
 
 	}
 

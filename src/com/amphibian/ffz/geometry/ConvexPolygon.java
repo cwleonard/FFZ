@@ -15,6 +15,11 @@ public class ConvexPolygon {
 	
 	private float[] center = new float[2];
 	
+	float[] axis = new float[2];
+	float tmp, minA, maxA, minB, maxB;
+	float[] smallest = new float[3];
+	float overlap = 99999999f;
+
 	public ConvexPolygon() {
 		// nothing
 	}
@@ -116,10 +121,17 @@ public class ConvexPolygon {
 	 */
 	public float[] intersectsWith(ConvexPolygon other) {
 		
-		float[] axis = new float[2];
-    	float tmp, minA, maxA, minB, maxB;
-    	float[] smallest = new float[3];
-    	float overlap = 99999999f;
+		axis[0] = 0f;
+		axis[1] = 0f;
+    	tmp = 0f;
+    	minA = 0f;
+    	maxA = 0f;
+    	minB = 0f;
+    	maxB = 0f;
+    	smallest[0] = 0f;
+    	smallest[1] = 0f;
+    	smallest[2] = 0f;
+    	overlap = 99999999f;
 
     	/* test polygon A's sides */
     	for (int side = 0; side < this.getNumberOfSides(); side++)
@@ -177,7 +189,10 @@ public class ConvexPolygon {
 
     		// test if lines intersect, if not, return false
     		if (maxA < minB || minA > maxB) {
-    			return new float[3];
+    			smallest[0] = 0f;
+    			smallest[1] = 0f;
+    			smallest[2] = 0f;
+    			return smallest;
     		} else {
     			//float o = (maxA > minB ? maxA - minB : maxB - minA);
     			float o = (maxA > maxB ? maxB - minA : maxA - minB);
@@ -251,7 +266,10 @@ public class ConvexPolygon {
 
     		/* test if lines intersect, if not, return false */
     		if (maxA < minB || minA > maxB) {
-    			return new float[3];
+    			smallest[0] = 0f;
+    			smallest[1] = 0f;
+    			smallest[2] = 0f;
+    			return smallest;
     		} else {
     			//float o = (maxA > minB ? maxA - minB : maxB - minA);
     			float o = (maxA > maxB ? maxB - minA : maxA - minB);

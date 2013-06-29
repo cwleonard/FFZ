@@ -4,18 +4,12 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
-
-import com.amphibian.ffz.geometry.ConvexPolygon;
 
 public class Drawinator {
 
@@ -25,10 +19,12 @@ public class Drawinator {
 	final static float SHADOW_SCALE = 0.7f;
 	
 	private final static int BYTES_PER_FLOAT = 4;
+	private final static int BYTES_PER_SHORT = 2;
 	private final static int VERTICES_PER_OBJECT = 4;
 	
 	private final static int POSITION_DATA_SIZE = 3;
 	private final static int TEXTURE_COORDINATE_DATA_SIZE = 2;
+	private final static int DRAW_ORDER_DATA_SIZE = 6;
 
 	private final static int COMBINED_DATA_SIZE = POSITION_DATA_SIZE + TEXTURE_COORDINATE_DATA_SIZE;
 	
@@ -56,8 +52,6 @@ public class Drawinator {
     
     private short drawOrder[] = { 0, 1, 2, 1, 3, 2 }; // order to draw vertices
 
-    private ShortBuffer drawListBuffer;
-
 	
 	/** This will be used to pass in the texture. */
 	private int mTextureUniformHandle;
@@ -80,9 +74,9 @@ public class Drawinator {
 
         ByteBuffer dlb = ByteBuffer.allocateDirect(
         // (# of coordinate values * 2 bytes per short)
-                drawOrder.length * 2);
+                drawOrder.length * BYTES_PER_SHORT);
         dlb.order(ByteOrder.nativeOrder());
-        drawListBuffer = dlb.asShortBuffer();
+        ShortBuffer drawListBuffer = dlb.asShortBuffer();
         drawListBuffer.put(drawOrder).position(0);
 
 
@@ -102,6 +96,7 @@ public class Drawinator {
     	// Bind to the buffer. Future commands will affect this buffer
     	// specifically.
     	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[0]);
+    	GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
 
     	// Transfer data from client memory to the buffer.
     	// We can release the client memory after this call.
@@ -109,8 +104,14 @@ public class Drawinator {
     			combinedBuffer.capacity() * BYTES_PER_FLOAT,
     			combinedBuffer, GLES20.GL_STATIC_DRAW);
     	
+    	GLES20.glBufferData(GLES20.GL_ELEMENT_ARRAY_BUFFER,
+    			drawListBuffer.capacity() * BYTES_PER_SHORT,
+    			drawListBuffer, GLES20.GL_STATIC_DRAW);
+    	
+    	
     	// IMPORTANT: Unbind from the buffer when we're done with it.
     	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+    	GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);
 
 
         
@@ -155,16 +156,20 @@ public class Drawinator {
         GLES20.glEnable(GLES20.GL_BLEND);
         
         
-        // bind to the correct buffer
-        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[0]);
+        // bind to the correct buffers
+        GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[0]); // vertices and texture coordinates
+        GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, buffers[1]); // draw order
 
         
         for (Sprite sprite : sprites) {
-            sprite.draw(this);
+        	if (sprite != null) {
+        		sprite.draw(this);
+        	}
         }
         
-    	// IMPORTANT: Unbind from the buffer when we're done with it.
+    	// IMPORTANT: Unbind from the buffers when we're done with them.
     	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+    	GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);
 
         // Disable vertex array
         GLES20.glDisableVertexAttribArray(mPositionHandle);
@@ -230,7 +235,7 @@ public class Drawinator {
     	GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
     	
     	// Draw 
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, drawListBuffer);
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, DRAW_ORDER_DATA_SIZE, GLES20.GL_UNSIGNED_SHORT, 0);
         
 	}
 	
