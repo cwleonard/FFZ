@@ -870,7 +870,7 @@ public class Ground {
 
         // start the position at -1, -1
         Matrix.setIdentityM(mMMatrix, 0);
-		Matrix.translateM(mMMatrix, 0, 0, 0, -1.0f);
+		Matrix.translateM(mMMatrix, 0, 0, 0, -1.0f); // z index is at the very back
         
 		//for (int i = 0; i < oTiles.length; i++) {
 
