@@ -16,6 +16,9 @@ public class Frog implements Sprite {
 	
 	private static float BASE_SPEED = 0.25f;
 	
+	private float moisture;
+	private float life;
+	
 	float x =  50f;
 	float y = -50f;
 
@@ -90,6 +93,8 @@ public class Frog implements Sprite {
     	this.faceRight();
     	//t = new Tongue(this);
     	this.initBlocker();
+    	this.moisture = 100f;
+    	this.life = 3f;
         
     }
     

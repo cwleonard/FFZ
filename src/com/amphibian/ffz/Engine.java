@@ -85,6 +85,7 @@ public class Engine {
 
 		Ground.loadGLTexture(context);
 		Drawinator.loadGLTexture(context);
+		InfoLayer.loadGLTexture(context);
 		
 //		float[] c = {300, -300};
 //		float[] p = {0, 100, 200, -100, -200, -100};
@@ -117,7 +118,7 @@ public class Engine {
 		
 		try {
 			
-			Tile[][] tiles = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.area)), Tile[][].class);
+			Tile[][] tiles = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.area2)), Tile[][].class);
 			//ground = new Ground(tiles);
 			ground = new Ground(tiles);
 			//ground.setTiles(tiles);
