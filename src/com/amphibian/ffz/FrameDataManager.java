@@ -31,10 +31,13 @@ public class FrameDataManager {
 	
 	private Set<Class> toInit;
 	
+	private Set<VertexDataReader> readers;
+	
 	private FrameDataManager() {
 		frames = new HashMap<String,Frame>();
 		cPolys = new HashMap<String,CollisionDataHolder>();
 		toInit = new HashSet<Class>();
+		readers = new HashSet<VertexDataReader>();
 	}
 	
 	public static synchronized FrameDataManager getInstance() {
@@ -146,20 +149,44 @@ public class FrameDataManager {
 	public void add(Class c) {
 		this.toInit.add(c);
 	}
+	
+	public void addReader(VertexDataReader vdr) {
+		this.readers.add(vdr);
+	}
 
 	private void performInitializations() {
 		
-		Iterator i = this.toInit.iterator();
+		Iterator<VertexDataReader> vdri = this.readers.iterator();
+		while (vdri.hasNext()) {
+			
+			VertexDataReader r = vdri.next();
+			
+			Log.d("ffz", "initializing " + r.getClass().getCanonicalName());
+			
+			float[] data = r.readVertexData();
+			r.init(data);
+			
+		}
+		
+		// -----------------
+		
+		Iterator<Class> i = this.toInit.iterator();
 		while (i.hasNext()) {
 			
 			try {
-			
-				Class c = (Class) i.next();
-				
+
+				Class c = i.next();
+
 				Log.d("ffz", "initializing " + c.getCanonicalName());
-				
-				Method m = c.getMethod("init", null);
-				m.invoke(null, null);
+
+				try {
+
+					Method m = c.getMethod("init", null);
+					m.invoke(null, null);
+
+				} catch (Exception e) {
+					// ignore
+				}
 				
 			} catch (Exception e) {
 				Log.e("ffz", "error initializing", e);

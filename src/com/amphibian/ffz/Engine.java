@@ -69,6 +69,9 @@ public class Engine {
 
 	public Engine(Context context) {
 
+		infoLayer = new InfoLayer();
+
+		
 		glSetup(context);
 
 		init(context);
@@ -96,6 +99,10 @@ public class Engine {
 	}
 	
 	public void glSetup(Context context) {
+
+		Reader infoDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.infolayer));
+		infoLayer.setReader(infoDataReader);
+
 		
 		this.loadTextures(context);
 		
@@ -103,6 +110,7 @@ public class Engine {
 
 		FrameDataManager fdman = FrameDataManager.getInstance();
 		fdman.add(Frog.class);
+		fdman.addReader(infoLayer);
 		drawinator = fdman.init(context);
 
 		try {
@@ -111,14 +119,9 @@ public class Engine {
 				.registerTypeAdapter(Obstacle.class, new ObstacleDeserializer())
 				.create();
 			
-			Reader infoDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.infolayer));
-			infoLayer = new InfoLayer(infoDataReader);
 
 			Tile[][] tiles = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.area3)), Tile[][].class);
 			ground = new Ground(tiles);
-
-			// we don't need the tiles array anymore
-			tiles = null;
 
 		} catch (Exception e) {
 			Log.e("ff", "json error", e);
@@ -157,9 +160,9 @@ public class Engine {
 				.registerTypeAdapter(Obstacle.class, new ObstacleDeserializer())
 				.create();
 			
-			//Reader infoDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.infolayer));
-			//infoLayer = new InfoLayer(infoDataReader);
-			
+//			Reader infoDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.infolayer));
+//			infoLayer = new InfoLayer(infoDataReader);
+
 //			if (tiles == null) {
 //				tiles = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.area3)), Tile[][].class);
 //			}

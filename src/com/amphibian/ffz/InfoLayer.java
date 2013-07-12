@@ -1,6 +1,5 @@
 package com.amphibian.ffz;
 
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
@@ -9,60 +8,18 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
-public class InfoLayer {
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+public class InfoLayer implements VertexDataReader {
 
 	private final static int FLOATS_PER_UNIT = 20;
-
 	private final static int BYTES_PER_FLOAT = 4;
-
-
-	private int HEART;
-	private int THERMOMETER;
-	private int HYDROMETER;
-	
-	private static TextureManager tm;
-
-    // Set color with red, green, blue and alpha (opacity) values
-    float normalColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-	private final float[] mMMatrix = new float[16];
-	private final float[] mvpMatrix = new float[16];
-	private final float[] eyeMatrix = new float[16];
-
-	// these are pointers to the buffers in the GPU where we load the vertex and texture data
-	final int buffers[] = new int[2];
-
-    private int mPositionHandle;
-    private int mColorHandle;
-    private int mMVPMatrixHandle;
-
-    // number of coordinates per vertex in this array
-    static final int COORDS_PER_VERTEX = 3;
-
-    //private final static int SQUARE_DATA_SIZE = 18;
-    private final static int SQUARE_DATA_SIZE = 12;
-    
-    
-    private final int vertexCount = 6; // how many vertices does it take to draw the square?
-    private final int vertexStride = COORDS_PER_VERTEX * BYTES_PER_FLOAT; // 4 bytes per vertex
-
-    //private final static int TEXTURE_STRIDE = 12;
-    private final static int TEXTURE_STRIDE = 8;
-    
-    private short drawOrder[] = { 0, 1, 2, 1, 3, 2 }; // order to draw vertices
-
-    private int drawLength;
-    
-    //private ShortBuffer drawListBuffer;
-    
     private final static int VERTICES_PER_OBJECT = 4;
     private final static int POSITION_DATA_SIZE = 3;
 	private final static int TEXTURE_COORDINATE_DATA_SIZE = 2;
@@ -71,8 +28,28 @@ public class InfoLayer {
     private final int STRIDE = COMBINED_DATA_SIZE * BYTES_PER_FLOAT;
     private final int SKIP = COMBINED_DATA_SIZE * VERTICES_PER_OBJECT;
 
+	private int HEART;
+	private int THERMOMETER;
+	private int HYDROMETER;
+	
+	private static TextureManager tm;
 
-    
+    // Set color with red, green, blue and alpha (opacity) values
+    private float normalColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+	private final float[] mMMatrix = new float[16];
+	private final float[] mvpMatrix = new float[16];
+
+	// these are pointers to the buffers in the GPU where we load the vertex and texture data
+	private final static int buffers[] = new int[2];
+
+    private int mPositionHandle;
+    private int mColorHandle;
+    private int mMVPMatrixHandle;
+
+    private static short drawOrder[] = { 0, 1, 2, 1, 3, 2 }; // order to draw vertices
+
+    private Reader dataReader;
 
 	/** This will be used to pass in the texture. */
 	private int mTextureUniformHandle;
@@ -80,24 +57,17 @@ public class InfoLayer {
 	/** This will be used to pass in model texture coordinate information. */
 	private int mTextureCoordinateHandle;
 
-	/** Size of the texture coordinate data in elements. */
-	private final static int TEXTURE_COORD_DATA_SIZE = 2;
-    private final static int TX_STRIDE = TEXTURE_COORD_DATA_SIZE * BYTES_PER_FLOAT;
-
-
-    // Set color with red, green, blue and alpha (opacity) values
-    float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
     
-    public InfoLayer(Reader r) {
+    
+    public InfoLayer() {
 
-    	float[] alldata = this.readVertexData(r);
-    			
-    	
-    	
-    	// ----------------------------------------
-    	
+    	dataReader = null;
     	Matrix.setIdentityM(mMMatrix, 0);
+
+    }
+
+	public void init(float[] alldata) {
 
     	FloatBuffer everythingBuffer = ByteBuffer
     			.allocateDirect(alldata.length * BYTES_PER_FLOAT)
@@ -139,39 +109,49 @@ public class InfoLayer {
     	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
     	GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);
 
+	}
+
+    
+    public void setReader(Reader r) {
+    	this.dataReader = r;
     }
     
-	private float[] readVertexData(Reader dataReader) {
+	public float[] readVertexData() {
 		
 		float[] data = {};
-		try {
-			
-			Gson gson = new Gson();
-			
-			Type collectionType = new TypeToken<List<VertexDataHolder>>(){}.getType();
-			List<VertexDataHolder> vList = gson.fromJson(dataReader, collectionType);			
-			
-			data = new float[vList.size() * FLOATS_PER_UNIT];
-			
-			for (int i = 0; i < vList.size(); i++) {
-				
-				VertexDataHolder vdh = vList.get(i);
-				
-				if ("heart".equalsIgnoreCase(vdh.getName())) {
-					HEART = i;
-				} else if ("hydrometer_demo".equalsIgnoreCase(vdh.getName())) {
-					HYDROMETER = i;
-				} else if ("thermometer_demo".equalsIgnoreCase(vdh.getName())) {
-					THERMOMETER = i;
-				}
-				
-				System.arraycopy(vdh.getVertexData(), 0, data, i * FLOATS_PER_UNIT, FLOATS_PER_UNIT);
-				
-			}
+		
+		if (dataReader != null) {
+			try {
 
-		} catch (Exception e) {
-			Log.e("ffz", "vertex data read error", e);
+				Gson gson = new Gson();
+
+				Type collectionType = new TypeToken<List<VertexDataHolder>>(){}.getType();
+				List<VertexDataHolder> vList = gson.fromJson(dataReader, collectionType);			
+
+				data = new float[vList.size() * FLOATS_PER_UNIT];
+
+				for (int i = 0; i < vList.size(); i++) {
+
+					VertexDataHolder vdh = vList.get(i);
+
+					if ("heart".equalsIgnoreCase(vdh.getName())) {
+						HEART = i;
+					} else if ("hydrometer_demo".equalsIgnoreCase(vdh.getName())) {
+						HYDROMETER = i;
+					} else if ("thermometer_demo".equalsIgnoreCase(vdh.getName())) {
+						THERMOMETER = i;
+					}
+
+					System.arraycopy(vdh.getVertexData(), 0, data, i * FLOATS_PER_UNIT, FLOATS_PER_UNIT);
+
+				}
+
+			} catch (Exception e) {
+				Log.e("ffz", "info layer vertex data read error", e);
+			}
 		}
+		
+		
 		
 		return data;
 		
@@ -181,8 +161,6 @@ public class InfoLayer {
 
 	public void draw(StandardProgram prog, Viewport vp) {
     	
-		float[] projMatrix = vp.getProjMatrix();
-		float[] viewMatrix = vp.getViewMatrix();
 
         // get handle to vertex shader's vPosition member
         mPositionHandle = prog.getAttributeLocation("vPosition");
@@ -193,14 +171,9 @@ public class InfoLayer {
 
         
         GLES20.glEnableVertexAttribArray(mPositionHandle);
-//		GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
-//				GLES20.GL_FLOAT, false, vertexStride, 0);        
         
         // get handle to fragment shader's vColor member
         mColorHandle = prog.getUniformLocation("vColor");
-        
-        // Set color for drawing
-        GLES20.glUniform4fv(mColorHandle, 1, color, 0);
         
         
         // texture stuff
@@ -223,30 +196,6 @@ public class InfoLayer {
 		Matrix.translateM(mMMatrix, 0, 0, 0, 1.0f); // z index is at the very front
         
 
-		/*
-				
-				int p = 0;//SQUARE_DATA_SIZE + ((oTiles[i][j].getId() - 1) * TEXTURE_STRIDE);
-		    	int pos = (p * SKIP) * BYTES_PER_FLOAT;
-				GLES20.glVertexAttribPointer(mPositionHandle,
-						COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, STRIDE, pos);
-
-				pos = ((p * SKIP) + POSITION_DATA_SIZE) * BYTES_PER_FLOAT;
-				GLES20.glVertexAttribPointer(mTextureCoordinateHandle,
-						TEXTURE_COORD_DATA_SIZE, GLES20.GL_FLOAT, false,
-						STRIDE, pos);
-
-		        // translate!
-		        Matrix.multiplyMM(eyeMatrix, 0, viewMatrix, 0, mMMatrix, 0);
-		        Matrix.multiplyMM(mvpMatrix, 0, projMatrix, 0, eyeMatrix, 0);
-
-
-		        // Apply the projection and view transformation
-		        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
-
-		        // Draw the square
-		        GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, 0);
-
-*/
 		
 		drawLife(vp);
 		drawHydrometer(vp);
