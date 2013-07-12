@@ -12,14 +12,31 @@ public class FFZSurfaceView extends GLSurfaceView {
 	
 	private FrogPath path = null;
 	
+	private Engine engine = null;
+	
 	public FFZSurfaceView(Context context) {
 		
 		super(context);
 		setEGLContextClientVersion(2);
 		
-		r = new FFZRenderer(context);
+		//engine = new Engine(context);
+		
+		r = new FFZRenderer(null, context);
 		setRenderer(r);
 		
+		setEngine(r.getEngine());
+		
+//		engine = new Engine(context);
+//		r.setEngine(engine);
+		
+	}
+
+	public Engine getEngine() {
+		return r.getEngine();
+	}
+	
+	public void setEngine(Engine e) {
+		this.engine = e;
 	}
 	
     @Override
@@ -55,7 +72,7 @@ public class FFZSurfaceView extends GLSurfaceView {
     		handled = true;
     		if (path != null) {
     			path.setEnd(event.getX(), -event.getY());
-        		r.getEngine().getFrog().setFrogPath(path);
+        		engine.getFrog().setFrogPath(path);
     		}
     		break;
     	}

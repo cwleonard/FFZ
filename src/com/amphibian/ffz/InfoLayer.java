@@ -1,6 +1,7 @@
 package com.amphibian.ffz;
 
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -22,11 +23,15 @@ public class InfoLayer {
 
 	private final static int BYTES_PER_FLOAT = 4;
 
+
 	private int HEART;
 	private int THERMOMETER;
 	private int HYDROMETER;
 	
 	private static TextureManager tm;
+
+    // Set color with red, green, blue and alpha (opacity) values
+    float normalColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 	private final float[] mMMatrix = new float[16];
 	private final float[] mvpMatrix = new float[16];
@@ -84,22 +89,10 @@ public class InfoLayer {
     float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
     
-    public InfoLayer() {
+    public InfoLayer(Reader r) {
 
-    	
-    	
-    	float[] alldata = this.readVertexData(null);
+    	float[] alldata = this.readVertexData(r);
     			
-
-    	
-    	drawLength = drawOrder.length;
-    	
-    	
-    	
-    	
-    	
-    	
-    	
     	
     	
     	// ----------------------------------------
@@ -148,7 +141,7 @@ public class InfoLayer {
 
     }
     
-	private float[] readVertexData(Context context) {
+	private float[] readVertexData(Reader dataReader) {
 		
 		float[] data = {};
 		try {
@@ -156,9 +149,7 @@ public class InfoLayer {
 			Gson gson = new Gson();
 			
 			Type collectionType = new TypeToken<List<VertexDataHolder>>(){}.getType();
-			List<VertexDataHolder> vList = gson.fromJson(new InputStreamReader(
-					context.getResources().openRawResource(R.raw.infolayer)),
-					collectionType);			
+			List<VertexDataHolder> vList = gson.fromJson(dataReader, collectionType);			
 			
 			data = new float[vList.size() * FLOATS_PER_UNIT];
 			
@@ -168,13 +159,11 @@ public class InfoLayer {
 				
 				if ("heart".equalsIgnoreCase(vdh.getName())) {
 					HEART = i;
-				} else if ("hydrometer".equalsIgnoreCase(vdh.getName())) {
+				} else if ("hydrometer_demo".equalsIgnoreCase(vdh.getName())) {
 					HYDROMETER = i;
-				} else if ("thermometer".equalsIgnoreCase(vdh.getName())) {
+				} else if ("thermometer_demo".equalsIgnoreCase(vdh.getName())) {
 					THERMOMETER = i;
 				}
-				
-				float[] vdata = vdh.getVertexData();
 				
 				System.arraycopy(vdh.getVertexData(), 0, data, i * FLOATS_PER_UNIT, FLOATS_PER_UNIT);
 				
@@ -218,7 +207,7 @@ public class InfoLayer {
         
         mTextureUniformHandle = prog.getUniformLocation("u_Texture");
         mTextureCoordinateHandle = prog.getAttributeLocation("a_TexCoordinate");
-        tm.setTexture(R.drawable.ground_tiles);
+        tm.setTexture(R.drawable.info_textures);
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
@@ -231,20 +220,10 @@ public class InfoLayer {
 
         // start the position at -1, -1
         Matrix.setIdentityM(mMMatrix, 0);
-		Matrix.translateM(mMMatrix, 0, 0, 0, -1.0f); // z index is at the very back
+		Matrix.translateM(mMMatrix, 0, 0, 0, 1.0f); // z index is at the very front
         
-		//for (int i = 0; i < oTiles.length; i++) {
 
-			//Matrix.translateM(mMMatrix, 0, 0, -TILE_SIZE, 0);
-
-			//for (int j = 0; j < oTiles[i].length; j++) {
-
-				//Matrix.translateM(mMMatrix, 0, TILE_SIZE, 0, 0);
-
-		        // set the texture pointer to the correct place in the buffer
-				// note: web ffz tile ids started at 1, where this is 0-based
-
-
+		/*
 				
 				int p = 0;//SQUARE_DATA_SIZE + ((oTiles[i][j].getId() - 1) * TEXTURE_STRIDE);
 		    	int pos = (p * SKIP) * BYTES_PER_FLOAT;
@@ -265,14 +244,15 @@ public class InfoLayer {
 		        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
 
 		        // Draw the square
-		        GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawLength, GLES20.GL_UNSIGNED_SHORT, 0);
+		        GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, 0);
 
-			//}
-
-			//Matrix.translateM(mMMatrix, 0, -(oTiles[i].length * TILE_SIZE), 0, 0);
-
-		//}
-
+*/
+		
+		drawLife(vp);
+		drawHydrometer(vp);
+		drawThermometer(vp);
+		
+		        
     	// IMPORTANT: Unbind from the buffer when we're done with it.
     	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
     	GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -289,6 +269,101 @@ public class InfoLayer {
 		tm.loadTextures();
 
 	}
-    
+	
+	private void drawLife(Viewport vp) {
+
+		float x = 100f;
+
+		setBufferPosition(HEART);
+		setColor(normalColor);
+
+		for (int i = 0; i < 3; i++) {
+
+			setDrawPosition(x, -80f);
+
+			// set up the view matrix and projection matrix (this stuff always draws in the same place,
+			// no matter where the camera is looking)
+			Matrix.multiplyMM(mvpMatrix, 0, vp.getProjMatrix(), 0, mMMatrix, 0);
+
+			// Apply the projection and view transformation
+			GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+
+			// Draw 
+			GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, 0);
+			
+			x += 60f;
+
+		}
+
+		
+	}
+	
+
+	private void drawHydrometer(Viewport vp) {
+
+		setBufferPosition(HYDROMETER);
+		setColor(normalColor);
+
+		setDrawPosition(1810f, -130f);
+
+		// set up the view matrix and projection matrix (this stuff always draws in the same place,
+		// no matter where the camera is looking)
+		Matrix.multiplyMM(mvpMatrix, 0, vp.getProjMatrix(), 0, mMMatrix, 0);
+
+		// Apply the projection and view transformation
+		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+
+		// Draw 
+		GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, 0);
+			
+
+		
+	}
+	
+
+	private void drawThermometer(Viewport vp) {
+
+		setBufferPosition(THERMOMETER);
+		setColor(normalColor);
+
+		setDrawPosition(1730f, -130f);
+
+		// set up the view matrix and projection matrix (this stuff always draws in the same place,
+		// no matter where the camera is looking)
+		Matrix.multiplyMM(mvpMatrix, 0, vp.getProjMatrix(), 0, mMMatrix, 0);
+
+		// Apply the projection and view transformation
+		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+
+		// Draw 
+		GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, 0);
+			
+
+		
+	}
+
+	public void setColor(float[] c) {
+		GLES20.glUniform4fv(mColorHandle, 1, c, 0);
+	}
+	
+	public void setDrawPosition(float x, float y) {
+        Matrix.setIdentityM(mMMatrix, 0);
+    	Matrix.translateM(mMMatrix, 0, x, y, 0);
+	}
+
+	private void setBufferPosition(int p) {
+		
+    	// vertex coordinates
+    	int pos = (p * SKIP) * BYTES_PER_FLOAT;
+		GLES20.glVertexAttribPointer(mPositionHandle, POSITION_DATA_SIZE,
+				GLES20.GL_FLOAT, false, STRIDE, pos);
+
+		// texture coordinates
+    	pos = ((p * SKIP) + POSITION_DATA_SIZE) * BYTES_PER_FLOAT;
+		GLES20.glVertexAttribPointer(mTextureCoordinateHandle, TEXTURE_COORDINATE_DATA_SIZE,
+				GLES20.GL_FLOAT, false, STRIDE, pos);
+
+	}
+
     
 }

@@ -6,9 +6,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import android.content.Context;
 import android.util.Log;
@@ -27,12 +29,12 @@ public class FrameDataManager {
 	
 	private Map<String, CollisionDataHolder> cPolys;
 	
-	private List<Class> toInit;
+	private Set<Class> toInit;
 	
 	private FrameDataManager() {
 		frames = new HashMap<String,Frame>();
 		cPolys = new HashMap<String,CollisionDataHolder>();
-		toInit = new ArrayList<Class>();
+		toInit = new HashSet<Class>();
 	}
 	
 	public static synchronized FrameDataManager getInstance() {

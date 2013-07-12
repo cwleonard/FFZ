@@ -18,12 +18,19 @@ public class FFZRenderer implements Renderer {
 	
 	private Engine engine;
 
-    public FFZRenderer(Context c) {
+    public FFZRenderer(Engine e, Context c) {
+    	
+    	//this.engine = e;
+    	
     	this.context = c;
     	
     	lastTime = SystemClock.elapsedRealtime();
 
     	
+    }
+    
+    public Engine getEngine() {
+    	return engine;
     }
     
 	@Override
@@ -39,8 +46,8 @@ public class FFZRenderer implements Renderer {
 		}
 		
 		
-		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
-
+		//GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+		GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
 
 	    // Calculate the projection and view transformation
 		//Matrix.multiplyMM(mVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
@@ -90,15 +97,24 @@ public class FFZRenderer implements Renderer {
 	@Override
 	public void onSurfaceCreated(GL10 unused, EGLConfig config) {
 		
+		Log.i("ffz", "onSurfaceCreated called");
+		
 		GLES20.glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 		
 		
-		GLES20.glEnable( GLES20.GL_DEPTH_TEST );
-		GLES20.glDepthFunc( GLES20.GL_LEQUAL );
-		GLES20.glDepthMask( true );
+		//GLES20.glEnable( GLES20.GL_DEPTH_TEST );
+		//GLES20.glDepthFunc( GLES20.GL_LEQUAL );
+		//GLES20.glDepthMask( true );
 		
-//		if (engine == null) {
+		if (engine == null) {
+		
 			engine = new Engine(context);
+			
+		} else {
+			engine.glSetup(context);
+		}
+		
+		//engine.loadTextures(context);
 //		}
 		
 		//triangle = new Triangle();
@@ -123,9 +139,9 @@ public class FFZRenderer implements Renderer {
 	    return shader;
 	}
 
-	public Engine getEngine() {
-		return engine;
-	}
+//	public Engine getEngine() {
+//		return engine;
+//	}
 
 	
 

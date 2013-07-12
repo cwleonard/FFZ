@@ -658,8 +658,6 @@ public class Ground {
 
         
         GLES20.glEnableVertexAttribArray(mPositionHandle);
-//		GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX,
-//				GLES20.GL_FLOAT, false, vertexStride, 0);        
         
         // get handle to fragment shader's vColor member
         mColorHandle = prog.getUniformLocation("vColor");
@@ -687,45 +685,25 @@ public class Ground {
         Matrix.setIdentityM(mMMatrix, 0);
 		Matrix.translateM(mMMatrix, 0, 0, 0, -1.0f); // z index is at the very back
         
-		//for (int i = 0; i < oTiles.length; i++) {
-
-			//Matrix.translateM(mMMatrix, 0, 0, -TILE_SIZE, 0);
-
-			//for (int j = 0; j < oTiles[i].length; j++) {
-
-				//Matrix.translateM(mMMatrix, 0, TILE_SIZE, 0, 0);
-
-		        // set the texture pointer to the correct place in the buffer
-				// note: web ffz tile ids started at 1, where this is 0-based
-
-
 				
-				int p = 0;//SQUARE_DATA_SIZE + ((oTiles[i][j].getId() - 1) * TEXTURE_STRIDE);
-		    	int pos = (p * SKIP) * BYTES_PER_FLOAT;
-				GLES20.glVertexAttribPointer(mPositionHandle,
-						COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, STRIDE, pos);
+		GLES20.glVertexAttribPointer(mPositionHandle,
+				COORDS_PER_VERTEX, GLES20.GL_FLOAT, false, STRIDE, 0);
 
-				pos = ((p * SKIP) + POSITION_DATA_SIZE) * BYTES_PER_FLOAT;
-				GLES20.glVertexAttribPointer(mTextureCoordinateHandle,
-						TEXTURE_COORD_DATA_SIZE, GLES20.GL_FLOAT, false,
-						STRIDE, pos);
+		GLES20.glVertexAttribPointer(mTextureCoordinateHandle,
+				TEXTURE_COORD_DATA_SIZE, GLES20.GL_FLOAT, false,
+				STRIDE, POSITION_DATA_SIZE * BYTES_PER_FLOAT);
 
-		        // translate!
-		        Matrix.multiplyMM(eyeMatrix, 0, viewMatrix, 0, mMMatrix, 0);
-		        Matrix.multiplyMM(mvpMatrix, 0, projMatrix, 0, eyeMatrix, 0);
+		// translate!
+		Matrix.multiplyMM(eyeMatrix, 0, viewMatrix, 0, mMMatrix, 0);
+		Matrix.multiplyMM(mvpMatrix, 0, projMatrix, 0, eyeMatrix, 0);
 
 
-		        // Apply the projection and view transformation
-		        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+		// Apply the projection and view transformation
+		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
 
-		        // Draw the square
-		        GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawLength, GLES20.GL_UNSIGNED_SHORT, 0);
+		// Draw the square
+		GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawLength, GLES20.GL_UNSIGNED_SHORT, 0);
 
-			//}
-
-			//Matrix.translateM(mMMatrix, 0, -(oTiles[i].length * TILE_SIZE), 0, 0);
-
-		//}
 
     	// IMPORTANT: Unbind from the buffer when we're done with it.
     	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);

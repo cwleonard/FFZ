@@ -3,6 +3,7 @@ package com.amphibian.ffz;
 import io.socket.SocketIO;
 
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +33,7 @@ public class Engine {
 	private Frog frog = null;
 	private Frog frog2 = null;
 	private Ground ground;
+	private InfoLayer infoLayer;
 	
 	//private Obstacles obstacles;
 	private Drawinator drawinator;
@@ -63,40 +65,15 @@ public class Engine {
 	
 	float[] correction = new float[2];
 
+	private String newGround;
 
 	public Engine(Context context) {
-		
-		spriteSorter = new SpriteSorter();
-		
-		sprites = new ArrayList<Sprite>(100);
-		newSprites = new ArrayList<Sprite>(50);
-		remSprites = new ArrayList<Sprite>(50);
-		
-		Gson gson = new GsonBuilder()
-			.registerTypeAdapter(Obstacle.class, new ObstacleDeserializer())
-			.create();
 
-		lastUpdate = SystemClock.elapsedRealtime();
-		cycle = SystemClock.elapsedRealtime();
-		//triangle = new Triangle();
-		//square = new Square();
-		frog = new Frog();
+		glSetup(context);
 
-
-		Ground.loadGLTexture(context);
-		Drawinator.loadGLTexture(context);
-		InfoLayer.loadGLTexture(context);
-		
-//		float[] c = {300, -300};
-//		float[] p = {0, 100, 200, -100, -200, -100};
-//		testBlock = new ConvexPolygon(c, p); // blocking triangle
-
-		float[] c = {200, -900};
-		float[] p = {-200, 100, 200, 100, 0, -100, -200, -100};
-		testBlock = new ConvexPolygon(c, p); // blocking rock wall
+		init(context);
 		
 		
-		prog = new StandardProgram();
 
 //		try {
 //			socket = new SocketIO("http://www.amphibian.com:8080/");
@@ -108,20 +85,85 @@ public class Engine {
 //			Log.e("ffz", "socket.io error", e);
 //		}
 
+		
+		
+		
+		
+		//recreateStuff(context);
+		
+		
+
+	}
+	
+	public void glSetup(Context context) {
+		
+		this.loadTextures(context);
+		
+		prog = new StandardProgram();
+
 		FrameDataManager fdman = FrameDataManager.getInstance();
 		fdman.add(Frog.class);
 		drawinator = fdman.init(context);
+
+		try {
+
+			Gson gson = new GsonBuilder()
+				.registerTypeAdapter(Obstacle.class, new ObstacleDeserializer())
+				.create();
+			
+			Reader infoDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.infolayer));
+			infoLayer = new InfoLayer(infoDataReader);
+
+			Tile[][] tiles = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.area3)), Tile[][].class);
+			ground = new Ground(tiles);
+
+			// we don't need the tiles array anymore
+			tiles = null;
+
+		} catch (Exception e) {
+			Log.e("ff", "json error", e);
+		}
+
 		
+	}
+	
+	public void init(Context context) {
+		
+		spriteSorter = new SpriteSorter();
+		
+		sprites = new ArrayList<Sprite>(100);
+		newSprites = new ArrayList<Sprite>(50);
+		remSprites = new ArrayList<Sprite>(50);
+
+		lastUpdate = SystemClock.elapsedRealtime();
+		cycle = SystemClock.elapsedRealtime();
+
+		frog = new Frog();
+		//triangle = new Triangle();
+		//square = new Square();
+
+		//TODO move this out of here at some point
+		float[] c = {200, -900};
+		float[] p = {-200, 100, 200, 100, 0, -100, -200, -100};
+		testBlock = new ConvexPolygon(c, p); // blocking rock wall
+
 		frog.faceRight();
 		frog.setEngine(this);
 		frog.setInputSource(new TouchInputSource(frog));
-		
+
 		try {
+
+			Gson gson = new GsonBuilder()
+				.registerTypeAdapter(Obstacle.class, new ObstacleDeserializer())
+				.create();
 			
-			Tile[][] tiles = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.area2)), Tile[][].class);
-			//ground = new Ground(tiles);
-			ground = new Ground(tiles);
-			//ground.setTiles(tiles);
+			//Reader infoDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.infolayer));
+			//infoLayer = new InfoLayer(infoDataReader);
+			
+//			if (tiles == null) {
+//				tiles = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.area3)), Tile[][].class);
+//			}
+//			ground = new Ground(tiles);
 			
 			Type collectionType = new TypeToken<List<Obstacle>>(){}.getType();
 			List<Obstacle> obs = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.obstacles)), collectionType);
@@ -136,10 +178,39 @@ public class Engine {
 
 
 		addSprite(frog);
+
 		
 		
+	}
+	
+	
+	
+	public void loadTextures(Context context) {
+		Ground.loadGLTexture(context);
+		Drawinator.loadGLTexture(context);
+		InfoLayer.loadGLTexture(context);
+	}
+	
+	public void setNewGround(String ng) {
+		this.newGround = ng;
+	}
+	
+	private void resetArea(String groundJson) {
 		
-		
+		try {
+			
+			Log.d("ffz", "resetting the ground");
+			
+			Gson gson = new GsonBuilder()
+				.registerTypeAdapter(Obstacle.class, new ObstacleDeserializer())
+				.create();
+
+			Tile[][] tiles = gson.fromJson(groundJson, Tile[][].class);
+			ground = new Ground(tiles);
+			
+		} catch (Exception e) {
+			Log.e("ff", "json error", e);
+		}
 
 	}
 	
@@ -152,6 +223,10 @@ public class Engine {
 	}
 	
 	private void updateSprites() {
+		if (newGround != null) {
+			resetArea(newGround);
+			newGround = null;
+		}
 		if (newSprites.size() > 0) {
 			this.sprites.addAll(newSprites);
 			this.newSprites.clear();
@@ -287,10 +362,9 @@ public class Engine {
 
 		ground.draw(prog, viewport);
 
-		//square.draw(prog, viewport);
-
-		//obstacles.draw(prog, viewport);
 		drawinator.draw(sprites, prog, viewport);
+		
+		infoLayer.draw(prog, viewport);
 		
 		frameCounter++;
 		
