@@ -499,10 +499,13 @@ public class Ground {
     // Set color with red, green, blue and alpha (opacity) values
     float color[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
+    private int width;
+    private int height;
     
     public Ground(Tile[][] tiles) {
 
-    	
+    	width = tiles[0].length * TILE_SIZE;
+    	height = tiles.length * TILE_SIZE;
     	
     	float positions[] = {
                 0f,    0f, 0f, // 0     // vertices of the square
@@ -713,6 +716,15 @@ public class Ground {
         GLES20.glDisableVertexAttribArray(mPositionHandle);
         
     }    
+
+	public int getWidth() {
+		return width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
 
 	public static void loadGLTexture(Context context) {
 

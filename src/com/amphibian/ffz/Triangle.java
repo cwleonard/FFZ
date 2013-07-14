@@ -22,9 +22,12 @@ public class Triangle {
             "  gl_Position = uMVPMatrix * vPosition;" +
             "}";
 
-	private final String fragmentShaderCode = "precision mediump float;"
-			+ "uniform vec4 vColor;" + "void main() {"
-			+ "  gl_FragColor = vColor;" + "}";
+	private final String fragmentShaderCode = 
+			"precision mediump float;" +
+			"uniform vec4 vColor;" + 
+			"void main() {" +
+			"  gl_FragColor = vColor;" +
+			"}";
 
 	private final float[] mMMatrix = new float[16];
 	private final float[] mvpMatrix = new float[16];

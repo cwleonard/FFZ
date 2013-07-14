@@ -132,15 +132,18 @@ public class ConvexPolygon {
     	smallest[1] = 0f;
     	smallest[2] = 0f;
     	overlap = 99999999f;
+    	
+    	int myNumSides = this.getNumberOfSides();
+    	int otherNumSides = other.getNumberOfSides();
 
     	/* test polygon A's sides */
-    	for (int side = 0; side < this.getNumberOfSides(); side++)
+    	for (int side = 0; side < myNumSides; side++)
     	{
     		/* get the axis that we will project onto */
     		if (side == 0)
     		{
-    			axis[x] = this.points.get(this.getNumberOfSides() - 1)[y] - this.points.get(0)[y];
-    			axis[y] = this.points.get(0)[x] - this.points.get(this.getNumberOfSides() - 1)[x];
+    			axis[x] = this.points.get(myNumSides - 1)[y] - this.points.get(0)[y];
+    			axis[y] = this.points.get(0)[x] - this.points.get(myNumSides - 1)[x];
     		}
     		else
     		{
@@ -156,7 +159,7 @@ public class ConvexPolygon {
     		/* project polygon A onto axis to determine the min/max */
     		minA = this.points.get(0)[x] * axis[x] + this.points.get(0)[y] * axis[y];
     		maxA = minA;
-    		for (int i = 1; i < this.getNumberOfSides(); i++)
+    		for (int i = 1; i < myNumSides; i++)
     		{
     			tmp = this.points.get(i)[x] * axis[x] + this.points.get(i)[y] * axis[y];
     			if (tmp > maxA)
@@ -173,7 +176,7 @@ public class ConvexPolygon {
     		// project polygon B onto axis to determine the min/max
     		minB = other.points.get(0)[x] * axis[x] + other.points.get(0)[y] * axis[y];
     		maxB = minB;
-    		for (int i = 1; i < other.getNumberOfSides(); i++)
+    		for (int i = 1; i < otherNumSides; i++)
     		{
     			tmp = other.points.get(i)[x] * axis[x] + other.points.get(i)[y] * axis[y];
     			if (tmp > maxB)
@@ -208,13 +211,13 @@ public class ConvexPolygon {
     	}
 
     	/* test polygon B's sides */
-    	for (int side = 0; side < other.getNumberOfSides(); side++)
+    	for (int side = 0; side < otherNumSides; side++)
     	{
     		/* get the axis that we will project onto */
     		if (side == 0)
     		{
-    			axis[x] = other.points.get(other.getNumberOfSides() - 1)[y] - other.points.get(0)[y];
-    			axis[y] = other.points.get(0)[x] - other.points.get(other.getNumberOfSides() - 1)[x];
+    			axis[x] = other.points.get(otherNumSides - 1)[y] - other.points.get(0)[y];
+    			axis[y] = other.points.get(0)[x] - other.points.get(otherNumSides - 1)[x];
     		}
     		else
     		{
@@ -232,7 +235,7 @@ public class ConvexPolygon {
     		/* project polygon A onto axis to determine the min/max */
     		minA = this.points.get(0)[x] * axis[x] + this.points.get(0)[y] * axis[y];
     		maxA = minA;
-    		for (int i = 1; i < this.getNumberOfSides(); i++)
+    		for (int i = 1; i < myNumSides; i++)
     		{
     			tmp = this.points.get(i)[x] * axis[x] + this.points.get(i)[y] * axis[y];
     			if (tmp > maxA)
@@ -250,7 +253,7 @@ public class ConvexPolygon {
     		/* project polygon B onto axis to determine the min/max */
     		minB = other.points.get(0)[x] * axis[x] + other.points.get(0)[y] * axis[y];
     		maxB = minB;
-    		for (int i = 1; i < other.getNumberOfSides(); i++)
+    		for (int i = 1; i < otherNumSides; i++)
     		{
     			tmp = other.points.get(i)[x] * axis[x] + other.points.get(i)[y] * axis[y];
     			if (tmp > maxB)

@@ -83,4 +83,24 @@ public class TextureManager {
 			Log.e("ffz", "unable to set texture", e);
 		}
 	}
+
+	public void setTextureToRepeat(int id) {
+		try {
+			
+			int textureid = this.textureMap.get(Integer.valueOf(id));
+			
+			// Set the active texture unit to texture unit 0.
+		    GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+		    
+			GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, this.textures[textureid]);
+			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_REPEAT);
+			GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_REPEAT);
+			//GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
+			
+		} catch (Exception e) {
+			Log.e("ffz", "unable to set texture", e);
+		}
+	}
+
+
 }

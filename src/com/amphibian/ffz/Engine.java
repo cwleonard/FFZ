@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -34,6 +35,7 @@ public class Engine {
 	private Frog frog2 = null;
 	private Ground ground;
 	private InfoLayer infoLayer;
+	private WaterLayer waterLayer;
 	
 	//private Obstacles obstacles;
 	private Drawinator drawinator;
@@ -66,11 +68,12 @@ public class Engine {
 	float[] correction = new float[2];
 
 	private String newGround;
+	private String newObstacles;
 
 	public Engine(Context context) {
 
 		infoLayer = new InfoLayer();
-
+		waterLayer = new WaterLayer();
 		
 		glSetup(context);
 
@@ -102,6 +105,9 @@ public class Engine {
 
 		Reader infoDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.infolayer));
 		infoLayer.setReader(infoDataReader);
+		
+		Reader waterDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.waterlayer));
+		waterLayer.setReader(waterDataReader);
 
 		
 		this.loadTextures(context);
@@ -111,6 +117,7 @@ public class Engine {
 		FrameDataManager fdman = FrameDataManager.getInstance();
 		fdman.add(Frog.class);
 		fdman.addReader(infoLayer);
+		fdman.addReader(waterLayer);
 		drawinator = fdman.init(context);
 
 		try {
@@ -192,10 +199,15 @@ public class Engine {
 		Ground.loadGLTexture(context);
 		Drawinator.loadGLTexture(context);
 		InfoLayer.loadGLTexture(context);
+		WaterLayer.loadGLTexture(context);
 	}
 	
 	public void setNewGround(String ng) {
 		this.newGround = ng;
+	}
+	
+	public void setNewObstacles(String no) {
+		this.newObstacles = no;
 	}
 	
 	private void resetArea(String groundJson) {
@@ -210,7 +222,33 @@ public class Engine {
 
 			Tile[][] tiles = gson.fromJson(groundJson, Tile[][].class);
 			ground = new Ground(tiles);
+			viewport.setAreaHeight(ground.getHeight());
+			viewport.setAreaWidth(ground.getWidth());
 			
+		} catch (Exception e) {
+			Log.e("ff", "json error", e);
+		}
+
+	}
+	
+	private void resetObstacles(String obJson) {
+		
+		try {
+
+			Gson gson = new GsonBuilder()
+				.registerTypeAdapter(Obstacle.class, new ObstacleDeserializer())
+				.create();
+			
+			Type collectionType = new TypeToken<List<Obstacle>>(){}.getType();
+			List<Obstacle> obs = gson.fromJson(obJson, collectionType);
+			
+			//removeAllSprites();
+			addSprites(obs);
+
+			blockers = getBlockers(obs);
+
+			//addSprite(frog); // TODO: not sure why I put this here explicitly
+
 		} catch (Exception e) {
 			Log.e("ff", "json error", e);
 		}
@@ -221,8 +259,16 @@ public class Engine {
 		this.newSprites.add(s);
 	}
 	
+	public void addSprites(Collection s) {
+		this.newSprites.addAll(s);
+	}
+	
 	public void removeSprite(Sprite s) {
 		this.remSprites.add(s);
+	}
+	
+	public void removeAllSprites() {
+		this.remSprites.addAll(sprites);
 	}
 	
 	private void updateSprites() {
@@ -230,13 +276,18 @@ public class Engine {
 			resetArea(newGround);
 			newGround = null;
 		}
-		if (newSprites.size() > 0) {
-			this.sprites.addAll(newSprites);
-			this.newSprites.clear();
+		if (newObstacles != null) {
+			resetObstacles(newObstacles);
+			newObstacles = null;
 		}
 		if (remSprites.size() > 0) {
 			this.sprites.removeAll(remSprites);
 			this.remSprites.clear();
+		}
+		if (newSprites.size() > 0) {
+			this.sprites.addAll(newSprites);
+			this.newSprites.clear();
+			//blockers = getBlockers();
 		}
 	}
 	
@@ -265,6 +316,9 @@ public class Engine {
 				frog.setInputSource(input1);
 				viewport.setInputSource(new OuyaInputSource(OuyaController.getControllerByPlayer(0)));
 				viewport.setFollow(frog);
+				viewport.setAreaHeight(ground.getHeight());
+				viewport.setAreaWidth(ground.getWidth());
+
 			}
 		}
 		if (input2 == null) {
@@ -364,6 +418,8 @@ public class Engine {
 		prog.enable();
 
 		ground.draw(prog, viewport);
+		
+		waterLayer.draw(prog, viewport);
 
 		drawinator.draw(sprites, prog, viewport);
 		
@@ -381,7 +437,6 @@ public class Engine {
 
     public List<ConvexPolygon> getBlockers() {
     	
-    	//ConvexPolygon[] blockers = new ConvexPolygon[stuff.size()];
     	List<ConvexPolygon> blockers = new ArrayList<ConvexPolygon>();
     	for (Sprite s : sprites) {
     		blockers.addAll(s.getBlockers());
@@ -390,6 +445,15 @@ public class Engine {
     	
     }
 
+    public List<ConvexPolygon> getBlockers(List<Obstacle> obs) {
+    	
+    	List<ConvexPolygon> blockers = new ArrayList<ConvexPolygon>();
+    	for (Sprite s : obs) {
+    		blockers.addAll(s.getBlockers());
+    	}
+    	return blockers;
+    	
+    }
 	
 	
 }

@@ -34,6 +34,8 @@ public class Drawinator {
 	private final float[] mMMatrix = new float[16];
 	private final float[] mvpMatrix = new float[16];
 	private final float[] eyeMatrix = new float[16];
+	
+	
 
     private int mPositionHandle;
     private int mColorHandle;
@@ -60,6 +62,8 @@ public class Drawinator {
 	private int mTextureCoordinateHandle;
 	 
 	private Viewport viewport;
+	private float[] viewMatrix;
+	private float[] projMatrix;
 	 
     // Set color with red, green, blue and alpha (opacity) values
     float normalColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -122,13 +126,16 @@ public class Drawinator {
 
 	public void draw(List<Sprite> sprites, StandardProgram prog, Viewport vp) {
     	
-		viewport = vp;
+		//viewport = vp;
+		viewMatrix = vp.getViewMatrix();
+		projMatrix = vp.getProjMatrix();
 		
         // get handle to vertex shader's vPosition member
         mPositionHandle = prog.getAttributeLocation("vPosition");
 
         // Enable a handle to the triangle vertices
         GLES20.glEnableVertexAttribArray(mPositionHandle);
+        
         // enable handle for texture coordinates
         GLES20.glEnableVertexAttribArray(mTextureCoordinateHandle);
 
@@ -139,7 +146,6 @@ public class Drawinator {
         
         
         // texture stuff
-        
         mTextureUniformHandle = prog.getUniformLocation("u_Texture");
         mTextureCoordinateHandle = prog.getAttributeLocation("a_TexCoordinate");
         // set texture was here
@@ -231,8 +237,8 @@ public class Drawinator {
 	public void performDraw() {
 		
     	// set up the view matrix and projection matrix
-    	Matrix.multiplyMM(eyeMatrix, 0, viewport.getViewMatrix(), 0, mMMatrix, 0);
-    	Matrix.multiplyMM(mvpMatrix, 0, viewport.getProjMatrix(), 0, eyeMatrix, 0);
+    	Matrix.multiplyMM(eyeMatrix, 0, viewMatrix, 0, mMMatrix, 0);
+    	Matrix.multiplyMM(mvpMatrix, 0, projMatrix, 0, eyeMatrix, 0);
     	
     	// Apply the projection and view transformation
     	GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);

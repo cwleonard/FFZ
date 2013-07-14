@@ -3,6 +3,8 @@ package com.amphibian.ffz;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -141,17 +143,54 @@ public class MainActivity extends FragmentActivity {
     	}
     }
 
-    private class GetAreaAsyncTask extends AsyncTask<String, Void, String> {
+    private class GetAreaAsyncTask extends AsyncTask<String, Void, List<String>> {
 
 		@Override
-		protected String doInBackground(String... params) {
+		protected List<String> doInBackground(String... params) {
 			
 			try {
 			
 				JSONObject area = getJson("http://www.amphibian.com/ffz/area?id=" + params[0]);
 				JSONArray groundGrid = area.getJSONArray("groundGrid");
+				JSONArray obsList = area.getJSONArray("objectList");
 				
-				return groundGrid.toString();
+				List<String> s = new ArrayList<String>();
+				s.add(groundGrid.toString());
+				
+				// convert from web format
+				JSONArray converted = new JSONArray();
+				for (int i = 0; i < obsList.length(); i++) {
+					
+					JSONObject ob = obsList.getJSONObject(i);
+					JSONObject cob = new JSONObject();
+
+					boolean canBeConverted = false;
+					
+					int type = ob.getInt("type");
+					if (type == 2) {
+						cob.put("type", "flower1");
+						canBeConverted = true;
+					} else if (type == 1) {
+						cob.put("type", "tree1");
+						canBeConverted = true;
+					}
+					
+					JSONObject pos = ob.getJSONObject("position");
+					double x = pos.getDouble("x");
+					double y = pos.getDouble("y");
+					cob.put("x", x*2.5d);
+					cob.put("y", -y*2.5d);
+
+					if (canBeConverted) {
+						converted.put(cob);
+					}
+					
+				}
+				
+				
+				s.add(converted.toString());
+				
+				return s;
 			
 			} catch (Exception e) {
 				Log.e("ffz", "error getting ground grid", e);
@@ -160,12 +199,13 @@ public class MainActivity extends FragmentActivity {
 			return null;
 		}
     	
-    	protected void onPostExecute(String result) {
+    	protected void onPostExecute(List<String> result) {
     		
 			if (glView != null) {
 				
 				Engine e = glView.getEngine();
-				e.setNewGround(result);
+				e.setNewGround(result.get(0));
+				e.setNewObstacles(result.get(1));
 				
 			}
 

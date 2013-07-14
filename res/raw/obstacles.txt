@@ -2,4 +2,6 @@
 {type: 'rock', x: 300, y: -500}, 
 {type: 'pine_tree', x: 800, y:-800}, 
 {type: 'tall_grass', x: 600, y:-600}, 
+{type: 'flower1', x: 1000, y:-1000}, 
+{type: 'flower2', x: 950, y:-1040}, 
 {type: 'tree1', x: 900, y: -200}]
