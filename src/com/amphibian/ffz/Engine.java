@@ -35,7 +35,8 @@ public class Engine {
 	private Frog frog2 = null;
 	private Ground ground;
 	private InfoLayer infoLayer;
-	private WaterLayer waterLayer;
+	//private WaterLayer waterLayer;
+	private Water water;
 	
 	//private Obstacles obstacles;
 	private Drawinator drawinator;
@@ -73,7 +74,7 @@ public class Engine {
 	public Engine(Context context) {
 
 		infoLayer = new InfoLayer();
-		waterLayer = new WaterLayer();
+		//waterLayer = new WaterLayer();
 		
 		glSetup(context);
 
@@ -106,8 +107,8 @@ public class Engine {
 		Reader infoDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.infolayer));
 		infoLayer.setReader(infoDataReader);
 		
-		Reader waterDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.waterlayer));
-		waterLayer.setReader(waterDataReader);
+//		Reader waterDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.waterlayer));
+//		waterLayer.setReader(waterDataReader);
 
 		
 		this.loadTextures(context);
@@ -117,7 +118,7 @@ public class Engine {
 		FrameDataManager fdman = FrameDataManager.getInstance();
 		fdman.add(Frog.class);
 		fdman.addReader(infoLayer);
-		fdman.addReader(waterLayer);
+		//fdman.addReader(waterLayer);
 		drawinator = fdman.init(context);
 
 		try {
@@ -129,6 +130,7 @@ public class Engine {
 
 			Tile[][] tiles = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.area3)), Tile[][].class);
 			ground = new Ground(tiles);
+			water = new Water(tiles);
 
 		} catch (Exception e) {
 			Log.e("ff", "json error", e);
@@ -199,7 +201,7 @@ public class Engine {
 		Ground.loadGLTexture(context);
 		Drawinator.loadGLTexture(context);
 		InfoLayer.loadGLTexture(context);
-		WaterLayer.loadGLTexture(context);
+		Water.loadGLTexture(context);
 	}
 	
 	public void setNewGround(String ng) {
@@ -222,6 +224,7 @@ public class Engine {
 
 			Tile[][] tiles = gson.fromJson(groundJson, Tile[][].class);
 			ground = new Ground(tiles);
+			water = new Water(tiles);
 			viewport.setAreaHeight(ground.getHeight());
 			viewport.setAreaWidth(ground.getWidth());
 			
@@ -354,7 +357,7 @@ public class Engine {
 					ConvexPolygon poly = pi.next();
 					
 					//TODO: put the ground blockers in the same array as below...
-					float[] mtv = poly.intersectsWith(testBlock);
+					float[] mtv = new float[3];//poly.intersectsWith(testBlock);
 					correction[0] = mtv[0] * mtv[2];
 					correction[1] = mtv[1] * mtv[2];//= new float[] { mtv[0] * mtv[2], mtv[1] * mtv[2] };
 					
@@ -419,7 +422,8 @@ public class Engine {
 
 		ground.draw(prog, viewport);
 		
-		waterLayer.draw(prog, viewport);
+		//waterLayer.draw(prog, viewport);
+		water.draw(prog, viewport);
 
 		drawinator.draw(sprites, prog, viewport);
 		

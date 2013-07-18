@@ -179,7 +179,7 @@ public class WaterLayer implements VertexDataReader {
         
         mTextureUniformHandle = prog.getUniformLocation("u_Texture");
         mTextureCoordinateHandle = prog.getAttributeLocation("a_TexCoordinate");
-        tm.setTextureToRepeat(R.drawable.water_textures);
+        tm.setTextureToRepeat(R.drawable.blank);
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
@@ -229,7 +229,7 @@ public class WaterLayer implements VertexDataReader {
 	public static void loadGLTexture(Context context) {
 
 		tm = new TextureManager(context);
-		tm.add(R.drawable.water_textures);
+		tm.add(R.drawable.blank);
 		tm.loadTextures();
 
 	}
