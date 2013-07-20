@@ -33,6 +33,7 @@ public class Engine {
 	//private Square square;
 	private Frog frog = null;
 	private Frog frog2 = null;
+	private Rabbit rabbit = null;
 	private Ground ground;
 	private InfoLayer infoLayer;
 	//private WaterLayer waterLayer;
@@ -117,6 +118,7 @@ public class Engine {
 
 		FrameDataManager fdman = FrameDataManager.getInstance();
 		fdman.add(Frog.class);
+		fdman.add(Rabbit.class);
 		fdman.addReader(infoLayer);
 		//fdman.addReader(waterLayer);
 		drawinator = fdman.init(context);
@@ -151,8 +153,12 @@ public class Engine {
 		cycle = SystemClock.elapsedRealtime();
 
 		frog = new Frog();
+		rabbit = new Rabbit();
 		//triangle = new Triangle();
 		//square = new Square();
+		
+		infoLayer.setFrog(frog);
+		
 
 		//TODO move this out of here at some point
 		float[] c = {200, -900};
@@ -188,8 +194,10 @@ public class Engine {
 
 		blockers = getBlockers();
 
-
+		blockers.addAll(rabbit.getBlockers());
+		
 		addSprite(frog);
+		addSprite(rabbit);
 
 		
 		
@@ -358,13 +366,19 @@ public class Engine {
 					
 					//TODO: put the ground blockers in the same array as below...
 					float[] mtv = new float[3];//poly.intersectsWith(testBlock);
-					correction[0] = mtv[0] * mtv[2];
-					correction[1] = mtv[1] * mtv[2];//= new float[] { mtv[0] * mtv[2], mtv[1] * mtv[2] };
+					correction[0] = 0f;//mtv[0] * mtv[2];
+					correction[1] = 0f;//mtv[1] * mtv[2];//= new float[] { mtv[0] * mtv[2], mtv[1] * mtv[2] };
 					
 					for (int j = 0; j < blockers.size(); j++) {
-						mtv = poly.intersectsWith(blockers.get(j));
+						ConvexPolygon cp = blockers.get(j);
+						mtv = poly.intersectsWith(cp);
 						correction[0] += mtv[0] * mtv[2];
 						correction[1] += mtv[1] * mtv[2];
+						if (mtv[0] != 0 || mtv[1] != 0) {
+							if (cp.getOwner() != null) {
+								s.hurt();
+							}
+						}
 					}
 
 					s.move(correction[0], correction[1]);

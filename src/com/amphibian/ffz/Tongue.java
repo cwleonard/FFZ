@@ -75,6 +75,10 @@ public class Tongue implements Sprite {
 		this.y = y;
 	}
 	
+	public void hurt() {
+		// nothing
+	}
+	
 	@Override
 	public float getDrawX() {
 		

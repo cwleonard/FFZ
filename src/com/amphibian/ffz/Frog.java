@@ -239,6 +239,15 @@ public class Frog implements Sprite {
     	this.direction = DOWN;
     }
     
+    public float getLife() {
+    	return this.life;
+    }
+    
+    public void hurt() {
+    	this.life -= 0.05f;
+    	Log.d("ffz", "ouch!");
+    }
+    
     public void faceRight() {
     	this.sprite = SIT_FACE_RIGHT;
     	this.frames = rightFrames;

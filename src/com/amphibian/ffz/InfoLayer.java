@@ -29,8 +29,15 @@ public class InfoLayer implements VertexDataReader {
     private final int SKIP = COMBINED_DATA_SIZE * VERTICES_PER_OBJECT;
 
 	private int HEART;
+	private int HALF_HEART;
+	private int QRT1_HEART;
+	private int QRT3_HEART;
+	private int EMPTY_HEART;
 	private int THERMOMETER;
-	private int HYDROMETER;
+	private int HYDROMETER_BACK;
+	private int HYDROMETER_LINES;
+	
+	private Frog frog;
 	
 	private static TextureManager tm;
 
@@ -116,6 +123,10 @@ public class InfoLayer implements VertexDataReader {
     	this.dataReader = r;
     }
     
+    public void setFrog(Frog f) {
+    	this.frog = f;
+    }
+    
 	public float[] readVertexData() {
 		
 		float[] data = {};
@@ -136,8 +147,18 @@ public class InfoLayer implements VertexDataReader {
 
 					if ("heart".equalsIgnoreCase(vdh.getName())) {
 						HEART = i;
-					} else if ("hydrometer_demo".equalsIgnoreCase(vdh.getName())) {
-						HYDROMETER = i;
+					} else if ("half_heart".equalsIgnoreCase(vdh.getName())) {
+						HALF_HEART = i;
+					} else if ("third_quarter_heart".equalsIgnoreCase(vdh.getName())) {
+						QRT3_HEART = i;
+					} else if ("empty_heart".equalsIgnoreCase(vdh.getName())) {
+						EMPTY_HEART = i;
+					} else if ("first_quarter_heart".equalsIgnoreCase(vdh.getName())) {
+						QRT1_HEART = i;
+					} else if ("hydrometer_back".equalsIgnoreCase(vdh.getName())) {
+						HYDROMETER_BACK = i;
+					} else if ("hydrometer_lines".equalsIgnoreCase(vdh.getName())) {
+						HYDROMETER_LINES = i;
 					} else if ("thermometer_demo".equalsIgnoreCase(vdh.getName())) {
 						THERMOMETER = i;
 					}
@@ -221,13 +242,30 @@ public class InfoLayer implements VertexDataReader {
 	
 	private void drawLife(Viewport vp) {
 
-		float x = 100f;
+		float x = 220f;
 
-		setBufferPosition(HEART);
 		setColor(normalColor);
 
 		for (int i = 0; i < 3; i++) {
 
+			if (frog != null) {
+			
+				float p = frog.getLife() - (2 - i);
+				if (p < 0f) {
+					setBufferPosition(EMPTY_HEART);
+				} else if (p < 0.25f) {
+					setBufferPosition(QRT3_HEART);
+				} else if (p < 0.5f) {
+					setBufferPosition(HALF_HEART);
+				} else if (p < 0.75f) {
+					setBufferPosition(QRT1_HEART);
+				} else {
+					setBufferPosition(HEART);
+				}
+				
+			} else {
+				setBufferPosition(HEART);
+			}
 			setDrawPosition(x, -80f);
 
 			// set up the view matrix and projection matrix (this stuff always draws in the same place,
@@ -240,7 +278,7 @@ public class InfoLayer implements VertexDataReader {
 			// Draw 
 			GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, 0);
 			
-			x += 60f;
+			x -= 60f;
 
 		}
 
@@ -250,7 +288,7 @@ public class InfoLayer implements VertexDataReader {
 
 	private void drawHydrometer(Viewport vp) {
 
-		setBufferPosition(HYDROMETER);
+		setBufferPosition(HYDROMETER_BACK);
 		setColor(normalColor);
 
 		setDrawPosition(1810f, -130f);
@@ -266,6 +304,23 @@ public class InfoLayer implements VertexDataReader {
 		GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, 0);
 			
 
+		
+		
+		setBufferPosition(HYDROMETER_LINES);
+
+		setDrawPosition(1810f, -130f);
+
+		// set up the view matrix and projection matrix (this stuff always draws in the same place,
+		// no matter where the camera is looking)
+		Matrix.multiplyMM(mvpMatrix, 0, vp.getProjMatrix(), 0, mMMatrix, 0);
+
+		// Apply the projection and view transformation
+		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+
+		// Draw 
+		GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, 0);
+
+		
 		
 	}
 	

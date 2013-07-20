@@ -41,6 +41,10 @@ public class Obstacle implements Sprite {
 		this.id = -1;
 	}
 	
+	public void hurt() {
+		// nothing
+	}
+	
 	public String getType() {
 		return type;
 	}

@@ -25,4 +25,6 @@ public interface Sprite {
 	
 	public void update(long delta);
 	
+	public void hurt();
+	
 }

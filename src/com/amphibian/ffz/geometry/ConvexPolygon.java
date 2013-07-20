@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.amphibian.ffz.Sprite;
+
 import android.util.Log;
 
 public class ConvexPolygon {
@@ -23,6 +25,8 @@ public class ConvexPolygon {
 	public ConvexPolygon() {
 		// nothing
 	}
+	
+	private Sprite owner;
 	
 	/**
 	 * Constructor.
@@ -89,6 +93,14 @@ public class ConvexPolygon {
 		}
 	
 	}
+	
+	public void setOwner(Sprite s) {
+		this.owner = s;
+	}
+	
+	public Sprite getOwner() {
+		return this.owner;
+	}
 
 	public void move(float dx, float dy) {
 		
@@ -132,6 +144,8 @@ public class ConvexPolygon {
     	smallest[1] = 0f;
     	smallest[2] = 0f;
     	overlap = 99999999f;
+    	
+    	if (this == other) return smallest;
     	
     	int myNumSides = this.getNumberOfSides();
     	int otherNumSides = other.getNumberOfSides();
