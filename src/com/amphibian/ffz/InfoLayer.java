@@ -36,6 +36,9 @@ public class InfoLayer implements VertexDataReader {
 	private int THERMOMETER;
 	private int HYDROMETER_BACK;
 	private int HYDROMETER_LINES;
+	private int HYDROMETER_WATER_BOTTOM;
+	private int HYDROMETER_WATER_TOP;
+	private int HYDROMETER_WATER_MIDDLE;
 	
 	private Frog frog;
 	
@@ -159,6 +162,12 @@ public class InfoLayer implements VertexDataReader {
 						HYDROMETER_BACK = i;
 					} else if ("hydrometer_lines".equalsIgnoreCase(vdh.getName())) {
 						HYDROMETER_LINES = i;
+					} else if ("hydrometer_water_bottom".equalsIgnoreCase(vdh.getName())) {
+						HYDROMETER_WATER_BOTTOM = i;
+					} else if ("hydrometer_water_top".equalsIgnoreCase(vdh.getName())) {
+						HYDROMETER_WATER_TOP = i;
+					} else if ("hydrometer_water_middle".equalsIgnoreCase(vdh.getName())) {
+						HYDROMETER_WATER_MIDDLE = i;
 					} else if ("thermometer_demo".equalsIgnoreCase(vdh.getName())) {
 						THERMOMETER = i;
 					}
@@ -303,11 +312,34 @@ public class InfoLayer implements VertexDataReader {
 		// Draw 
 		GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, 0);
 			
+		// ---------------------------------
 
+		setBufferPosition(HYDROMETER_WATER_BOTTOM);
+		setDrawPosition(1810f, -194f);
+		Matrix.multiplyMM(mvpMatrix, 0, vp.getProjMatrix(), 0, mMMatrix, 0);
+		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+		GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, 0);
 		
+
+		setBufferPosition(HYDROMETER_WATER_MIDDLE);
+		float p = 1.0f;
+		if (frog != null) {
+			p = frog.getMoisture();
+		}
+		
+		float y = -186.5f;
+		int howMany = (int) (29 * p);
+		for (int i = 0; i < howMany; i++) {
+			setDrawPosition(1810f, y);
+			Matrix.multiplyMM(mvpMatrix, 0, vp.getProjMatrix(), 0, mMMatrix, 0);
+			GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+			GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, 0);
+			y += 4;
+		}
+		
+		// ---------------------------------
 		
 		setBufferPosition(HYDROMETER_LINES);
-
 		setDrawPosition(1810f, -130f);
 
 		// set up the view matrix and projection matrix (this stuff always draws in the same place,
@@ -354,6 +386,11 @@ public class InfoLayer implements VertexDataReader {
         Matrix.setIdentityM(mMMatrix, 0);
     	Matrix.translateM(mMMatrix, 0, x, y, 0);
 	}
+	
+	public void setScale(float sx, float sy) {
+		Matrix.scaleM(mMMatrix, 0, sx, sy, 1);
+	}
+
 
 	private void setBufferPosition(int p) {
 		

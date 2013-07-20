@@ -23,6 +23,8 @@ public class Water {
 	private final float[] mMMatrix = new float[16];
 	private final float[] mvpMatrix = new float[16];
 	private final float[] eyeMatrix = new float[16];
+	
+	private boolean[][] wgrid;
 
 	// these are pointers to the buffers in the GPU where we load the vertex and texture data
 	final int buffers[] = new int[2];
@@ -82,6 +84,8 @@ public class Water {
     
     public Water(Tile[][] tiles) {
 
+    	wgrid = new boolean[tiles.length][tiles[0].length];
+    	
     	width = tiles[0].length * TILE_SIZE;
     	height = tiles.length * TILE_SIZE;
     	
@@ -116,6 +120,8 @@ public class Water {
 			for (int j = 0; j < tiles[i].length; j++) {
 			
 				if (tiles[i][j].getId() == 32 || tiles[i][j].isWater()) {
+					
+					wgrid[i][j] = true;
 					
 					//Log.d("ffz", "tile " + i + ", " + j + " is water");
 					
@@ -232,7 +238,14 @@ public class Water {
 
     }
     
-    
+    public boolean isWater(float x, float y) {
+    	
+    	int xi = (int) (x / 100);
+    	int yi = (int) (-y / 100);
+    	if (xi < 0 || yi < 0) return false;
+    	return wgrid[yi][xi];
+    	
+    }
     
     
     public void setTiles(Tile[][] oTiles) {

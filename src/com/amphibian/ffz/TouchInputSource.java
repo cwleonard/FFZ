@@ -56,4 +56,10 @@ public class TouchInputSource implements InputSource {
 		return 0;
 	}
 
+	@Override
+	public boolean isLeftTriggerPressed() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

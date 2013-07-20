@@ -292,11 +292,19 @@ public class Engine {
 			newObstacles = null;
 		}
 		if (remSprites.size() > 0) {
-			this.sprites.removeAll(remSprites);
+			for (Sprite s : remSprites) {
+				this.sprites.remove(s);
+				this.blockers.removeAll(s.getBlockers());
+			}
+			//this.sprites.removeAll(remSprites);
 			this.remSprites.clear();
 		}
 		if (newSprites.size() > 0) {
-			this.sprites.addAll(newSprites);
+			for (Sprite s : newSprites) {
+				this.sprites.add(s);
+				this.blockers.addAll(s.getBlockers());
+			}
+			//this.sprites.addAll(newSprites);
 			this.newSprites.clear();
 			//blockers = getBlockers();
 		}
@@ -348,6 +356,9 @@ public class Engine {
 		// move things that might move
 		for (Sprite s : sprites) {
 			s.update(delta);
+			if (s.remove()) {
+				this.removeSprite(s);
+			}
 		}
 		viewport.update(delta);
 		
@@ -372,13 +383,15 @@ public class Engine {
 					for (int j = 0; j < blockers.size(); j++) {
 						ConvexPolygon cp = blockers.get(j);
 						mtv = poly.intersectsWith(cp);
-						correction[0] += mtv[0] * mtv[2];
-						correction[1] += mtv[1] * mtv[2];
 						if (mtv[0] != 0 || mtv[1] != 0) {
 							if (cp.getOwner() != null) {
 								s.hurt();
+								mtv[0] = 0f;
+								mtv[1] = 0f;
 							}
 						}
+						correction[0] += mtv[0] * mtv[2];
+						correction[1] += mtv[1] * mtv[2];
 					}
 
 					s.move(correction[0], correction[1]);
@@ -387,6 +400,14 @@ public class Engine {
 				
 			}
 			
+		}
+		
+		
+		if (water.isWater(frog.getDrawX(), frog.getDrawY())) {
+			frog.hydrate(delta);
+			frog.setSwimming(true);
+		} else {
+			frog.setSwimming(false);
 		}
 		
 		

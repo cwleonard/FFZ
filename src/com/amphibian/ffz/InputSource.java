@@ -13,6 +13,8 @@ public interface InputSource {
 	public boolean isButton3Pressed();
 
 	public boolean isButton4Pressed();
+	
+	public boolean isLeftTriggerPressed();
 
 	public float getStick2X();
 	

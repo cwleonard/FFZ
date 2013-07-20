@@ -114,4 +114,9 @@ public class OuyaInputSource implements InputSource {
 		return (c != null ? c.getButton(OuyaController.BUTTON_U) : false);
 	}
 
+	@Override
+	public boolean isLeftTriggerPressed() {
+		return (c != null ? c.getButton(OuyaController.BUTTON_L1) : false);
+	}
+
 }

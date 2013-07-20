@@ -122,6 +122,12 @@ public class Obstacle implements Sprite {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public boolean remove() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	
 

@@ -44,6 +44,8 @@ public class Rabbit implements Sprite {
 	private boolean moving = false;
 	private int frameIndex = 0;
 	private float distanceMoved = 0f;
+	
+	private boolean dead = false;
 
 	public static void init() {
 		
@@ -75,7 +77,11 @@ public class Rabbit implements Sprite {
     }
     
     public void hurt() {
-    	// nothing
+    	this.life -= 0.1f;
+    	if (this.life <= 0.0f) {
+    		this.dead = true;
+    	}
+    	Log.d("ffz", "rabbit hurt!");
     }
     
 	public Engine getEngine() {
@@ -87,6 +93,8 @@ public class Rabbit implements Sprite {
 	}
 
 	public void update(long delta) {
+		
+		if (dead) return;
 		
 		float[] m = new float[2];
 
@@ -114,7 +122,9 @@ public class Rabbit implements Sprite {
 		
 	}
 
-	
+	public boolean remove() {
+		return this.dead;
+	}
 
 	public void setDirection(float x, float y) {
 

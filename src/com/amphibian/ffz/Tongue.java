@@ -59,6 +59,10 @@ public class Tongue implements Sprite {
 		
 		frog = f;
 		blockers = new ArrayList<ConvexPolygon>();
+    	float[] p = { -6, 6, 6, 6, 6, -6, -6, -6 };
+    	ConvexPolygon mainBlocker = new ConvexPolygon(p, getPolyX(), getPolyY() - 12.5f);
+    	mainBlocker.setOwner(this);
+    	blockers.add(mainBlocker);
 
 	}
 
@@ -77,6 +81,28 @@ public class Tongue implements Sprite {
 	
 	public void hurt() {
 		// nothing
+	}
+	
+	private float getPolyX() {
+		float fx = frog.getDrawX();
+		if (frog.getDirection() == Frog.LEFT) {
+			return fx - OFFSET_X - 120;
+		} else if (frog.getDirection() == Frog.RIGHT) {
+			return fx + OFFSET_X + 120;
+		} else {
+			return fx;
+		}
+	}
+	
+	private float getPolyY() {
+		float fy = frog.getDrawY();
+		if (frog.getDirection() == Frog.UP) {
+			return fy - OFFSET_Y - 120;
+		} else if (frog.getDirection() == Frog.DOWN) {
+			return fy + OFFSET_Y + 120;
+		} else {
+			return fy;
+		}
 	}
 	
 	@Override
@@ -211,6 +237,12 @@ public class Tongue implements Sprite {
 	public void update(long delta) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public boolean remove() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 

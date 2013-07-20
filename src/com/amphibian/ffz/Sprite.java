@@ -27,4 +27,6 @@ public interface Sprite {
 	
 	public void hurt();
 	
+	public boolean remove();
+	
 }

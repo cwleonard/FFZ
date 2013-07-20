@@ -48,7 +48,12 @@ public class Frog implements Sprite {
 	private static int OPEN_MOUTH_RIGHT;
 	private static int OPEN_MOUTH_LEFT;
 	private static int OPEN_MOUTH_DOWN;
-	
+
+	private static int WATER_FACE_RIGHT;
+	private static int WATER_FACE_LEFT;
+	private static int WATER_FACE_DOWN;
+	private static int WATER_FACE_UP;
+
 	private int[] frames;
 	
 	private static int[] rightFrames;
@@ -56,11 +61,20 @@ public class Frog implements Sprite {
 	private static int[] upFrames;
 	private static int[] downFrames;
 	
+	private static int[] rightFramesW;
+	private static int[] leftFramesW;
+	private static int[] upFramesW;
+	private static int[] downFramesW;
+
+	
+	
 	private long elapsed;
 	private boolean moving = false;
 	private int frameIndex = 0;
 
 	private Tongue t;
+	private boolean om = false;
+	private boolean swimming = false;
 	
 	public static void init() {
 		
@@ -78,12 +92,21 @@ public class Frog implements Sprite {
 		OPEN_MOUTH_RIGHT = fdm.getFrameIndex("open_mouth_right");
 		OPEN_MOUTH_LEFT = fdm.getFrameIndex("open_mouth_left");
 		OPEN_MOUTH_DOWN = fdm.getFrameIndex("open_mouth_down");
+		WATER_FACE_RIGHT = fdm.getFrameIndex("frog_water_right");
+		WATER_FACE_LEFT = fdm.getFrameIndex("frog_water_left");
+		WATER_FACE_DOWN = fdm.getFrameIndex("frog_water_down");
+		WATER_FACE_UP = fdm.getFrameIndex("frog_water_up");
 		
 		rightFrames = new int[] { JUMPING_RIGHT_1, JUMPING_RIGHT_2, SIT_FACE_RIGHT };
 		leftFrames = new int[] { JUMPING_LEFT_1, JUMPING_LEFT_2, SIT_FACE_LEFT };
 		upFrames = new int[] { JUMPING_UP, SIT_FACE_UP };
 		downFrames = new int[] { JUMPING_DOWN, SIT_FACE_DOWN };
-		
+
+		rightFramesW = new int[] { WATER_FACE_RIGHT };
+		leftFramesW = new int[] { WATER_FACE_LEFT };
+		upFramesW = new int[] { WATER_FACE_UP };
+		downFramesW = new int[] { WATER_FACE_DOWN };
+
 		Tongue.init();
 		
 	}
@@ -93,7 +116,7 @@ public class Frog implements Sprite {
     	this.faceRight();
     	//t = new Tongue(this);
     	this.initBlocker();
-    	this.moisture = 100f;
+    	this.moisture = 1.0f;
     	this.life = 3f;
         
     }
@@ -131,11 +154,19 @@ public class Frog implements Sprite {
 		
 		if (inputSource != null) {
 			this.ribbit(this.inputSource.isButton3Pressed());
-			if (t == null) {
+			if (this.inputSource.isLeftTriggerPressed()) {
+				this.hydrate(delta);
+			}
+			if (t == null && !om) {
 				getMovement(delta, this.inputSource.getStickX(), this.inputSource.getStickY());
 			}
 		}
 		
+	}
+	
+	public void hydrate(long delta) {
+		this.moisture += (delta * BASE_SPEED) * .003f;
+		if (this.moisture > 1.0f) this.moisture = 1.0f;
 	}
 
 	private void getMovement(long delta, float stickX, float stickY) {
@@ -189,11 +220,13 @@ public class Frog implements Sprite {
 	}
 	
 	public void ribbit(boolean b) {
-		if (t == null && b) {
+		om = b;
+		if (t == null && b && moisture > 0f && !swimming) {
 			t = new Tongue(this);
 			if (engine != null) {
 				engine.addSprite(t);
 			}
+			this.moisture -= 0.03f;
 		} else if (t != null && !b) {
 			if (engine != null) {
 				engine.removeSprite(t);
@@ -233,14 +266,12 @@ public class Frog implements Sprite {
     	this.mainBlocker.move(dx, dy);
     }
     
-    public void faceDown() {
-    	this.sprite = SIT_FACE_DOWN;
-    	this.frames = downFrames;
-    	this.direction = DOWN;
-    }
-    
     public float getLife() {
     	return this.life;
+    }
+    
+    public float getMoisture() {
+    	return this.moisture;
     }
     
     public void hurt() {
@@ -248,21 +279,47 @@ public class Frog implements Sprite {
     	Log.d("ffz", "ouch!");
     }
     
+    public void faceDown() {
+    	if (swimming) {
+    		this.sprite = WATER_FACE_DOWN;
+    		this.frames = downFramesW;
+    	} else {
+    		this.sprite = SIT_FACE_DOWN;
+    		this.frames = downFrames;
+    	}
+    	this.direction = DOWN;
+    }
+    
     public void faceRight() {
-    	this.sprite = SIT_FACE_RIGHT;
-    	this.frames = rightFrames;
+    	if (swimming) {
+    		this.sprite = WATER_FACE_RIGHT;
+    		this.frames = rightFramesW;
+    	} else {
+    		this.sprite = SIT_FACE_RIGHT;
+    		this.frames = rightFrames;
+    	}
     	this.direction = RIGHT;
     }
     
     public void faceLeft() {
-    	this.sprite = SIT_FACE_LEFT;
-    	this.frames = leftFrames;
+    	if (swimming) {
+    		this.sprite = WATER_FACE_LEFT;
+    		this.frames = leftFramesW;
+    	} else {
+    		this.sprite = SIT_FACE_LEFT;
+    		this.frames = leftFrames;
+    	}
     	this.direction = LEFT;
     }
     
     public void faceUp() {
-    	this.sprite = SIT_FACE_UP;
-    	this.frames = upFrames;
+    	if (swimming) {
+    		this.sprite = WATER_FACE_UP;
+    		this.frames = upFramesW;
+    	} else {
+    		this.sprite = SIT_FACE_UP;
+    		this.frames = upFrames;
+    	}
     	this.direction = UP;
     }
     
@@ -271,9 +328,9 @@ public class Frog implements Sprite {
     }
 
 	public int getBufferIndex() {
-		if (!moving && t == null) {
+		if (!moving && t == null && !om) {
 			return sprite;
-		} else if (t != null) {
+		} else if (t != null || om) {
 			if (this.sprite == SIT_FACE_RIGHT) {
 				return OPEN_MOUTH_RIGHT;
 			} else if (this.sprite == SIT_FACE_LEFT) {
@@ -284,8 +341,20 @@ public class Frog implements Sprite {
 				return sprite;
 			}
 		} else {
+			if (frameIndex > frames.length - 1) frameIndex = 0; // TODO: check this. I shouldn't need this check
 			return frames[frameIndex];
 		}
+	}
+
+	public boolean isSwimming() {
+		return swimming;
+	}
+
+	public void setSwimming(boolean swimming) {
+		if (!this.swimming && swimming) {
+			this.frameIndex = 0;
+		}
+		this.swimming = swimming;
 	}
 
 	@Override
@@ -338,6 +407,12 @@ public class Frog implements Sprite {
 	@Override
 	public boolean checkMovement() {
 		return true;
+	}
+
+	@Override
+	public boolean remove() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 

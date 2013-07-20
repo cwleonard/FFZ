@@ -173,6 +173,9 @@ public class MainActivity extends FragmentActivity {
 					} else if (type == 1) {
 						cob.put("type", "tree1");
 						canBeConverted = true;
+					} else if (type == 4) {
+						cob.put("type", "rock");
+						canBeConverted = true;
 					}
 					
 					JSONObject pos = ob.getJSONObject("position");
