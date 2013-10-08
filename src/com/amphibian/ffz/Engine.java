@@ -130,7 +130,7 @@ public class Engine {
 				.create();
 			
 
-			Tile[][] tiles = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.area3)), Tile[][].class);
+			Tile[][] tiles = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.area4)), Tile[][].class);
 			ground = new Ground(tiles);
 			water = new Water(tiles);
 
@@ -184,7 +184,7 @@ public class Engine {
 //			ground = new Ground(tiles);
 			
 			Type collectionType = new TypeToken<List<Obstacle>>(){}.getType();
-			List<Obstacle> obs = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.obstacles)), collectionType);
+			List<Obstacle> obs = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.obstacles3)), collectionType);
 			
 			sprites.addAll(obs);
 			

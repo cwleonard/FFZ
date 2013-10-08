@@ -137,7 +137,7 @@ public class MainActivity extends FragmentActivity {
     private void createMediaPlayer() {
     	if (player == null) {
     		Log.i("ffz", "creating media player");
-    		player = MediaPlayer.create(this, R.raw.olive_twist_60);
+    		player = MediaPlayer.create(this, R.raw.wendy_bonson);
     		player.setVolume(0.2f, 0.2f);
     		player.setLooping(true);
     	}
@@ -175,6 +175,15 @@ public class MainActivity extends FragmentActivity {
 						canBeConverted = true;
 					} else if (type == 4) {
 						cob.put("type", "rock");
+						canBeConverted = true;
+					} else if (type == 13) {
+						cob.put("type", "flower2");
+						canBeConverted = true;
+					} else if (type == 14) {
+						cob.put("type", "pine_tree");
+						canBeConverted = true;
+					} else if (type == 3) {
+						cob.put("type", "tall_grass");
 						canBeConverted = true;
 					}
 					

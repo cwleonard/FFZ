@@ -19,6 +19,8 @@ public class Frog implements Sprite {
 	private float moisture;
 	private float life;
 	
+	private int mode = 0;
+	
 	float x =  50f;
 	float y = -50f;
 
@@ -49,6 +51,21 @@ public class Frog implements Sprite {
 	private static int OPEN_MOUTH_LEFT;
 	private static int OPEN_MOUTH_DOWN;
 
+	private static int SIT_FACE_RIGHT_SCI;
+	private static int SIT_FACE_LEFT_SCI;
+	private static int SIT_FACE_DOWN_SCI;
+	private static int SIT_FACE_UP_SCI;
+	private static int JUMPING_UP_SCI;
+	private static int JUMPING_DOWN_SCI;
+	private static int JUMPING_LEFT_1_SCI;
+	private static int JUMPING_LEFT_2_SCI;
+	private static int JUMPING_RIGHT_1_SCI;
+	private static int JUMPING_RIGHT_2_SCI;
+	private static int OPEN_MOUTH_RIGHT_SCI;
+	private static int OPEN_MOUTH_LEFT_SCI;
+	private static int OPEN_MOUTH_DOWN_SCI;
+	
+	
 	private static int WATER_FACE_RIGHT;
 	private static int WATER_FACE_LEFT;
 	private static int WATER_FACE_DOWN;
@@ -66,6 +83,10 @@ public class Frog implements Sprite {
 	private static int[] upFramesW;
 	private static int[] downFramesW;
 
+	private static int[] rightFramesSci;
+	private static int[] leftFramesSci;
+	private static int[] upFramesSci;
+	private static int[] downFramesSci;
 	
 	
 	private long elapsed;
@@ -96,6 +117,20 @@ public class Frog implements Sprite {
 		WATER_FACE_LEFT = fdm.getFrameIndex("frog_water_left");
 		WATER_FACE_DOWN = fdm.getFrameIndex("frog_water_down");
 		WATER_FACE_UP = fdm.getFrameIndex("frog_water_up");
+
+		SIT_FACE_RIGHT_SCI = fdm.getFrameIndex("sitting_right_science");
+		SIT_FACE_LEFT_SCI = fdm.getFrameIndex("sitting_left_science");
+		SIT_FACE_DOWN_SCI = fdm.getFrameIndex("sitting_down");
+		SIT_FACE_UP_SCI = fdm.getFrameIndex("sitting_up_science");
+		JUMPING_UP_SCI = fdm.getFrameIndex("frog_jumping_up_science");
+		JUMPING_DOWN_SCI = fdm.getFrameIndex("frog_jumping_down");
+		JUMPING_LEFT_1_SCI = fdm.getFrameIndex("jumping_left_1_science");
+		JUMPING_LEFT_2_SCI = fdm.getFrameIndex("jumping_left_2_science");
+		JUMPING_RIGHT_1_SCI = fdm.getFrameIndex("jumping_right_1_science");
+		JUMPING_RIGHT_2_SCI = fdm.getFrameIndex("jumping_right_2_science");
+		OPEN_MOUTH_RIGHT_SCI = fdm.getFrameIndex("open_mouth_right_science");
+		OPEN_MOUTH_LEFT_SCI = fdm.getFrameIndex("open_mouth_left_science");
+		OPEN_MOUTH_DOWN_SCI = fdm.getFrameIndex("open_mouth_down");
 		
 		rightFrames = new int[] { JUMPING_RIGHT_1, JUMPING_RIGHT_2, SIT_FACE_RIGHT };
 		leftFrames = new int[] { JUMPING_LEFT_1, JUMPING_LEFT_2, SIT_FACE_LEFT };
@@ -106,6 +141,11 @@ public class Frog implements Sprite {
 		leftFramesW = new int[] { WATER_FACE_LEFT };
 		upFramesW = new int[] { WATER_FACE_UP };
 		downFramesW = new int[] { WATER_FACE_DOWN };
+
+		upFramesSci = new int[] { JUMPING_UP_SCI, SIT_FACE_UP_SCI };
+		downFramesSci = new int[] { JUMPING_DOWN_SCI, SIT_FACE_DOWN_SCI };
+		rightFramesSci = new int[] { JUMPING_RIGHT_1_SCI, JUMPING_RIGHT_2_SCI, SIT_FACE_RIGHT_SCI };
+		leftFramesSci = new int[] { JUMPING_LEFT_1_SCI, JUMPING_LEFT_2_SCI, SIT_FACE_LEFT_SCI };
 
 		Tongue.init();
 		
@@ -156,6 +196,11 @@ public class Frog implements Sprite {
 			this.ribbit(this.inputSource.isButton3Pressed());
 			if (this.inputSource.isLeftTriggerPressed()) {
 				this.hydrate(delta);
+				if (mode == 0) {
+					mode = 1;
+				} else {
+					mode = 0;
+				}
 			}
 			if (t == null && !om) {
 				getMovement(delta, this.inputSource.getStickX(), this.inputSource.getStickY());
@@ -284,8 +329,8 @@ public class Frog implements Sprite {
     		this.sprite = WATER_FACE_DOWN;
     		this.frames = downFramesW;
     	} else {
-    		this.sprite = SIT_FACE_DOWN;
-    		this.frames = downFrames;
+    		this.sprite = (mode == 0 ? SIT_FACE_DOWN : SIT_FACE_DOWN_SCI);
+    		this.frames = (mode == 0 ? downFrames : downFramesSci);
     	}
     	this.direction = DOWN;
     }
@@ -295,8 +340,8 @@ public class Frog implements Sprite {
     		this.sprite = WATER_FACE_RIGHT;
     		this.frames = rightFramesW;
     	} else {
-    		this.sprite = SIT_FACE_RIGHT;
-    		this.frames = rightFrames;
+    		this.sprite = (mode == 0 ? SIT_FACE_RIGHT : SIT_FACE_RIGHT_SCI);
+    		this.frames = (mode == 0 ? rightFrames : rightFramesSci);
     	}
     	this.direction = RIGHT;
     }
@@ -306,8 +351,8 @@ public class Frog implements Sprite {
     		this.sprite = WATER_FACE_LEFT;
     		this.frames = leftFramesW;
     	} else {
-    		this.sprite = SIT_FACE_LEFT;
-    		this.frames = leftFrames;
+    		this.sprite = (mode == 0 ? SIT_FACE_LEFT : SIT_FACE_LEFT_SCI);
+    		this.frames = (mode == 0 ? leftFrames : leftFramesSci);
     	}
     	this.direction = LEFT;
     }
@@ -317,8 +362,8 @@ public class Frog implements Sprite {
     		this.sprite = WATER_FACE_UP;
     		this.frames = upFramesW;
     	} else {
-    		this.sprite = SIT_FACE_UP;
-    		this.frames = upFrames;
+    		this.sprite = (mode == 0 ? SIT_FACE_UP : SIT_FACE_UP_SCI);
+    		this.frames = (mode == 0 ? upFrames : upFramesSci);
     	}
     	this.direction = UP;
     }
