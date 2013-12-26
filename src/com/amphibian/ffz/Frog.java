@@ -24,8 +24,6 @@ public class Frog implements Sprite {
 	float x =  50f;
 	float y = -50f;
 
-	private FrogPath fp;
-
     private int sprite;
     
     private int direction;
@@ -178,10 +176,6 @@ public class Frog implements Sprite {
 		this.engine = engine;
 	}
 
-	public void setFrogPath(FrogPath fp) {
-		this.fp = fp;
-	}
-	
 	public InputSource getInputSource() {
 		return inputSource;
 	}
@@ -203,7 +197,7 @@ public class Frog implements Sprite {
 				}
 			}
 			if (t == null && !om) {
-				getMovement(delta, this.inputSource.getStickX(), this.inputSource.getStickY());
+				getMovement(delta);
 			}
 		}
 		
@@ -214,30 +208,9 @@ public class Frog implements Sprite {
 		if (this.moisture > 1.0f) this.moisture = 1.0f;
 	}
 
-	private void getMovement(long delta, float stickX, float stickY) {
+	private void getMovement(long delta) {
 		
-		float[] m = new float[2];
-		if (fp != null) { // this frog has a path set, follow it!
-			
-			float dist = delta * BASE_SPEED;
-			float[] cp = new float[2];
-			cp[0] = this.x;
-			cp[1] = this.y;
-			float[] p = fp.getNextPoint(cp, dist);
-			
-			m[0] = p[0]-this.x;
-			m[1] = p[1]-this.y;
-			
-			if (p[2] == 1f) {
-				fp = null;
-			}
-			
-		} else { // we might have a joystick
-			
-			m[0] = delta * BASE_SPEED * stickX;
-			m[1] = delta * BASE_SPEED * stickY;
-			
-		}
+		float[] m = this.inputSource.getMovement(BASE_SPEED, delta);
 		
 		if (Math.abs(m[0]) > 0.0f || Math.abs(m[1]) > 0.0f) {
 			this.moving = true;
@@ -259,8 +232,6 @@ public class Frog implements Sprite {
 		
 		this.setDirection(m[0], m[1]);
 		this.move(m[0], m[1]);
-		
-		//return m;
 		
 	}
 	

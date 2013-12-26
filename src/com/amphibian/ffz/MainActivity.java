@@ -10,13 +10,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import tv.ouya.console.api.OuyaController;
-import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.InputDevice;

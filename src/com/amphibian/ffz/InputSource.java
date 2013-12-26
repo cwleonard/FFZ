@@ -2,6 +2,8 @@ package com.amphibian.ffz;
 
 public interface InputSource {
 
+	public float[] getMovement(float speed, float delta);
+	
 	public float getStickX();
 	
 	public float getStickY();

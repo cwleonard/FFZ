@@ -2,10 +2,10 @@ package com.amphibian.ffz;
 
 public class TouchInputSource implements InputSource {
 
-	private Sprite sprite;
+	private FrogPath path = null;
 	
-	public TouchInputSource(Sprite s) {
-		sprite = s;
+	public void setPath(FrogPath p) {
+		this.path = p;
 	}
 	
 	@Override
@@ -60,6 +60,17 @@ public class TouchInputSource implements InputSource {
 	public boolean isLeftTriggerPressed() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public float[] getMovement(float speed, float delta) {
+
+		if (path != null) {
+			return path.getDeltaToNextPoint(speed * delta);
+		} else {
+			return new float[]{0, 0};
+		}
+		
 	}
 
 }

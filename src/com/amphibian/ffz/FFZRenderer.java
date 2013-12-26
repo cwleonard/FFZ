@@ -16,11 +16,13 @@ public class FFZRenderer implements Renderer {
 	private int frames  = 0;
 	private long lastTime;
 	
+	private InputSource input;
 	private Engine engine;
+	
 
-    public FFZRenderer(Engine e, Context c) {
+    public FFZRenderer(InputSource is, Context c) {
     	
-    	//this.engine = e;
+    	this.input = is;
     	
     	this.context = c;
     	
@@ -109,6 +111,7 @@ public class FFZRenderer implements Renderer {
 		if (engine == null) {
 		
 			engine = new Engine(context);
+			engine.setInputSource(input);
 			
 		} else {
 			engine.glSetup(context);

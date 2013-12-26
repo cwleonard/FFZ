@@ -3,6 +3,7 @@ package com.amphibian.ffz;
 import tv.ouya.console.api.OuyaController;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
@@ -14,6 +15,8 @@ public class FFZSurfaceView extends GLSurfaceView {
 	
 	private Engine engine = null;
 	
+	private TouchInputSource tis = null;
+	
 	public FFZSurfaceView(Context context) {
 		
 		super(context);
@@ -21,10 +24,12 @@ public class FFZSurfaceView extends GLSurfaceView {
 		
 		//engine = new Engine(context);
 		
-		r = new FFZRenderer(null, context);
+		tis = new TouchInputSource();
+		
+		r = new FFZRenderer(tis, context);
 		setRenderer(r);
 		
-		setEngine(r.getEngine());
+//		setEngine(r.getEngine());
 		
 //		engine = new Engine(context);
 //		r.setEngine(engine);
@@ -72,8 +77,11 @@ public class FFZSurfaceView extends GLSurfaceView {
     		handled = true;
     		if (path != null) {
     			path.setEnd(event.getX(), -event.getY());
-    			if (engine != null && engine.getFrog() != null) {
-    				engine.getFrog().setFrogPath(path);
+//    			if (engine != null && engine.getFrog() != null) {
+//    				engine.getFrog().setFrogPath(path);
+//    			}
+    			if (this.tis != null) {
+    				this.tis.setPath(path);
     			}
     		}
     		break;

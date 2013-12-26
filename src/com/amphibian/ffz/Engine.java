@@ -167,7 +167,6 @@ public class Engine {
 
 		frog.faceRight();
 		frog.setEngine(this);
-		frog.setInputSource(new TouchInputSource(frog));
 
 		try {
 
@@ -201,6 +200,12 @@ public class Engine {
 
 		
 		
+	}
+	
+	public void setInputSource(InputSource is) {
+		if (this.frog != null) {
+			this.frog.setInputSource(is);
+		}
 	}
 	
 	

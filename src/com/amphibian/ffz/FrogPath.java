@@ -3,12 +3,13 @@ package com.amphibian.ffz;
 public class FrogPath {
 
 	private float x1;
-	
 	private float x2;
 	
 	private float y1;
-	
 	private float y2;
+	
+	private float cx;
+	private float cy;
 	
 	private float slope;
 	
@@ -21,6 +22,8 @@ public class FrogPath {
 	public void setStart(float x, float y) {
 		this.x1 = x;
 		this.y1 = y;
+		this.cx = x;
+		this.cy = y;
 	}
 	
 	public void setEnd(float x, float y) {
@@ -54,6 +57,21 @@ public class FrogPath {
 
 	private float yIntercept(float x, float y, float m) {
 		return (y - (m * x));
+	}
+	
+	public float[] getDeltaToNextPoint(float dist) {
+		
+		if (distMoved >= this.dist) return new float[]{0,0};
+		
+		float[] p = new float[]{cx, cy};
+		float[] m = getNextPoint(new float[]{cx, cy}, dist);
+		cx = m[0];
+		cy = m[1];
+		m[0] -= p[0];
+		m[1] -= p[1];
+		
+		return m;
+		
 	}
 	
 	public float[] getNextPoint(float[] cp, float dist) {

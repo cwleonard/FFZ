@@ -25,10 +25,12 @@ public class OuyaInputSource implements InputSource {
 	
 	private OuyaController c;
 	private float deadZone;
+	private float[] movement;
 	
 	public OuyaInputSource(OuyaController oc) {
 		this.c = oc;
 		deadZone = DEFAULT_DEAD_ZONE;
+		movement = new float[2];
 	}
 	
 	public float getDeadZone() {
@@ -46,6 +48,15 @@ public class OuyaInputSource implements InputSource {
 		return f;
 	}
 	
+	@Override
+	public float[] getMovement(float speed, float delta) {
+
+		movement[0] = delta * speed * this.getStickX();
+		movement[1] = delta * speed * this.getStickY();
+		return movement;
+		
+	}
+
 	@Override
 	public float getStickX() {
 		if (c != null) {
@@ -118,5 +129,6 @@ public class OuyaInputSource implements InputSource {
 	public boolean isLeftTriggerPressed() {
 		return (c != null ? c.getButton(OuyaController.BUTTON_L1) : false);
 	}
+
 
 }
