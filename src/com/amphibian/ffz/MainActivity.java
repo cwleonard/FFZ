@@ -48,7 +48,7 @@ public class MainActivity extends FragmentActivity {
 		
 		super.onCreate(savedInstanceState);
 
-		Log.i("ffz", "onCreate called");
+		Log.i("ffz", "MainActivity onCreate called");
 		
         // full-screen
         this.requestWindowFeature(Window.FEATURE_NO_TITLE); // (NEW)
@@ -57,9 +57,10 @@ public class MainActivity extends FragmentActivity {
 
         OuyaController.init(this);
         
-		glView = new FFZSurfaceView(this);
+        glView = new FFZSurfaceView(this);
 		setContentView(glView);
 		
+        
 		this.createMediaPlayer();
 		
 	}

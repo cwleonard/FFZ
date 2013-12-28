@@ -74,6 +74,8 @@ public class FFZRenderer implements Renderer {
 	@Override
 	public void onSurfaceChanged(GL10 unused, int width, int height) {
 
+		Log.i("ffz", "onSurfaceChanged called");
+
 		engine.createViewport(height, width);
 		
 //		GLES20.glViewport(0, 0, width, height);
@@ -142,10 +144,5 @@ public class FFZRenderer implements Renderer {
 	    return shader;
 	}
 
-//	public Engine getEngine() {
-//		return engine;
-//	}
-
-	
 
 }
