@@ -6,6 +6,7 @@ import java.util.List;
 import android.util.Log;
 
 import com.amphibian.ffz.geometry.ConvexPolygon;
+import com.amphibian.ffz.input.InputSource;
 
 public class Frog implements Sprite {
 

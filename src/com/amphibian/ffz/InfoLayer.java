@@ -1,5 +1,6 @@
 package com.amphibian.ffz;
 
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
@@ -16,7 +17,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-public class InfoLayer implements VertexDataReader {
+public class InfoLayer {
 
 	private final static int FLOATS_PER_UNIT = 20;
 	private final static int BYTES_PER_FLOAT = 4;
@@ -28,17 +29,17 @@ public class InfoLayer implements VertexDataReader {
     private final int STRIDE = COMBINED_DATA_SIZE * BYTES_PER_FLOAT;
     private final int SKIP = COMBINED_DATA_SIZE * VERTICES_PER_OBJECT;
 
-	private int HEART;
-	private int HALF_HEART;
-	private int QRT1_HEART;
-	private int QRT3_HEART;
-	private int EMPTY_HEART;
-	private int THERMOMETER;
-	private int HYDROMETER_BACK;
-	private int HYDROMETER_LINES;
-	private int HYDROMETER_WATER_BOTTOM;
-	private int HYDROMETER_WATER_TOP;
-	private int HYDROMETER_WATER_MIDDLE;
+	private static int HEART;
+	private static int HALF_HEART;
+	private static int QRT1_HEART;
+	private static int QRT3_HEART;
+	private static int EMPTY_HEART;
+	private static int THERMOMETER;
+	private static int HYDROMETER_BACK;
+	private static int HYDROMETER_LINES;
+	private static int HYDROMETER_WATER_BOTTOM;
+	private static int HYDROMETER_WATER_TOP;
+	private static int HYDROMETER_WATER_MIDDLE;
 	
 	private Frog frog;
 	
@@ -59,8 +60,6 @@ public class InfoLayer implements VertexDataReader {
 
     private static short drawOrder[] = { 0, 1, 2, 1, 3, 2 }; // order to draw vertices
 
-    private Reader dataReader;
-
 	/** This will be used to pass in the texture. */
 	private int mTextureUniformHandle;
 
@@ -72,12 +71,12 @@ public class InfoLayer implements VertexDataReader {
     
     public InfoLayer() {
 
-    	dataReader = null;
     	Matrix.setIdentityM(mMMatrix, 0);
+    	
 
     }
 
-	public void init(float[] alldata) {
+	private static void glInit(float[] alldata) {
 
     	FloatBuffer everythingBuffer = ByteBuffer
     			.allocateDirect(alldata.length * BYTES_PER_FLOAT)
@@ -122,15 +121,13 @@ public class InfoLayer implements VertexDataReader {
 	}
 
     
-    public void setReader(Reader r) {
-    	this.dataReader = r;
-    }
-    
     public void setFrog(Frog f) {
     	this.frog = f;
     }
     
-	public float[] readVertexData() {
+    public static void init() {
+    
+		Reader dataReader = new InputStreamReader(App.getContext().getResources().openRawResource(R.raw.infolayer));
 		
 		float[] data = {};
 		
@@ -179,18 +176,16 @@ public class InfoLayer implements VertexDataReader {
 			} catch (Exception e) {
 				Log.e("ffz", "info layer vertex data read error", e);
 			}
+		
+			glInit(data);
+		
 		}
-		
-		
-		
-		return data;
 		
 	}
 
     
 
 	public void draw(StandardProgram prog, Viewport vp) {
-    	
 
         // get handle to vertex shader's vPosition member
         mPositionHandle = prog.getAttributeLocation("vPosition");
@@ -240,6 +235,10 @@ public class InfoLayer implements VertexDataReader {
         GLES20.glDisableVertexAttribArray(mPositionHandle);
         
     }    
+
+	public static void unloadGLTexture() {
+		if (tm != null) tm.clearTextures();
+	}
 
 	public static void loadGLTexture(Context context) {
 
@@ -299,8 +298,10 @@ public class InfoLayer implements VertexDataReader {
 
 		setBufferPosition(HYDROMETER_BACK);
 		setColor(normalColor);
+		
+		float dx = vp.getWidth() - 110f;
 
-		setDrawPosition(1810f, -130f);
+		setDrawPosition(dx, -130f);
 
 		// set up the view matrix and projection matrix (this stuff always draws in the same place,
 		// no matter where the camera is looking)
@@ -315,7 +316,7 @@ public class InfoLayer implements VertexDataReader {
 		// ---------------------------------
 
 		setBufferPosition(HYDROMETER_WATER_BOTTOM);
-		setDrawPosition(1810f, -194f);
+		setDrawPosition(dx, -194f);
 		Matrix.multiplyMM(mvpMatrix, 0, vp.getProjMatrix(), 0, mMMatrix, 0);
 		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
 		GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, 0);
@@ -330,7 +331,7 @@ public class InfoLayer implements VertexDataReader {
 		float y = -186.5f;
 		int howMany = (int) (29 * p);
 		for (int i = 0; i < howMany; i++) {
-			setDrawPosition(1810f, y);
+			setDrawPosition(dx, y);
 			Matrix.multiplyMM(mvpMatrix, 0, vp.getProjMatrix(), 0, mMMatrix, 0);
 			GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
 			GLES20.glDrawElements(GLES20.GL_TRIANGLES, drawOrder.length, GLES20.GL_UNSIGNED_SHORT, 0);
@@ -340,7 +341,7 @@ public class InfoLayer implements VertexDataReader {
 		// ---------------------------------
 		
 		setBufferPosition(HYDROMETER_LINES);
-		setDrawPosition(1810f, -130f);
+		setDrawPosition(dx, -130f);
 
 		// set up the view matrix and projection matrix (this stuff always draws in the same place,
 		// no matter where the camera is looking)
@@ -362,7 +363,9 @@ public class InfoLayer implements VertexDataReader {
 		setBufferPosition(THERMOMETER);
 		setColor(normalColor);
 
-		setDrawPosition(1730f, -130f);
+		float dx = vp.getWidth() - 190f;
+		
+		setDrawPosition(dx, -130f);
 
 		// set up the view matrix and projection matrix (this stuff always draws in the same place,
 		// no matter where the camera is looking)
@@ -405,6 +408,5 @@ public class InfoLayer implements VertexDataReader {
 				GLES20.GL_FLOAT, false, STRIDE, pos);
 
 	}
-
-    
+	
 }

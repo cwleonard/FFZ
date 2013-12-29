@@ -248,6 +248,9 @@ public class Drawinator {
         
 	}
 	
+	public static void unloadGLTexture() {
+		if (tm != null) tm.clearTextures();
+	}
 
 	public static void loadGLTexture(Context context) {
 

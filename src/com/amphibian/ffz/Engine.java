@@ -12,13 +12,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import org.json.JSONObject;
+
 import tv.ouya.console.api.OuyaController;
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.os.SystemClock;
 import android.util.Log;
 
 import com.amphibian.ffz.data.ObstacleDeserializer;
 import com.amphibian.ffz.geometry.ConvexPolygon;
+import com.amphibian.ffz.input.InputSource;
+import com.amphibian.ffz.input.OuyaInputSource;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -28,6 +33,10 @@ public class Engine {
 	private long lastUpdate;
 	
 	private Viewport viewport;
+	
+	private MediaPlayer mediaPlayer = null;
+
+	private InputSource inputSource = null;
 	
 	//private Triangle triangle;
 	//private Square square;
@@ -61,8 +70,8 @@ public class Engine {
 	private List<Sprite> newSprites;
 	private List<Sprite> remSprites;
 	
-	private InputSource input1;
-	private InputSource input2;
+	//private InputSource input1;
+	//private InputSource input2;
 	
 	private String fid = UUID.randomUUID().toString();
 	
@@ -72,56 +81,47 @@ public class Engine {
 	private String newGround;
 	private String newObstacles;
 
-	public Engine(Context context) {
-
-		infoLayer = new InfoLayer();
-		//waterLayer = new WaterLayer();
-		
-		glSetup(context);
-
-		init(context);
-		
-		
-
-//		try {
-//			socket = new SocketIO("http://www.amphibian.com:8080/");
-//			socket.connect(new FrogSocketMessageHandler());
-//			JSONObject jo = new JSONObject();
-//			jo.put("fid", fid);
-//			socket.emit("startup", jo);
-//		} catch (Exception e) {
-//			Log.e("ffz", "socket.io error", e);
-//		}
-
-		
-		
-		
-		
-		//recreateStuff(context);
-		
-		
-
+	public Engine() {
 	}
 	
-	public void glSetup(Context context) {
-
-		Reader infoDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.infolayer));
-		infoLayer.setReader(infoDataReader);
+	/**
+	 * not used right now
+	 */
+	public void connectWebsocket() {
 		
+		try {
+			socket = new SocketIO("http://www.amphibian.com:8080/");
+			socket.connect(new FrogSocketMessageHandler());
+			JSONObject jo = new JSONObject();
+			jo.put("fid", fid);
+			socket.emit("startup", jo);
+		} catch (Exception e) {
+			Log.e("ffz", "socket.io error", e);
+		}
+		
+	}
+	
+	public void setup() {
+		glSetup();
+		init();
+	}
+	
+	public void glSetup() {
+
 //		Reader waterDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.waterlayer));
 //		waterLayer.setReader(waterDataReader);
 
 		
-		this.loadTextures(context);
+		this.loadTextures(App.getContext());
 		
 		prog = new StandardProgram();
 
 		FrameDataManager fdman = FrameDataManager.getInstance();
 		fdman.add(Frog.class);
 		fdman.add(Rabbit.class);
-		fdman.addReader(infoLayer);
+		fdman.add(InfoLayer.class);
 		//fdman.addReader(waterLayer);
-		drawinator = fdman.init(context);
+		drawinator = fdman.init(App.getContext());
 
 		try {
 
@@ -130,7 +130,7 @@ public class Engine {
 				.create();
 			
 
-			Tile[][] tiles = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.area4)), Tile[][].class);
+			Tile[][] tiles = gson.fromJson(new InputStreamReader(App.getContext().getResources().openRawResource(R.raw.area4)), Tile[][].class);
 			ground = new Ground(tiles);
 			water = new Water(tiles);
 
@@ -141,7 +141,16 @@ public class Engine {
 		
 	}
 	
-	public void init(Context context) {
+	public void init() {
+		
+		Log.i("ffz", "creating media player");
+		mediaPlayer = MediaPlayer.create(App.getContext(), R.raw.wendy_bonson);
+		mediaPlayer.setVolume(0.2f, 0.2f);
+		mediaPlayer.setLooping(true);
+		mediaPlayer.start();
+
+		infoLayer = new InfoLayer();
+
 		
 		spriteSorter = new SpriteSorter();
 		
@@ -159,6 +168,10 @@ public class Engine {
 		
 		infoLayer.setFrog(frog);
 		
+		if (inputSource != null) {
+			frog.setInputSource(inputSource);
+		}
+		
 
 		//TODO move this out of here at some point
 		float[] c = {200, -900};
@@ -174,16 +187,13 @@ public class Engine {
 				.registerTypeAdapter(Obstacle.class, new ObstacleDeserializer())
 				.create();
 			
-//			Reader infoDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.infolayer));
-//			infoLayer = new InfoLayer(infoDataReader);
-
 //			if (tiles == null) {
 //				tiles = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.area3)), Tile[][].class);
 //			}
 //			ground = new Ground(tiles);
 			
 			Type collectionType = new TypeToken<List<Obstacle>>(){}.getType();
-			List<Obstacle> obs = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.obstacles3)), collectionType);
+			List<Obstacle> obs = gson.fromJson(new InputStreamReader(App.getContext().getResources().openRawResource(R.raw.obstacles3)), collectionType);
 			
 			sprites.addAll(obs);
 			
@@ -202,10 +212,22 @@ public class Engine {
 		
 	}
 	
+	public void cleanup() {
+		
+		this.unloadTextures();
+		FrameDataManager.destroy();
+		
+        mediaPlayer.pause();
+        mediaPlayer.release();
+		
+	}
+	
+	public void resume() {
+		
+	}
+	
 	public void setInputSource(InputSource is) {
-		if (this.frog != null) {
-			this.frog.setInputSource(is);
-		}
+		this.inputSource = is;
 	}
 	
 	
@@ -216,6 +238,14 @@ public class Engine {
 		InfoLayer.loadGLTexture(context);
 		Water.loadGLTexture(context);
 	}
+	
+	public void unloadTextures() {
+		Ground.unloadGLTexture();
+		Drawinator.unloadGLTexture();
+		InfoLayer.unloadGLTexture();
+		Water.unloadGLTexture();
+	}
+	
 	
 	public void setNewGround(String ng) {
 		this.newGround = ng;
@@ -321,6 +351,10 @@ public class Engine {
 		if (frog != null) {
 			viewport.setFollow(frog);
 		}
+		if (ground != null) {
+			viewport.setAreaHeight(ground.getHeight());
+			viewport.setAreaWidth(ground.getWidth());
+		}
 		
 	}
 	
@@ -333,29 +367,29 @@ public class Engine {
 		long delta = now - lastUpdate;
 		lastUpdate = now;
 		
-		if (input1 == null) {
-			OuyaController oc1 = OuyaController.getControllerByPlayer(0);
-			if (oc1 != null) {
-				input1 = new OuyaInputSource(oc1);
-				frog.setInputSource(input1);
-				viewport.setInputSource(new OuyaInputSource(OuyaController.getControllerByPlayer(0)));
-				viewport.setFollow(frog);
-				viewport.setAreaHeight(ground.getHeight());
-				viewport.setAreaWidth(ground.getWidth());
-
-			}
-		}
-		if (input2 == null) {
-			OuyaController oc2 = OuyaController.getControllerByPlayer(1);
-			if (oc2 != null) {
-				if (frog2 == null) {
-					frog2 = new Frog();
-					input2 = new OuyaInputSource(oc2);
-					frog2.setInputSource(input2);
-					addSprite(frog2);
-				}
-			}
-		}
+//		if (input1 == null) {
+//			OuyaController oc1 = OuyaController.getControllerByPlayer(0);
+//			if (oc1 != null) {
+//				input1 = new OuyaInputSource(oc1);
+//				frog.setInputSource(input1);
+//				viewport.setInputSource(new OuyaInputSource(OuyaController.getControllerByPlayer(0)));
+//				viewport.setFollow(frog);
+//				viewport.setAreaHeight(ground.getHeight());
+//				viewport.setAreaWidth(ground.getWidth());
+//
+//			}
+//		}
+//		if (input2 == null) {
+//			OuyaController oc2 = OuyaController.getControllerByPlayer(1);
+//			if (oc2 != null) {
+//				if (frog2 == null) {
+//					frog2 = new Frog();
+//					input2 = new OuyaInputSource(oc2);
+//					frog2.setInputSource(input2);
+//					addSprite(frog2);
+//				}
+//			}
+//		}
 		
 		
 		// move things that might move

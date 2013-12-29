@@ -1,5 +1,7 @@
 package com.amphibian.ffz;
 
+import com.amphibian.ffz.input.InputSource;
+
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 

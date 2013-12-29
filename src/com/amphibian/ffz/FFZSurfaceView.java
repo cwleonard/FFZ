@@ -1,10 +1,11 @@
 package com.amphibian.ffz;
 
 import tv.ouya.console.api.OuyaController;
-import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+
+import com.amphibian.ffz.input.TouchInputSource;
 
 public class FFZSurfaceView extends GLSurfaceView {
 
@@ -14,22 +15,23 @@ public class FFZSurfaceView extends GLSurfaceView {
 	
 	private TouchInputSource tis = null;
 	
-	public FFZSurfaceView(Context context) {
+	public FFZSurfaceView(Engine e) {
 		
-		super(context);
+		super(App.getContext());
 		setEGLContextClientVersion(2);
 		
-		tis = new TouchInputSource();
-		r = new FFZRenderer(tis, context);
+
+		r = new FFZRenderer(e);
 		
 		setRenderer(r);
 		
 	}
-
-	public Engine getEngine() {
-		return r.getEngine();
-	}
 	
+	public void setTouchInput(Engine e) {
+		tis = new TouchInputSource();
+		e.setInputSource(tis);
+	}
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
     	boolean handled = OuyaController.onKeyDown(keyCode, event);

@@ -725,6 +725,9 @@ public class Ground {
 		return height;
 	}
 
+	public static void unloadGLTexture() {
+		if (tm != null) tm.clearTextures();
+	}
 
 	public static void loadGLTexture(Context context) {
 

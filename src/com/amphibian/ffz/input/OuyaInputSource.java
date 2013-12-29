@@ -1,4 +1,5 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.input;
+
 
 import tv.ouya.console.api.OuyaController;
 

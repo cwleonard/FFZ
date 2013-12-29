@@ -67,6 +67,12 @@ public class TextureManager {
 
 		}
 	}
+	
+	public void clearTextures() {
+		
+		GLES20.glDeleteTextures(textures.length, textures, 0);
+		
+	}
 
 	public void setTexture(int id) {
 		try {

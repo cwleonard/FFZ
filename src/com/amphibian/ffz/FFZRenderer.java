@@ -3,7 +3,6 @@ package com.amphibian.ffz;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView.Renderer;
 import android.os.SystemClock;
@@ -11,28 +10,19 @@ import android.util.Log;
 
 public class FFZRenderer implements Renderer {
 
-	private Context context;
+	private Engine engine;
 	
 	private int frames  = 0;
 	private long lastTime;
 	
-	private InputSource input;
-	private Engine engine;
-	
 
-    public FFZRenderer(InputSource is, Context c) {
+    public FFZRenderer(Engine e) {
     	
-    	this.input = is;
-    	
-    	this.context = c;
+    	this.engine = e;
     	
     	lastTime = SystemClock.elapsedRealtime();
 
     	
-    }
-    
-    public Engine getEngine() {
-    	return engine;
     }
     
 	@Override
@@ -110,14 +100,16 @@ public class FFZRenderer implements Renderer {
 		//GLES20.glDepthFunc( GLES20.GL_LEQUAL );
 		//GLES20.glDepthMask( true );
 		
-		if (engine == null) {
+		engine.setup();
 		
-			engine = new Engine(context);
-			engine.setInputSource(input);
-			
-		} else {
-			engine.glSetup(context);
-		}
+//		if (engine == null) {
+//		
+//			engine = new Engine(context);
+//			engine.setInputSource(input);
+//			
+//		} else {
+//			engine.glSetup(context);
+//		}
 		
 		//engine.loadTextures(context);
 //		}

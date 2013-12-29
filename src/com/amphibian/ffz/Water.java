@@ -240,6 +240,7 @@ public class Water {
     
     public boolean isWater(float x, float y) {
     	
+    	//TODO: fix index out of bounds
     	int xi = (int) (x / 100);
     	int yi = (int) (-y / 100);
     	if (xi < 0 || yi < 0) return false;
@@ -331,6 +332,9 @@ public class Water {
 		return height;
 	}
 
+	public static void unloadGLTexture() {
+		if (tm != null) tm.clearTextures();
+	}
 
 	public static void loadGLTexture(Context context) {
 

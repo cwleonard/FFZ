@@ -9,9 +9,12 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.amphibian.ffz.input.InputSource;
+import com.amphibian.ffz.input.OuyaInputSource;
+
 import tv.ouya.console.api.OuyaController;
+import tv.ouya.console.api.OuyaFacade;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -19,8 +22,6 @@ import android.util.Log;
 import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.Window;
-import android.view.WindowManager;
 
 public class MainActivity extends FragmentActivity {
 
@@ -28,7 +29,7 @@ public class MainActivity extends FragmentActivity {
 	
 	private FFZSurfaceView glView;
 	
-	private MediaPlayer player = null;
+	private Engine engine = null;
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
@@ -50,19 +51,22 @@ public class MainActivity extends FragmentActivity {
 
 		Log.i("ffz", "MainActivity onCreate called");
 		
-        // full-screen
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE); // (NEW)
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN); // (NEW)
-
-        OuyaController.init(this);
-        
-        glView = new FFZSurfaceView(this);
+		engine = new Engine();
+        glView = new FFZSurfaceView(engine);
 		setContentView(glView);
+
+		if (OuyaFacade.getInstance().isRunningOnOUYAHardware()) {
+			OuyaController.init(this);
+			OuyaController oc1 = OuyaController.getControllerByPlayer(0);
+			InputSource is = new OuyaInputSource(oc1);
+			engine.setInputSource(is);
+		} else {
+			// set touch-screen input source
+			glView.setTouchInput(engine);
+		}
+        
 		
         
-		this.createMediaPlayer();
-		
 	}
 	
     @Override
@@ -100,9 +104,9 @@ public class MainActivity extends FragmentActivity {
         // If your OpenGL application is memory intensive,
         // you should consider de-allocating objects that
         // consume significant memory here.
-        player.pause();
-        player.release();
-        player = null;
+		
+		engine.cleanup();
+		
         glView.onPause();
     }
     
@@ -110,8 +114,7 @@ public class MainActivity extends FragmentActivity {
     protected void onResume() {
         super.onResume();
 		Log.i("ffz", "onResume called");
-		this.createMediaPlayer();
-    	player.start();
+		engine.resume();
         glView.onResume();
     }
     
@@ -132,15 +135,6 @@ public class MainActivity extends FragmentActivity {
     	Log.i("ffz", "onDestroy called. is finishing? " + this.isFinishing());
     }
     
-    private void createMediaPlayer() {
-    	if (player == null) {
-    		Log.i("ffz", "creating media player");
-    		player = MediaPlayer.create(this, R.raw.wendy_bonson);
-    		player.setVolume(0.2f, 0.2f);
-    		player.setLooping(true);
-    	}
-    }
-
     private class GetAreaAsyncTask extends AsyncTask<String, Void, List<String>> {
 
 		@Override
@@ -213,9 +207,8 @@ public class MainActivity extends FragmentActivity {
     		
 			if (glView != null) {
 				
-				Engine e = glView.getEngine();
-				e.setNewGround(result.get(0));
-				e.setNewObstacles(result.get(1));
+				engine.setNewGround(result.get(0));
+				engine.setNewObstacles(result.get(1));
 				
 			}
 

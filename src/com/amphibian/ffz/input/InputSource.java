@@ -1,4 +1,4 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.input;
 
 public interface InputSource {
 

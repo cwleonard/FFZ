@@ -1,4 +1,6 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.input;
+
+import com.amphibian.ffz.FrogPath;
 
 public class TouchInputSource implements InputSource {
 

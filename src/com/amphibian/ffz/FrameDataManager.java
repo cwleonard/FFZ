@@ -47,6 +47,21 @@ public class FrameDataManager {
 		return instance;
 	}
 	
+	public static synchronized void destroy() {
+		if (instance != null) {
+			instance.clear();
+			instance = null;
+		}
+	}
+	
+	public synchronized void clear() {
+		
+		frames.clear();
+		cPolys.clear();
+		toInit.clear();
+		readers.clear();
+		
+	}
 	
 	
 	public Drawinator init(Context context) {
