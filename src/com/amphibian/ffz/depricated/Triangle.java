@@ -1,8 +1,10 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.depricated;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+
+import com.amphibian.ffz.FFZRenderer;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
