@@ -1,26 +1,24 @@
-package com.amphibian.ffz;
-
-import java.util.HashMap;
+package com.amphibian.ffz.opengl;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import android.content.Context;
+import com.amphibian.ffz.App;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.util.Log;
+import android.util.SparseIntArray;
 
 public class TextureManager {
 	
-	private HashMap<Integer, Integer> textureMap; 
+	private SparseIntArray textureMap; 
 	private int[] textureFiles; 
-	private Context context; 
 	private int[] textures;
 	
-	public TextureManager(Context context) {
-		this.context = context;
-		this.textureMap = new HashMap<Integer, Integer>();
+	public TextureManager() {
+		this.textureMap = new SparseIntArray();
 	}
 	
 	public void add(int resource) {
@@ -50,7 +48,7 @@ public class TextureManager {
 			final BitmapFactory.Options options = new BitmapFactory.Options();
 	        options.inScaled = false;   // No pre-scaling
 	 
-			Bitmap bmp = BitmapFactory.decodeResource(context.getResources(),
+			Bitmap bmp = BitmapFactory.decodeResource(App.getContext().getResources(),
 					textureFiles[i], options);
 			
 			textureMap.put(Integer.valueOf(textureFiles[i]), Integer.valueOf((i)));

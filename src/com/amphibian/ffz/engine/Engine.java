@@ -1,29 +1,42 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.engine;
 
 import io.socket.SocketIO;
 
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.XMLConfiguration;
 import org.json.JSONObject;
 
-import tv.ouya.console.api.OuyaController;
-import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.amphibian.ffz.App;
+import com.amphibian.ffz.FrogSocketMessageHandler;
+import com.amphibian.ffz.R;
 import com.amphibian.ffz.data.ObstacleDeserializer;
+import com.amphibian.ffz.engine.layers.Ground;
+import com.amphibian.ffz.engine.layers.InfoLayer;
+import com.amphibian.ffz.engine.layers.SpriteLayer;
+import com.amphibian.ffz.engine.layers.Water;
+import com.amphibian.ffz.engine.sprite.FrameDataManager;
+import com.amphibian.ffz.engine.sprite.Frog;
+import com.amphibian.ffz.engine.sprite.Obstacle;
+import com.amphibian.ffz.engine.sprite.Rabbit;
+import com.amphibian.ffz.engine.sprite.Sprite;
+import com.amphibian.ffz.engine.world.Tile;
 import com.amphibian.ffz.geometry.ConvexPolygon;
 import com.amphibian.ffz.input.InputSource;
-import com.amphibian.ffz.input.OuyaInputSource;
+import com.amphibian.ffz.opengl.StandardProgram;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -37,9 +50,10 @@ public class Engine {
 	private MediaPlayer mediaPlayer = null;
 
 	private InputSource inputSource = null;
+
+	private List<String> glTextureLoaders = null;
 	
-	//private Triangle triangle;
-	//private Square square;
+	
 	private Frog frog = null;
 	private Frog frog2 = null;
 	private Rabbit rabbit = null;
@@ -49,7 +63,7 @@ public class Engine {
 	private Water water;
 	
 	//private Obstacles obstacles;
-	private Drawinator drawinator;
+	private SpriteLayer drawinator;
 	
 	//private int fps = 0;
 	private long cycle = 0;
@@ -70,9 +84,6 @@ public class Engine {
 	private List<Sprite> newSprites;
 	private List<Sprite> remSprites;
 	
-	//private InputSource input1;
-	//private InputSource input2;
-	
 	private String fid = UUID.randomUUID().toString();
 	
 	
@@ -82,6 +93,18 @@ public class Engine {
 	private String newObstacles;
 
 	public Engine() {
+		
+		glTextureLoaders = new ArrayList<String>();
+		try {
+			
+			XMLConfiguration config = new XMLConfiguration();
+			config.load(App.getContext().getResources().openRawResource(R.raw.config));
+			glTextureLoaders.addAll(Arrays.asList(config.getStringArray("glTextureLoaders")));
+			
+		} catch (ConfigurationException e) {
+			Log.e("ffz", "error loading configuration", e);
+		}
+		
 	}
 	
 	/**
@@ -108,19 +131,17 @@ public class Engine {
 	
 	public void glSetup() {
 
-//		Reader waterDataReader = new InputStreamReader(context.getResources().openRawResource(R.raw.waterlayer));
-//		waterLayer.setReader(waterDataReader);
-
-		
-		this.loadTextures(App.getContext());
-		
 		prog = new StandardProgram();
+		prog.addTexture(R.drawable.ground_tiles);
+		prog.addTexture(R.drawable.all_textures);
+		prog.addTexture(R.drawable.info_textures);
+		prog.addTexture(R.drawable.blank);
+		prog.loadTextures();
 
 		FrameDataManager fdman = FrameDataManager.getInstance();
 		fdman.add(Frog.class);
 		fdman.add(Rabbit.class);
 		fdman.add(InfoLayer.class);
-		//fdman.addReader(waterLayer);
 		drawinator = fdman.init(App.getContext());
 
 		try {
@@ -163,8 +184,6 @@ public class Engine {
 
 		frog = new Frog();
 		rabbit = new Rabbit();
-		//triangle = new Triangle();
-		//square = new Square();
 		
 		infoLayer.setFrog(frog);
 		
@@ -212,9 +231,12 @@ public class Engine {
 		
 	}
 	
+	/**
+	 * Unloads textures, clears arrays of vertex data, and stops music.
+	 */
 	public void cleanup() {
 		
-		this.unloadTextures();
+		prog.unloadTextures();
 		FrameDataManager.destroy();
 		
         mediaPlayer.pause();
@@ -229,23 +251,6 @@ public class Engine {
 	public void setInputSource(InputSource is) {
 		this.inputSource = is;
 	}
-	
-	
-	
-	public void loadTextures(Context context) {
-		Ground.loadGLTexture(context);
-		Drawinator.loadGLTexture(context);
-		InfoLayer.loadGLTexture(context);
-		Water.loadGLTexture(context);
-	}
-	
-	public void unloadTextures() {
-		Ground.unloadGLTexture();
-		Drawinator.unloadGLTexture();
-		InfoLayer.unloadGLTexture();
-		Water.unloadGLTexture();
-	}
-	
 	
 	public void setNewGround(String ng) {
 		this.newGround = ng;
@@ -367,18 +372,6 @@ public class Engine {
 		long delta = now - lastUpdate;
 		lastUpdate = now;
 		
-//		if (input1 == null) {
-//			OuyaController oc1 = OuyaController.getControllerByPlayer(0);
-//			if (oc1 != null) {
-//				input1 = new OuyaInputSource(oc1);
-//				frog.setInputSource(input1);
-//				viewport.setInputSource(new OuyaInputSource(OuyaController.getControllerByPlayer(0)));
-//				viewport.setFollow(frog);
-//				viewport.setAreaHeight(ground.getHeight());
-//				viewport.setAreaWidth(ground.getWidth());
-//
-//			}
-//		}
 //		if (input2 == null) {
 //			OuyaController oc2 = OuyaController.getControllerByPlayer(1);
 //			if (oc2 != null) {
@@ -505,12 +498,6 @@ public class Engine {
 		
 		frameCounter++;
 		
-		//triangle.draw(viewport.getProjMatrix(), viewport.getViewMatrix());
-		
-	}
-
-	public Frog getFrog() {
-		return frog;
 	}
 
     public List<ConvexPolygon> getBlockers() {

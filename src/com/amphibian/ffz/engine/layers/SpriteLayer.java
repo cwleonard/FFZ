@@ -1,4 +1,4 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.engine.layers;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -6,17 +6,22 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.List;
 
-import android.content.Context;
+import com.amphibian.ffz.R;
+import com.amphibian.ffz.R.drawable;
+import com.amphibian.ffz.engine.Viewport;
+import com.amphibian.ffz.engine.sprite.Sprite;
+import com.amphibian.ffz.opengl.StandardProgram;
+
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
-public class Drawinator {
+public class SpriteLayer {
 
 	public static final int SHADOW_MODE = 0;
 	public static final int NORMAL_MODE = 1;
 	
-	final static float SHADOW_SCALE = 0.7f;
+	public final static float SHADOW_SCALE = 0.7f;
 	
 	private final static int BYTES_PER_FLOAT = 4;
 	private final static int BYTES_PER_SHORT = 2;
@@ -27,9 +32,6 @@ public class Drawinator {
 	private final static int DRAW_ORDER_DATA_SIZE = 6;
 
 	private final static int COMBINED_DATA_SIZE = POSITION_DATA_SIZE + TEXTURE_COORDINATE_DATA_SIZE;
-	
-	
-	private static TextureManager tm;
 	
 	private final float[] mMMatrix = new float[16];
 	private final float[] mvpMatrix = new float[16];
@@ -61,7 +63,6 @@ public class Drawinator {
 	/** This will be used to pass in model texture coordinate information. */
 	private int mTextureCoordinateHandle;
 	 
-	private Viewport viewport;
 	private float[] viewMatrix;
 	private float[] projMatrix;
 	 
@@ -72,7 +73,7 @@ public class Drawinator {
     
     private int[] buffers = new int[2];
 
-    public Drawinator(float[] vdata) {
+    public SpriteLayer(float[] vdata) {
     	
     	Matrix.setIdentityM(mMMatrix, 0);
 
@@ -126,7 +127,6 @@ public class Drawinator {
 
 	public void draw(List<Sprite> sprites, StandardProgram prog, Viewport vp) {
     	
-		//viewport = vp;
 		viewMatrix = vp.getViewMatrix();
 		projMatrix = vp.getProjMatrix();
 		
@@ -151,8 +151,7 @@ public class Drawinator {
         // set texture was here
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
-        tm.setTexture(R.drawable.all_textures);
-
+        prog.useTexture(R.drawable.all_textures);
         
     	// get handle to shape's transformation matrix
     	mMVPMatrixHandle = prog.getUniformLocation("uMVPMatrix");
@@ -247,18 +246,5 @@ public class Drawinator {
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, DRAW_ORDER_DATA_SIZE, GLES20.GL_UNSIGNED_SHORT, 0);
         
 	}
-	
-	public static void unloadGLTexture() {
-		if (tm != null) tm.clearTextures();
-	}
-
-	public static void loadGLTexture(Context context) {
-
-		tm = new TextureManager(context);
-		tm.add(R.drawable.all_textures);
-		tm.loadTextures();
-		
-	}
-    
     
 }

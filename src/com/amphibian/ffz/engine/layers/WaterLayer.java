@@ -1,4 +1,4 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.engine.layers;
 
 import java.io.Reader;
 import java.lang.reflect.Type;
@@ -13,6 +13,13 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import com.amphibian.ffz.R;
+import com.amphibian.ffz.R.drawable;
+import com.amphibian.ffz.engine.Viewport;
+import com.amphibian.ffz.engine.util.VertexDataHolder;
+import com.amphibian.ffz.engine.util.VertexDataReader;
+import com.amphibian.ffz.opengl.StandardProgram;
+import com.amphibian.ffz.opengl.TextureManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -228,7 +235,7 @@ public class WaterLayer implements VertexDataReader {
 
 	public static void loadGLTexture(Context context) {
 
-		tm = new TextureManager(context);
+		tm = new TextureManager();
 		tm.add(R.drawable.blank);
 		tm.loadTextures();
 

@@ -1,10 +1,12 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.engine.sprite;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import android.util.Log;
 
+import com.amphibian.ffz.engine.Engine;
+import com.amphibian.ffz.engine.layers.SpriteLayer;
 import com.amphibian.ffz.geometry.ConvexPolygon;
 import com.amphibian.ffz.input.InputSource;
 
@@ -385,7 +387,7 @@ public class Frog implements Sprite {
 	}
 
 	@Override
-	public void draw(Drawinator d) {
+	public void draw(SpriteLayer d) {
 
 		float z = -1f - (this.getBottom() / 999999f);
 
@@ -393,10 +395,10 @@ public class Frog implements Sprite {
 		d.setBufferPosition(this.getBufferIndex());
 		
 		d.setDrawPosition(this.getShadowX(), this.getShadowY(), z - 0.00001f);
-		d.setMode(Drawinator.SHADOW_MODE);
+		d.setMode(SpriteLayer.SHADOW_MODE);
 		d.performDraw();
 		
-		d.setMode(Drawinator.NORMAL_MODE);
+		d.setMode(SpriteLayer.NORMAL_MODE);
 		d.setDrawPosition(this.getDrawX(), this.getDrawY(), z);
 		d.performDraw();
 		
@@ -412,7 +414,7 @@ public class Frog implements Sprite {
 	}
 	
 	public float getShadowY() {
-		return this.y - (25f * (1f - Drawinator.SHADOW_SCALE));
+		return this.y - (25f * (1f - SpriteLayer.SHADOW_SCALE));
 	}
 	
 	public List<ConvexPolygon> getBlockers() {

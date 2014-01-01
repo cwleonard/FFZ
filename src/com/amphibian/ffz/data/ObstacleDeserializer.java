@@ -2,7 +2,7 @@ package com.amphibian.ffz.data;
 
 import java.lang.reflect.Type;
 
-import com.amphibian.ffz.Obstacle;
+import com.amphibian.ffz.engine.sprite.Obstacle;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;

@@ -5,6 +5,7 @@ import android.opengl.GLSurfaceView;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
+import com.amphibian.ffz.engine.Engine;
 import com.amphibian.ffz.input.TouchInputSource;
 
 public class FFZSurfaceView extends GLSurfaceView {

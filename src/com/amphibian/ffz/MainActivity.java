@@ -9,6 +9,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.amphibian.ffz.engine.Engine;
 import com.amphibian.ffz.input.InputSource;
 import com.amphibian.ffz.input.OuyaInputSource;
 
@@ -57,6 +58,7 @@ public class MainActivity extends FragmentActivity {
 
 		if (OuyaFacade.getInstance().isRunningOnOUYAHardware()) {
 			OuyaController.init(this);
+			OuyaController.showCursor(false);
 			OuyaController oc1 = OuyaController.getControllerByPlayer(0);
 			InputSource is = new OuyaInputSource(oc1);
 			engine.setInputSource(is);

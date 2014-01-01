@@ -1,7 +1,8 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.engine.sprite;
 
 import java.util.List;
 
+import com.amphibian.ffz.engine.layers.SpriteLayer;
 import com.amphibian.ffz.geometry.ConvexPolygon;
 
 public class Obstacle implements Sprite {
@@ -72,17 +73,17 @@ public class Obstacle implements Sprite {
 		return y;
 	}
 	@Override
-	public void draw(Drawinator d) {
+	public void draw(SpriteLayer d) {
 
 		float z = -1f - (this.getBottom() / 999999f);
 
 		d.setBufferPosition(this.id);
 		
 		d.setDrawPosition(this.getShadowX(), this.getShadowY(), z - 0.00001f);
-		d.setMode(Drawinator.SHADOW_MODE);
+		d.setMode(SpriteLayer.SHADOW_MODE);
 		d.performDraw();
 		
-		d.setMode(Drawinator.NORMAL_MODE);
+		d.setMode(SpriteLayer.NORMAL_MODE);
 		d.setDrawPosition(x, y, z);
 		d.performDraw();
 		
@@ -93,7 +94,7 @@ public class Obstacle implements Sprite {
 	}
 	
 	public float getShadowY() {
-		return this.y - (this.hh * (1f - Drawinator.SHADOW_SCALE));
+		return this.y - (this.hh * (1f - SpriteLayer.SHADOW_SCALE));
 	}
 	
 	public float getShadowX() {

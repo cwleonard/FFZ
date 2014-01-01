@@ -1,7 +1,8 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.engine.sprite;
 
 import java.util.List;
 
+import com.amphibian.ffz.engine.layers.SpriteLayer;
 import com.amphibian.ffz.geometry.ConvexPolygon;
 
 public interface Sprite {
@@ -10,7 +11,7 @@ public interface Sprite {
 	
 	public float getDrawY();
 	
-	public void draw(Drawinator d);
+	public void draw(SpriteLayer d);
 	
 	public float getBottom();
 	

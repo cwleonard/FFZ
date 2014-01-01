@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.amphibian.ffz.Sprite;
+import com.amphibian.ffz.engine.sprite.Sprite;
 
 import android.util.Log;
 

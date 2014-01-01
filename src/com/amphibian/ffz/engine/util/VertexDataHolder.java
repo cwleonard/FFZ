@@ -1,4 +1,4 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.engine.util;
 
 public class VertexDataHolder {
 

@@ -1,6 +1,8 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.engine;
 
 import java.util.Comparator;
+
+import com.amphibian.ffz.engine.sprite.Sprite;
 
 public class SpriteSorter implements Comparator<Sprite> {
 

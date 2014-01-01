@@ -1,11 +1,16 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.engine.layers;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
-import android.content.Context;
+import com.amphibian.ffz.R;
+import com.amphibian.ffz.R.drawable;
+import com.amphibian.ffz.engine.Viewport;
+import com.amphibian.ffz.engine.world.Tile;
+import com.amphibian.ffz.opengl.StandardProgram;
+
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
@@ -16,8 +21,6 @@ public class Ground {
 	private static final int TILE_SIZE = 100;
 
 	private Tile[][] oTiles;
-
-	private static TextureManager tm;
 
 	private final float[] mMMatrix = new float[16];
 	private final float[] mvpMatrix = new float[16];
@@ -673,7 +676,7 @@ public class Ground {
         
         mTextureUniformHandle = prog.getUniformLocation("u_Texture");
         mTextureCoordinateHandle = prog.getAttributeLocation("a_TexCoordinate");
-        tm.setTexture(R.drawable.ground_tiles);
+        prog.useTexture(R.drawable.ground_tiles);
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
@@ -724,18 +727,5 @@ public class Ground {
 	public int getHeight() {
 		return height;
 	}
-
-	public static void unloadGLTexture() {
-		if (tm != null) tm.clearTextures();
-	}
-
-	public static void loadGLTexture(Context context) {
-
-		tm = new TextureManager(context);
-		tm.add(R.drawable.ground_tiles);
-		tm.loadTextures();
-
-	}
-    
     
 }

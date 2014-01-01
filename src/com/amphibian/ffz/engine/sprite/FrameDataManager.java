@@ -1,4 +1,4 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.engine.sprite;
 
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
@@ -15,6 +15,11 @@ import java.util.Set;
 import android.content.Context;
 import android.util.Log;
 
+import com.amphibian.ffz.R;
+import com.amphibian.ffz.R.raw;
+import com.amphibian.ffz.engine.layers.SpriteLayer;
+import com.amphibian.ffz.engine.util.VertexDataHolder;
+import com.amphibian.ffz.engine.util.VertexDataReader;
 import com.amphibian.ffz.geometry.ConvexPolygon;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -64,9 +69,9 @@ public class FrameDataManager {
 	}
 	
 	
-	public Drawinator init(Context context) {
+	public SpriteLayer init(Context context) {
 		
-		Drawinator d = new Drawinator(this.readVertexData(context));
+		SpriteLayer d = new SpriteLayer(this.readVertexData(context));
 		this.performInitializations();
 		return d;
 		

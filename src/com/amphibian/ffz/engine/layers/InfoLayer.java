@@ -1,4 +1,4 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.engine.layers;
 
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -14,6 +14,14 @@ import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
+import com.amphibian.ffz.App;
+import com.amphibian.ffz.R;
+import com.amphibian.ffz.R.drawable;
+import com.amphibian.ffz.R.raw;
+import com.amphibian.ffz.engine.Viewport;
+import com.amphibian.ffz.engine.sprite.Frog;
+import com.amphibian.ffz.engine.util.VertexDataHolder;
+import com.amphibian.ffz.opengl.StandardProgram;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -43,8 +51,6 @@ public class InfoLayer {
 	
 	private Frog frog;
 	
-	private static TextureManager tm;
-
     // Set color with red, green, blue and alpha (opacity) values
     private float normalColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -205,7 +211,7 @@ public class InfoLayer {
         
         mTextureUniformHandle = prog.getUniformLocation("u_Texture");
         mTextureCoordinateHandle = prog.getAttributeLocation("a_TexCoordinate");
-        tm.setTexture(R.drawable.info_textures);
+        prog.useTexture(R.drawable.info_textures);
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
@@ -236,18 +242,6 @@ public class InfoLayer {
         
     }    
 
-	public static void unloadGLTexture() {
-		if (tm != null) tm.clearTextures();
-	}
-
-	public static void loadGLTexture(Context context) {
-
-		tm = new TextureManager(context);
-		tm.add(R.drawable.info_textures);
-		tm.loadTextures();
-
-	}
-	
 	private void drawLife(Viewport vp) {
 
 		float x = 220f;

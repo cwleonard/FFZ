@@ -1,9 +1,12 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.opengl;
+
 
 import android.opengl.GLES20;
 
 public class StandardProgram {
 
+	private TextureManager tm;
+	
 	private int mProgram;
 
 	private final String vertexShaderCode =
@@ -31,6 +34,8 @@ public class StandardProgram {
 	
 	public StandardProgram() {
 		
+		tm = new TextureManager();
+		
         int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
         int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
 
@@ -41,6 +46,22 @@ public class StandardProgram {
 		
 	}
 	
+	public void addTexture(int t) {
+		tm.add(t);
+	}
+	
+	public void loadTextures() {
+		tm.loadTextures();
+	}
+	
+	public void unloadTextures() {
+		tm.clearTextures();
+	}
+
+	public void useTexture(int t) {
+		tm.setTexture(t);
+	}
+
 	public void enable() {
 		GLES20.glUseProgram(mProgram);
 	}

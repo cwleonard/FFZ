@@ -1,5 +1,6 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.engine;
 
+import com.amphibian.ffz.engine.sprite.Sprite;
 import com.amphibian.ffz.input.InputSource;
 
 import android.opengl.GLES20;

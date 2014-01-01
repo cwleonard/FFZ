@@ -1,8 +1,9 @@
-package com.amphibian.ffz;
+package com.amphibian.ffz.engine.sprite;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.amphibian.ffz.engine.layers.SpriteLayer;
 import com.amphibian.ffz.geometry.ConvexPolygon;
 
 public class Tongue implements Sprite {
@@ -130,7 +131,7 @@ public class Tongue implements Sprite {
 	}
 	
 	@Override
-	public void draw(Drawinator d) {
+	public void draw(SpriteLayer d) {
 		
 		float pw = 0.0f, ph = 0.0f;
 		float ew = 0.0f, eh = 0.0f; 
@@ -172,7 +173,7 @@ public class Tongue implements Sprite {
 //		d.setMode(Drawinator.SHADOW_MODE);
 //		d.performDraw();
 		
-		d.setMode(Drawinator.NORMAL_MODE);
+		d.setMode(SpriteLayer.NORMAL_MODE);
 
 		float th = 0;
 		float tw = 0;
