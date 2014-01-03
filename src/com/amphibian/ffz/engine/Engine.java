@@ -5,7 +5,6 @@ import io.socket.SocketIO;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
@@ -51,8 +50,6 @@ public class Engine {
 
 	private InputSource inputSource = null;
 
-	private List<String> glTextureLoaders = null;
-	
 	
 	private Frog frog = null;
 	private Frog frog2 = null;
@@ -94,16 +91,21 @@ public class Engine {
 
 	public Engine() {
 		
-		glTextureLoaders = new ArrayList<String>();
 		try {
 			
 			XMLConfiguration config = new XMLConfiguration();
 			config.load(App.getContext().getResources().openRawResource(R.raw.config));
-			glTextureLoaders.addAll(Arrays.asList(config.getStringArray("glTextureLoaders")));
 			
 		} catch (ConfigurationException e) {
 			Log.e("ffz", "error loading configuration", e);
 		}
+		
+		spriteSorter = new SpriteSorter();
+
+		sprites = new ArrayList<Sprite>(100);
+		newSprites = new ArrayList<Sprite>(50);
+		remSprites = new ArrayList<Sprite>(50);
+
 		
 	}
 	
@@ -141,8 +143,9 @@ public class Engine {
 		FrameDataManager fdman = FrameDataManager.getInstance();
 		fdman.add(Frog.class);
 		fdman.add(Rabbit.class);
-		fdman.add(InfoLayer.class);
 		drawinator = fdman.init(App.getContext());
+
+		infoLayer = new InfoLayer();
 
 		try {
 
@@ -164,20 +167,16 @@ public class Engine {
 	
 	public void init() {
 		
+		//TODO: music should come from the Area currently inhabited
 		Log.i("ffz", "creating media player");
 		mediaPlayer = MediaPlayer.create(App.getContext(), R.raw.wendy_bonson);
 		mediaPlayer.setVolume(0.2f, 0.2f);
 		mediaPlayer.setLooping(true);
 		mediaPlayer.start();
 
-		infoLayer = new InfoLayer();
 
 		
-		spriteSorter = new SpriteSorter();
 		
-		sprites = new ArrayList<Sprite>(100);
-		newSprites = new ArrayList<Sprite>(50);
-		remSprites = new ArrayList<Sprite>(50);
 
 		lastUpdate = SystemClock.elapsedRealtime();
 		cycle = SystemClock.elapsedRealtime();

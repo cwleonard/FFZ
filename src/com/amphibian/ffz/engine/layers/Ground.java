@@ -1,23 +1,41 @@
 package com.amphibian.ffz.engine.layers;
 
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
+import java.util.List;
 
+import com.amphibian.ffz.App;
 import com.amphibian.ffz.R;
 import com.amphibian.ffz.R.drawable;
 import com.amphibian.ffz.engine.Viewport;
+import com.amphibian.ffz.engine.util.VertexDataHolder;
 import com.amphibian.ffz.engine.world.Tile;
 import com.amphibian.ffz.opengl.StandardProgram;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 
 public class Ground {
 
 	private final static int BYTES_PER_FLOAT = 4;
+    private final static int VERTICES_PER_OBJECT = 4;
+    private final static int POSITION_DATA_SIZE = 3;
+	private final static int TEXTURE_COORDINATE_DATA_SIZE = 2;
+	private final static int COMBINED_DATA_SIZE = POSITION_DATA_SIZE + TEXTURE_COORDINATE_DATA_SIZE;
 
+    private final int STRIDE = COMBINED_DATA_SIZE * BYTES_PER_FLOAT;
+    private final int SKIP = COMBINED_DATA_SIZE * VERTICES_PER_OBJECT;
+    
+	private final static int FLOATS_PER_UNIT = 20;
+	
 	private static final int TILE_SIZE = 100;
 
 	private Tile[][] oTiles;
@@ -54,15 +72,8 @@ public class Ground {
     
     //private ShortBuffer drawListBuffer;
     
-    private final static int VERTICES_PER_OBJECT = 4;
-    private final static int POSITION_DATA_SIZE = 3;
-	private final static int TEXTURE_COORDINATE_DATA_SIZE = 2;
-	private final static int COMBINED_DATA_SIZE = POSITION_DATA_SIZE + TEXTURE_COORDINATE_DATA_SIZE;
 
-    private final int STRIDE = COMBINED_DATA_SIZE * BYTES_PER_FLOAT;
-    private final int SKIP = COMBINED_DATA_SIZE * VERTICES_PER_OBJECT;
-
-
+    
     private float whatnot[] = {
     		
             0f, 100f, 0f, // 0     // vertices of the square
@@ -505,6 +516,56 @@ public class Ground {
     private int width;
     private int height;
     
+    public Ground() {
+    	
+    	this.setupFrames();
+    	
+    }
+
+    /**
+     * This method reads the frame data for the Info Layer and sets the buffer index for each
+     * drawable part. After building the array of all vertex and texture data, it calls glInit
+     * to send the data to OpenGL.
+     */
+    private void setupFrames() {
+    
+    	// the info layer frames are defined in the file "res/raw/ground.json"
+    	// the textures being described are in "/res/drawable/ground_textures.png"
+		Reader dataReader = new InputStreamReader(App.getContext().getResources().openRawResource(R.raw.ground));
+		
+		float[] data = {};
+		
+		if (dataReader != null) {
+			try {
+
+				Gson gson = new Gson();
+
+				Type collectionType = new TypeToken<List<VertexDataHolder>>(){}.getType();
+				List<VertexDataHolder> vList = gson.fromJson(dataReader, collectionType);			
+
+				data = new float[vList.size() * FLOATS_PER_UNIT];
+
+				for (int i = 0; i < vList.size(); i++) {
+
+					VertexDataHolder vdh = vList.get(i);
+
+					Log.i("ffz", "reading ground vertexes for " + vdh.getName() + " into position " + i);
+
+					System.arraycopy(vdh.getVertexData(), 0, data, i * FLOATS_PER_UNIT, FLOATS_PER_UNIT);
+
+				}
+
+			} catch (Exception e) {
+				Log.e("ffz", "ground layer vertex data read error", e);
+			}
+		
+			//glInit(data);
+		
+		}
+		
+	}
+
+    //TODO: remove this constructor. should make one Ground object and set the tiles whenever Area changes
     public Ground(Tile[][] tiles) {
 
     	width = tiles[0].length * TILE_SIZE;

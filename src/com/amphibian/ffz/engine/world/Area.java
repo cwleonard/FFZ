@@ -12,6 +12,8 @@ public class Area {
 	
 	private String description;
 
+	private int musicId;
+	
 	private Tile[][] groundGrid;
 	
 	private Object[][] objectGrid;
@@ -99,6 +101,14 @@ public class Area {
         }
         return list;
 		
+	}
+
+	public int getMusicId() {
+		return musicId;
+	}
+
+	public void setMusicId(int musicId) {
+		this.musicId = musicId;
 	}
 
 	/**

@@ -9,15 +9,12 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.List;
 
-import android.content.Context;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
 
 import com.amphibian.ffz.App;
 import com.amphibian.ffz.R;
-import com.amphibian.ffz.R.drawable;
-import com.amphibian.ffz.R.raw;
 import com.amphibian.ffz.engine.Viewport;
 import com.amphibian.ffz.engine.sprite.Frog;
 import com.amphibian.ffz.engine.util.VertexDataHolder;
@@ -37,17 +34,17 @@ public class InfoLayer {
     private final int STRIDE = COMBINED_DATA_SIZE * BYTES_PER_FLOAT;
     private final int SKIP = COMBINED_DATA_SIZE * VERTICES_PER_OBJECT;
 
-	private static int HEART;
-	private static int HALF_HEART;
-	private static int QRT1_HEART;
-	private static int QRT3_HEART;
-	private static int EMPTY_HEART;
-	private static int THERMOMETER;
-	private static int HYDROMETER_BACK;
-	private static int HYDROMETER_LINES;
-	private static int HYDROMETER_WATER_BOTTOM;
-	private static int HYDROMETER_WATER_TOP;
-	private static int HYDROMETER_WATER_MIDDLE;
+	private int HEART;
+	private int HALF_HEART;
+	private int QRT1_HEART;
+	private int QRT3_HEART;
+	private int EMPTY_HEART;
+	private int THERMOMETER;
+	private int HYDROMETER_BACK;
+	private int HYDROMETER_LINES;
+	private int HYDROMETER_WATER_BOTTOM;
+	private int HYDROMETER_WATER_TOP;
+	private int HYDROMETER_WATER_MIDDLE;
 	
 	private Frog frog;
 	
@@ -78,61 +75,23 @@ public class InfoLayer {
     public InfoLayer() {
 
     	Matrix.setIdentityM(mMMatrix, 0);
-    	
+    	this.setupFrames();
 
     }
 
-	private static void glInit(float[] alldata) {
-
-    	FloatBuffer everythingBuffer = ByteBuffer
-    			.allocateDirect(alldata.length * BYTES_PER_FLOAT)
-    			.order(ByteOrder.nativeOrder()).asFloatBuffer();
-    	everythingBuffer.put(alldata).position(0);
-
-        ByteBuffer dlb = ByteBuffer.allocateDirect(
-        // (# of coordinate values * 2 bytes per short)
-        		drawOrder.length * 2);
-        dlb.order(ByteOrder.nativeOrder());
-        ShortBuffer drawListBuffer = dlb.asShortBuffer();
-        drawListBuffer.put(drawOrder).position(0);
-    	
-    	
-    	
-    	// First, generate as many buffers as we need.
-    	// This will give us the OpenGL handles for these buffers.
-    	GLES20.glGenBuffers(2, buffers, 0);
-
-    	// Bind to the buffer. Future commands will affect this buffer
-    	// specifically.
-    	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[0]);
-    	GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
-
-
-    	// Transfer data from client memory to the buffer.
-    	// We can release the client memory after this call.
-    	GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER,
-    			everythingBuffer.capacity() * BYTES_PER_FLOAT,
-    			everythingBuffer, GLES20.GL_STATIC_DRAW);
-    	
-    	
-    	GLES20.glBufferData(GLES20.GL_ELEMENT_ARRAY_BUFFER,
-    			drawListBuffer.capacity() * 2,
-    			drawListBuffer, GLES20.GL_STATIC_DRAW);
-
-
-    	// IMPORTANT: Unbind from the buffer when we're done with it.
-    	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
-    	GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);
-
-	}
-
-    
     public void setFrog(Frog f) {
     	this.frog = f;
     }
     
-    public static void init() {
+    /**
+     * This method reads the frame data for the Info Layer and sets the buffer index for each
+     * drawable part. After building the array of all vertex and texture data, it calls glInit
+     * to send the data to OpenGL.
+     */
+    private void setupFrames() {
     
+    	// the info layer frames are defined in the file "res/raw/infolayer.json"
+    	// the textures being described are in "/res/drawable/info_textures.png"
 		Reader dataReader = new InputStreamReader(App.getContext().getResources().openRawResource(R.raw.infolayer));
 		
 		float[] data = {};
@@ -189,6 +148,49 @@ public class InfoLayer {
 		
 	}
 
+	private void glInit(float[] alldata) {
+
+    	FloatBuffer everythingBuffer = ByteBuffer
+    			.allocateDirect(alldata.length * BYTES_PER_FLOAT)
+    			.order(ByteOrder.nativeOrder()).asFloatBuffer();
+    	everythingBuffer.put(alldata).position(0);
+
+        ByteBuffer dlb = ByteBuffer.allocateDirect(
+        // (# of coordinate values * 2 bytes per short)
+        		drawOrder.length * 2);
+        dlb.order(ByteOrder.nativeOrder());
+        ShortBuffer drawListBuffer = dlb.asShortBuffer();
+        drawListBuffer.put(drawOrder).position(0);
+    	
+    	
+    	
+    	// First, generate as many buffers as we need.
+    	// This will give us the OpenGL handles for these buffers.
+    	GLES20.glGenBuffers(2, buffers, 0);
+
+    	// Bind to the buffer. Future commands will affect this buffer
+    	// specifically.
+    	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[0]);
+    	GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
+
+
+    	// Transfer data from client memory to the buffer.
+    	// We can release the client memory after this call.
+    	GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER,
+    			everythingBuffer.capacity() * BYTES_PER_FLOAT,
+    			everythingBuffer, GLES20.GL_STATIC_DRAW);
+    	
+    	
+    	GLES20.glBufferData(GLES20.GL_ELEMENT_ARRAY_BUFFER,
+    			drawListBuffer.capacity() * 2,
+    			drawListBuffer, GLES20.GL_STATIC_DRAW);
+
+
+    	// IMPORTANT: Unbind from the buffer when we're done with it.
+    	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+    	GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	}
     
 
 	public void draw(StandardProgram prog, Viewport vp) {
