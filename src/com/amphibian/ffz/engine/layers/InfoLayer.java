@@ -24,6 +24,8 @@ import com.google.gson.reflect.TypeToken;
 
 public class InfoLayer {
 
+	private final static int texture = R.drawable.info_textures;
+	
 	private final static int FLOATS_PER_UNIT = 20;
 	private final static int BYTES_PER_FLOAT = 4;
     private final static int VERTICES_PER_OBJECT = 4;
@@ -192,6 +194,14 @@ public class InfoLayer {
 
 	}
     
+	/**
+	 * Get the references to any textures used by this class.
+	 * 
+	 * @return array integer texture references (from R.drawable)
+	 */
+	public int[] getTextures() {
+		return new int[] { texture };
+	}
 
 	public void draw(StandardProgram prog, Viewport vp) {
 
@@ -213,7 +223,7 @@ public class InfoLayer {
         
         mTextureUniformHandle = prog.getUniformLocation("u_Texture");
         mTextureCoordinateHandle = prog.getAttributeLocation("a_TexCoordinate");
-        prog.useTexture(R.drawable.info_textures);
+        prog.useTexture(texture);
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);

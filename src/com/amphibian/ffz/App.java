@@ -13,6 +13,8 @@ import android.content.Context;
  */
 public class App extends Application {
 
+	public final static String name = "ffz"; 
+	
 	private static Context mContext;
 
     @Override

@@ -9,9 +9,12 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.List;
 
+import android.opengl.GLES20;
+import android.opengl.Matrix;
+import android.util.Log;
+
 import com.amphibian.ffz.App;
 import com.amphibian.ffz.R;
-import com.amphibian.ffz.R.drawable;
 import com.amphibian.ffz.engine.Viewport;
 import com.amphibian.ffz.engine.util.VertexDataHolder;
 import com.amphibian.ffz.engine.world.Tile;
@@ -19,11 +22,9 @@ import com.amphibian.ffz.opengl.StandardProgram;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import android.opengl.GLES20;
-import android.opengl.Matrix;
-import android.util.Log;
+public class Ground implements Layer {
 
-public class Ground {
+	private final static int texture = R.drawable.ground_textures;
 
 	private final static int BYTES_PER_FLOAT = 4;
     private final static int VERTICES_PER_OBJECT = 4;
@@ -38,7 +39,7 @@ public class Ground {
 	
 	private static final int TILE_SIZE = 100;
 
-	private Tile[][] oTiles;
+	//private Tile[][] oTiles;
 
 	private final float[] mMMatrix = new float[16];
 	private final float[] mvpMatrix = new float[16];
@@ -518,16 +519,15 @@ public class Ground {
     
     public Ground() {
     	
-    	this.setupFrames();
+    	//this.setupFrames();
     	
     }
 
     /**
-     * This method reads the frame data for the Info Layer and sets the buffer index for each
-     * drawable part. After building the array of all vertex and texture data, it calls glInit
-     * to send the data to OpenGL.
+     * This method reads the frame data for the ground Layer and sets the buffer index for each
+     * drawable part. The data won't be used until we get the set of ground tiles.
      */
-    private void setupFrames() {
+    public void setTiles(Tile[][] tiles) {
     
     	// the info layer frames are defined in the file "res/raw/ground.json"
     	// the textures being described are in "/res/drawable/ground_textures.png"
@@ -549,21 +549,157 @@ public class Ground {
 
 					VertexDataHolder vdh = vList.get(i);
 
-					Log.i("ffz", "reading ground vertexes for " + vdh.getName() + " into position " + i);
+					Log.i(App.name, "reading ground vertexes for " + vdh.getName() + " into position " + i);
 
 					System.arraycopy(vdh.getVertexData(), 0, data, i * FLOATS_PER_UNIT, FLOATS_PER_UNIT);
 
 				}
 
 			} catch (Exception e) {
-				Log.e("ffz", "ground layer vertex data read error", e);
+				Log.e(App.name, "ground layer vertex data read error", e);
 			}
 		
 			//glInit(data);
-		
+
+	    	width = tiles[0].length * TILE_SIZE;
+	    	height = tiles.length * TILE_SIZE;
+	    	
+	    	float positions[] = {
+	                0f,    0f, 0f, // 0     // vertices of the square
+	                0f, -100f, 0f, // 1
+	              100f,    0f, 0f, // 2
+	              100f, -100f, 0f  // 3
+	    	};
+	    	
+	    	float[] alldata = new float[tiles.length * tiles[0].length * FLOATS_PER_UNIT];
+	    			
+	    	short[] indexes = new short[vertexCount * tiles.length * tiles[0].length];
+
+	    	float offsetY = 0f;
+	    	float offsetX = 0f;
+	    	
+	    	int doIndex = 0;
+	    	int index = 0;
+	    	int squares = 0;
+			for (int i = 0; i < tiles.length; i++) {
+				
+				offsetX = 0f;
+				
+				for (int j = 0; j < tiles[i].length; j++) {
+				
+					//int pos = SQUARE_DATA_SIZE + ((tiles[i][j].getId() - 1) * TEXTURE_STRIDE);
+					int pos = 14 * FLOATS_PER_UNIT;
+					
+					System.arraycopy(positions, 0, alldata, index, 3); // first coords (x, y, z);
+					alldata[index++] += offsetX;
+					alldata[index++] += offsetY;
+					index++;
+					
+					System.arraycopy(data, pos+3, alldata, index, 2); // first texture position
+					index += 2;
+					
+					System.arraycopy(positions, 3, alldata, index, 3); // second coords (x, y, z);
+					alldata[index++] += offsetX;
+					alldata[index++] += offsetY;
+					index++;
+					
+					System.arraycopy(data, pos+8, alldata, index, 2); // second texture position
+					index += 2;
+
+					System.arraycopy(positions, 6, alldata, index, 3); // third coords (x, y, z);
+					alldata[index++] += offsetX;
+					alldata[index++] += offsetY;
+					index++;
+					
+					System.arraycopy(data, pos+13, alldata, index, 2); // third texture position
+					index += 2;
+
+					System.arraycopy(positions, 9, alldata, index, 3); // fourth coords (x, y, z);
+					alldata[index++] += offsetX;
+					alldata[index++] += offsetY;
+					index++;
+					
+					System.arraycopy(data, pos+18, alldata, index, 2); // fourth texture position
+					index += 2;
+
+					System.arraycopy(drawOrder, 0, indexes, doIndex, vertexCount);
+					indexes[doIndex++] += VERTICES_PER_OBJECT * squares;
+					indexes[doIndex++] += VERTICES_PER_OBJECT * squares;
+					indexes[doIndex++] += VERTICES_PER_OBJECT * squares;
+					indexes[doIndex++] += VERTICES_PER_OBJECT * squares;
+					indexes[doIndex++] += VERTICES_PER_OBJECT * squares;
+					indexes[doIndex++] += VERTICES_PER_OBJECT * squares;
+					
+					squares++;
+					
+					offsetX += 100f;
+
+				}
+
+				offsetY -= 100f;
+				
+			}
+	    	
+	    	
+	    	drawLength = indexes.length;
+	    	
+	    	// ------------------------------------------
+	    	
+	    	Matrix.setIdentityM(mMMatrix, 0);
+
+	    	FloatBuffer everythingBuffer = ByteBuffer
+	    			.allocateDirect(alldata.length * BYTES_PER_FLOAT)
+	    			.order(ByteOrder.nativeOrder()).asFloatBuffer();
+	    	everythingBuffer.put(alldata).position(0);
+
+	        ByteBuffer dlb = ByteBuffer.allocateDirect(
+	        // (# of coordinate values * 2 bytes per short)
+	        		indexes.length * 2);
+	        dlb.order(ByteOrder.nativeOrder());
+	        ShortBuffer drawListBuffer = dlb.asShortBuffer();
+	        drawListBuffer.put(indexes).position(0);
+	    	
+	    	
+	    	
+	    	// First, generate as many buffers as we need.
+	    	// This will give us the OpenGL handles for these buffers.
+	    	GLES20.glGenBuffers(2, buffers, 0);
+
+	    	// Bind to the buffer. Future commands will affect this buffer
+	    	// specifically.
+	    	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, buffers[0]);
+	    	GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
+
+
+	    	// Transfer data from client memory to the buffer.
+	    	// We can release the client memory after this call.
+	    	GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER,
+	    			everythingBuffer.capacity() * BYTES_PER_FLOAT,
+	    			everythingBuffer, GLES20.GL_STATIC_DRAW);
+	    	
+	    	
+	    	GLES20.glBufferData(GLES20.GL_ELEMENT_ARRAY_BUFFER,
+	    			drawListBuffer.capacity() * 2,
+	    			drawListBuffer, GLES20.GL_STATIC_DRAW);
+
+
+	    	// IMPORTANT: Unbind from the buffer when we're done with it.
+	    	GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
+	    	GLES20.glBindBuffer(GLES20.GL_ELEMENT_ARRAY_BUFFER, 0);
+			
 		}
 		
 	}
+    
+	/**
+	 * Get the references to any textures used by this class.
+	 * 
+	 * @return array integer texture references (from R.drawable)
+	 */
+	public int[] getTextures() {
+		return new int[] { texture };
+	}
+
 
     //TODO: remove this constructor. should make one Ground object and set the tiles whenever Area changes
     public Ground(Tile[][] tiles) {
@@ -705,12 +841,6 @@ public class Ground {
     
     
     
-    
-    public void setTiles(Tile[][] oTiles) {
-		this.oTiles = oTiles;
-	}
-
-
 	public void draw(StandardProgram prog, Viewport vp) {
     	
 		float[] projMatrix = vp.getProjMatrix();
@@ -737,7 +867,7 @@ public class Ground {
         
         mTextureUniformHandle = prog.getUniformLocation("u_Texture");
         mTextureCoordinateHandle = prog.getAttributeLocation("a_TexCoordinate");
-        prog.useTexture(R.drawable.ground_tiles);
+        prog.useTexture(texture);
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);

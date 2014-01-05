@@ -32,6 +32,7 @@ import com.amphibian.ffz.engine.sprite.Frog;
 import com.amphibian.ffz.engine.sprite.Obstacle;
 import com.amphibian.ffz.engine.sprite.Rabbit;
 import com.amphibian.ffz.engine.sprite.Sprite;
+import com.amphibian.ffz.engine.world.Area;
 import com.amphibian.ffz.engine.world.Tile;
 import com.amphibian.ffz.geometry.ConvexPolygon;
 import com.amphibian.ffz.input.InputSource;
@@ -46,10 +47,10 @@ public class Engine {
 	
 	private Viewport viewport;
 	
-	private MediaPlayer mediaPlayer = null;
 
 	private InputSource inputSource = null;
 
+	private MusicManager music;
 	
 	private Frog frog = null;
 	private Frog frog2 = null;
@@ -60,7 +61,7 @@ public class Engine {
 	private Water water;
 	
 	//private Obstacles obstacles;
-	private SpriteLayer drawinator;
+	private SpriteLayer spriteLayer;
 	
 	//private int fps = 0;
 	private long cycle = 0;
@@ -73,7 +74,7 @@ public class Engine {
 	
 	private SocketIO socket;
 	
-	private ConvexPolygon testBlock;
+	//private ConvexPolygon testBlock;
 	private List<ConvexPolygon> blockers;
 	
 	private List<Sprite> sprites;
@@ -97,8 +98,10 @@ public class Engine {
 			config.load(App.getContext().getResources().openRawResource(R.raw.config));
 			
 		} catch (ConfigurationException e) {
-			Log.e("ffz", "error loading configuration", e);
+			Log.e(App.name, "error loading configuration", e);
 		}
+		
+		music = new MusicManager();
 		
 		spriteSorter = new SpriteSorter();
 
@@ -121,7 +124,7 @@ public class Engine {
 			jo.put("fid", fid);
 			socket.emit("startup", jo);
 		} catch (Exception e) {
-			Log.e("ffz", "socket.io error", e);
+			Log.e(App.name, "socket.io error", e);
 		}
 		
 	}
@@ -133,20 +136,13 @@ public class Engine {
 	
 	public void glSetup() {
 
-		prog = new StandardProgram();
-		prog.addTexture(R.drawable.ground_tiles);
-		prog.addTexture(R.drawable.all_textures);
-		prog.addTexture(R.drawable.info_textures);
-		prog.addTexture(R.drawable.blank);
-		prog.loadTextures();
 
-		FrameDataManager fdman = FrameDataManager.getInstance();
-		fdman.add(Frog.class);
-		fdman.add(Rabbit.class);
-		drawinator = fdman.init(App.getContext());
+		spriteLayer = new SpriteLayer();
 
 		infoLayer = new InfoLayer();
-
+		
+		ground = new Ground();
+		
 		try {
 
 			Gson gson = new GsonBuilder()
@@ -154,34 +150,37 @@ public class Engine {
 				.create();
 			
 
-			Tile[][] tiles = gson.fromJson(new InputStreamReader(App.getContext().getResources().openRawResource(R.raw.area4)), Tile[][].class);
-			ground = new Ground(tiles);
+			Tile[][] tiles = gson.fromJson(new InputStreamReader(App
+					.getContext().getResources().openRawResource(R.raw.area4)),
+					Tile[][].class);
+			//ground = new Ground(tiles);
 			water = new Water(tiles);
 
 		} catch (Exception e) {
-			Log.e("ff", "json error", e);
+			Log.e(App.name, "json error", e);
 		}
+
+
+		prog = new StandardProgram();
+		prog.addTextures(ground.getTextures());
+		prog.addTextures(water.getTextures());
+		prog.addTextures(spriteLayer.getTextures());
+		prog.addTextures(infoLayer.getTextures());
+		prog.loadTextures();
 
 		
 	}
 	
 	public void init() {
 		
-		//TODO: music should come from the Area currently inhabited
-		Log.i("ffz", "creating media player");
-		mediaPlayer = MediaPlayer.create(App.getContext(), R.raw.wendy_bonson);
-		mediaPlayer.setVolume(0.2f, 0.2f);
-		mediaPlayer.setLooping(true);
-		mediaPlayer.start();
-
-
-		
-		
 
 		lastUpdate = SystemClock.elapsedRealtime();
 		cycle = SystemClock.elapsedRealtime();
 
 		frog = new Frog();
+		frog.faceRight();
+		frog.setEngine(this);
+
 		rabbit = new Rabbit();
 		
 		infoLayer.setFrog(frog);
@@ -190,14 +189,7 @@ public class Engine {
 			frog.setInputSource(inputSource);
 		}
 		
-
-		//TODO move this out of here at some point
-		float[] c = {200, -900};
-		float[] p = {-200, 100, 200, 100, 0, -100, -200, -100};
-		testBlock = new ConvexPolygon(c, p); // blocking rock wall
-
-		frog.faceRight();
-		frog.setEngine(this);
+		blockers = new ArrayList<ConvexPolygon>();
 
 		try {
 
@@ -205,27 +197,27 @@ public class Engine {
 				.registerTypeAdapter(Obstacle.class, new ObstacleDeserializer())
 				.create();
 			
-//			if (tiles == null) {
-//				tiles = gson.fromJson(new InputStreamReader(context.getResources().openRawResource(R.raw.area3)), Tile[][].class);
-//			}
-//			ground = new Ground(tiles);
+			Area a = gson.fromJson(new InputStreamReader(App.getContext()
+					.getResources().openRawResource(R.raw.test_area)),
+					Area.class);
 			
-			Type collectionType = new TypeToken<List<Obstacle>>(){}.getType();
-			List<Obstacle> obs = gson.fromJson(new InputStreamReader(App.getContext().getResources().openRawResource(R.raw.obstacles3)), collectionType);
+			ground.setTiles(a.getGround());
+			music.playMusic(a.getMusicId());
+			sprites.addAll(a.getObstacles());
+			blockers.addAll(getBlockers(a.getObstacles()));
 			
-			sprites.addAll(obs);
+			//TODO: also get blockers from the environment (walls, etc.)
 			
 		} catch (Exception e) {
-			Log.e("ff", "json error", e);
+			Log.e(App.name, "json error", e);
 		}
 
-		blockers = getBlockers();
 
-		blockers.addAll(rabbit.getBlockers());
-		
 		addSprite(frog);
 		addSprite(rabbit);
+		updateSprites();
 
+		blockers.addAll(getBlockers());
 		
 		
 	}
@@ -238,8 +230,7 @@ public class Engine {
 		prog.unloadTextures();
 		FrameDataManager.destroy();
 		
-        mediaPlayer.pause();
-        mediaPlayer.release();
+		music.stopMusic();
 		
 	}
 	
@@ -263,7 +254,7 @@ public class Engine {
 		
 		try {
 			
-			Log.d("ffz", "resetting the ground");
+			Log.d(App.name, "resetting the ground");
 			
 			Gson gson = new GsonBuilder()
 				.registerTypeAdapter(Obstacle.class, new ObstacleDeserializer())
@@ -276,7 +267,7 @@ public class Engine {
 			viewport.setAreaWidth(ground.getWidth());
 			
 		} catch (Exception e) {
-			Log.e("ff", "json error", e);
+			Log.e(App.name, "json error", e);
 		}
 
 	}
@@ -478,8 +469,8 @@ public class Engine {
 			float se = ((float)secondCounter/1000f);
 			//Log.d("ffz", "frames = " + frameCounter);
 			//Log.d("ffz", "seconds elapsed = " + se);
-			Log.d("ffz", frameCounter / se + " FPS");
-			Log.d("ffz", "there are " + this.sprites.size() + " sprites");
+			Log.d(App.name, frameCounter / se + " FPS");
+			Log.d(App.name, "there are " + this.sprites.size() + " sprites");
 			secondCounter = 0;
 			frameCounter = 0;
 		}
@@ -491,7 +482,7 @@ public class Engine {
 		//waterLayer.draw(prog, viewport);
 		water.draw(prog, viewport);
 
-		drawinator.draw(sprites, prog, viewport);
+		spriteLayer.draw(sprites, prog, viewport);
 		
 		infoLayer.draw(prog, viewport);
 		

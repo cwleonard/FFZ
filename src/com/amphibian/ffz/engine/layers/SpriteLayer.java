@@ -1,20 +1,30 @@
 package com.amphibian.ffz.engine.layers;
 
+import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.util.List;
 
-import com.amphibian.ffz.R;
-import com.amphibian.ffz.R.drawable;
-import com.amphibian.ffz.engine.Viewport;
-import com.amphibian.ffz.engine.sprite.Sprite;
-import com.amphibian.ffz.opengl.StandardProgram;
-
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.util.Log;
+
+import com.amphibian.ffz.App;
+import com.amphibian.ffz.R;
+import com.amphibian.ffz.engine.Viewport;
+import com.amphibian.ffz.engine.sprite.Frame;
+import com.amphibian.ffz.engine.sprite.FrameDataManager;
+import com.amphibian.ffz.engine.sprite.Frog;
+import com.amphibian.ffz.engine.sprite.Rabbit;
+import com.amphibian.ffz.engine.sprite.Sprite;
+import com.amphibian.ffz.engine.util.CollisionDataHolder;
+import com.amphibian.ffz.engine.util.VertexDataHolder;
+import com.amphibian.ffz.opengl.StandardProgram;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class SpriteLayer {
 
@@ -31,13 +41,15 @@ public class SpriteLayer {
 	private final static int TEXTURE_COORDINATE_DATA_SIZE = 2;
 	private final static int DRAW_ORDER_DATA_SIZE = 6;
 
+	private final static int FLOATS_PER_UNIT = 20;
+
 	private final static int COMBINED_DATA_SIZE = POSITION_DATA_SIZE + TEXTURE_COORDINATE_DATA_SIZE;
 	
 	private final float[] mMMatrix = new float[16];
 	private final float[] mvpMatrix = new float[16];
 	private final float[] eyeMatrix = new float[16];
 	
-	
+	private final static int texture = R.drawable.all_textures;
 
     private int mPositionHandle;
     private int mColorHandle;
@@ -46,7 +58,6 @@ public class SpriteLayer {
     private final int stride = COMBINED_DATA_SIZE * BYTES_PER_FLOAT;
     private final int skip = COMBINED_DATA_SIZE * VERTICES_PER_OBJECT;
     
-
     static float skewMatrix[] = {
     	1f,    0f, 0f, 0f,
       0.5f,    1f, 0f, 0f,
@@ -73,7 +84,80 @@ public class SpriteLayer {
     
     private int[] buffers = new int[2];
 
-    public SpriteLayer(float[] vdata) {
+    public SpriteLayer() {
+    	
+    	this.readVertexData();
+    	
+    	Frog.init();
+    	Rabbit.init();
+    	
+    }
+    	
+    private void readVertexData() {
+
+    	FrameDataManager fdm = FrameDataManager.getInstance();
+
+    	float[] data = {};
+    	try {
+
+    		Gson gson = new Gson();
+
+    		Type collectionType = new TypeToken<List<VertexDataHolder>>() {
+    		}.getType();
+    		List<VertexDataHolder> vList = gson.fromJson(new InputStreamReader(
+    				App.getContext().getResources().openRawResource(R.raw.frames)),
+    				collectionType);
+
+    		data = new float[vList.size() * FLOATS_PER_UNIT];
+
+    		for (int i = 0; i < vList.size(); i++) {
+
+    			VertexDataHolder vdh = vList.get(i);
+
+    			Frame f = new Frame();
+    			f.setName(vdh.getName());
+    			f.setIndex(i);
+
+    			float[] vdata = vdh.getVertexData();
+    			float width = vdata[10] - vdata[0];
+    			float height = vdata[1] - vdata[16];
+
+    			f.setHeight(height);
+    			f.setWidth(width);
+
+    			System.arraycopy(vdh.getVertexData(), 0, data, i
+    					* FLOATS_PER_UNIT, FLOATS_PER_UNIT);
+
+    			fdm.putFrame(f);
+
+    		}
+
+    		collectionType = new TypeToken<List<CollisionDataHolder>>() {
+    		}.getType();
+    		List<CollisionDataHolder> cList = gson
+    				.fromJson(new InputStreamReader(App.getContext().getResources()
+    						.openRawResource(R.raw.collisions)), collectionType);
+
+    		for (int i = 0; i < cList.size(); i++) {
+
+    			CollisionDataHolder cdh = cList.get(i);
+    			if (cdh != null) {
+    				fdm.putCollider(cdh);
+    			}
+
+    		}
+
+    	} catch (Exception e) {
+    		Log.e("ffz", "vertex data read error", e);
+    	}
+
+    	glInit(data);
+
+    }
+    	
+    
+    
+    private void  glInit(float[] vdata) {
     	
     	Matrix.setIdentityM(mMMatrix, 0);
 
@@ -122,8 +206,9 @@ public class SpriteLayer {
         
     }
     
-	
-    
+    public int[] getTextures() {
+    	return new int[] { texture };
+    }
 
 	public void draw(List<Sprite> sprites, StandardProgram prog, Viewport vp) {
     	
@@ -151,7 +236,7 @@ public class SpriteLayer {
         // set texture was here
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
-        prog.useTexture(R.drawable.all_textures);
+        prog.useTexture(texture);
         
     	// get handle to shape's transformation matrix
     	mMVPMatrixHandle = prog.getUniformLocation("uMVPMatrix");

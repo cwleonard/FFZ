@@ -49,7 +49,13 @@ public class StandardProgram {
 	public void addTexture(int t) {
 		tm.add(t);
 	}
-	
+
+	public void addTextures(int[] t) {
+		for (int i = 0; i < t.length; i++) {
+			tm.add(t[i]);
+		}
+	}
+
 	public void loadTextures() {
 		tm.loadTextures();
 	}

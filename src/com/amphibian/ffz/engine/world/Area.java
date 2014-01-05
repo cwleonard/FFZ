@@ -1,7 +1,8 @@
 package com.amphibian.ffz.engine.world;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import com.amphibian.ffz.engine.sprite.Obstacle;
 
 
 public class Area {
@@ -14,14 +15,22 @@ public class Area {
 
 	private int musicId;
 	
-	private Tile[][] groundGrid;
+	private Tile[][] ground;
 	
-	private Object[][] objectGrid;
+	private List<Obstacle> obstacles;
 	
 	private int worldId;
 	
 	
 	
+	public List<Obstacle> getObstacles() {
+		return obstacles;
+	}
+
+	public void setObstacles(List<Obstacle> obstacles) {
+		this.obstacles = obstacles;
+	}
+
 	/**
 	 * @return the id
 	 */
@@ -67,41 +76,17 @@ public class Area {
 	/**
 	 * @return the groundGrid
 	 */
-	public Tile[][] getGroundGrid() {
-		return groundGrid;
+	public Tile[][] getGround() {
+		return ground;
 	}
 
 	/**
 	 * @param groundGrid the groundGrid to set
 	 */
-	public void setGroundGrid(Tile[][] groundGrid) {
-		this.groundGrid = groundGrid;
+	public void setGround(Tile[][] groundGrid) {
+		this.ground = groundGrid;
 	}
 
-	/**
-	 * @return the objectGrid
-	 */
-	public Object[][] getObjectGrid() {
-		return objectGrid;
-	}
-	
-	public List<Object> getObjects() {
-		
-		List<Object> list = new ArrayList<Object>();
-        for (int io = 0; io < objectGrid.length; io++) {
-            Object[] innerArray = objectGrid[io];
-            if (innerArray != null) {
-                for (int jo = 0; jo < innerArray.length; jo++) {
-                    Object o = innerArray[jo];
-                    if (o != null) {
-                        list.add(o);
-                    }
-                }
-            }
-        }
-        return list;
-		
-	}
 
 	public int getMusicId() {
 		return musicId;
@@ -109,13 +94,6 @@ public class Area {
 
 	public void setMusicId(int musicId) {
 		this.musicId = musicId;
-	}
-
-	/**
-	 * @param objectGrid the objectGrid to set
-	 */
-	public void setObjectGrid(Object[][] objectGrid) {
-		this.objectGrid = objectGrid;
 	}
 
 	/**

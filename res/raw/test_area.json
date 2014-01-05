@@ -1,0 +1,3090 @@
+{
+  "name": "test_area",
+  "description": "ffz test area",
+  "musicId": 2,
+  "ground": [
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 26,
+        "name": "Water Edge Top Left",
+        "description": "Top left edge of water",
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 27,
+        "name": "Water Edge Top Right",
+        "description": "Top right edge of water",
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 22,
+        "name": "Water Edge Top",
+        "description": "Top edge of water",
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 29,
+        "name": "Grass Edge Bottom Right",
+        "description": "Bottom right edge of grass",
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 28,
+        "name": "Grass Edge Bottom Left",
+        "description": "Bottom left edge of grass",
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 27,
+        "name": "Water Edge Top Right",
+        "description": "Top right edge of water",
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 31,
+        "name": "Grass Edge Top Right",
+        "description": "Top right edge of grass",
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "name": "Water",
+        "description": "Water",
+        "water": true,
+        "rock": false
+      },
+      {
+        "id": 30,
+        "name": "Grass Edge Top Left",
+        "description": "Top left edge of grass",
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 25,
+        "name": "Water Edge Bottom Right",
+        "description": "Bottom right edge of water",
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 24,
+        "name": "Water Edge Bottom Left",
+        "description": "Bottom left edge of water",
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 23,
+        "name": "Water Edge Bottom",
+        "description": "Bottom edge of water",
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 25,
+        "name": "Water Edge Bottom Right",
+        "description": "Bottom right edge of water",
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ],
+    [
+      {
+        "id": 2,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 20,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 32,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 21,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      },
+      {
+        "id": 1,
+        "water": false,
+        "rock": false
+      }
+    ]
+  ],
+  "obstacles": [
+    {
+      "type": "pine_tree",
+      "x": 250,
+      "y": -300
+    },
+    {
+      "type": "pine_tree",
+      "x": 550,
+      "y": -300
+    },
+    {
+      "type": "pine_tree",
+      "x": 850,
+      "y": -300
+    },
+    {
+      "type": "pine_tree",
+      "x": 1150,
+      "y": -300
+    },
+    {
+      "type": "pine_tree",
+      "x": 1450,
+      "y": -300
+    },
+    {
+      "type": "pine_tree",
+      "x": 1750,
+      "y": -300
+    },
+    {
+      "type": "flower1",
+      "x": 250,
+      "y": -550
+    },
+    {
+      "type": "flower1",
+      "x": 1950,
+      "y": -650
+    },
+    {
+      "type": "flower1",
+      "x": 375,
+      "y": -850
+    },
+    {
+      "type": "rock",
+      "x": 1850,
+      "y": -850
+    },
+    {
+      "type": "flower2",
+      "x": 450,
+      "y": -1050
+    },
+    {
+      "type": "flower1",
+      "x": 550,
+      "y": -1150
+    },
+    {
+      "type": "flower2",
+      "x": 2050,
+      "y": -1150
+    },
+    {
+      "type": "flower2",
+      "x": 1650,
+      "y": -1250
+    },
+    {
+      "type": "pine_tree",
+      "x": 250,
+      "y": -1500
+    },
+    {
+      "type": "pine_tree",
+      "x": 550,
+      "y": -1500
+    },
+    {
+      "type": "pine_tree",
+      "x": 850,
+      "y": -1500
+    },
+    {
+      "type": "pine_tree",
+      "x": 1150,
+      "y": -1500
+    },
+    {
+      "type": "pine_tree",
+      "x": 1450,
+      "y": -1500
+    },
+    {
+      "type": "pine_tree",
+      "x": 1750,
+      "y": -1500
+    },
+    {
+      "type": "rock",
+      "x": 2050,
+      "y": -1550
+    },
+    {
+      "type": "rock",
+      "x": 550,
+      "y": -1750
+    },
+    {
+      "type": "rock",
+      "x": 1750,
+      "y": -1850
+    }
+  ]
+}

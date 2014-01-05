@@ -25,6 +25,8 @@ import com.google.gson.reflect.TypeToken;
 
 public class WaterLayer implements VertexDataReader {
 
+	private final static int texture = R.drawable.blank;
+
 	private final static int FLOATS_PER_UNIT = 20;
 	private final static int BYTES_PER_FLOAT = 4;
     private final static int VERTICES_PER_OBJECT = 4;
@@ -186,7 +188,7 @@ public class WaterLayer implements VertexDataReader {
         
         mTextureUniformHandle = prog.getUniformLocation("u_Texture");
         mTextureCoordinateHandle = prog.getAttributeLocation("a_TexCoordinate");
-        tm.setTextureToRepeat(R.drawable.blank);
+        tm.setTextureToRepeat(texture);
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
@@ -233,14 +235,14 @@ public class WaterLayer implements VertexDataReader {
         
     }    
 
-	public static void loadGLTexture(Context context) {
-
-		tm = new TextureManager();
-		tm.add(R.drawable.blank);
-		tm.loadTextures();
-
+	/**
+	 * Get the references to any textures used by this class.
+	 * 
+	 * @return array integer texture references (from R.drawable)
+	 */
+	public int[] getTextures() {
+		return new int[] { texture };
 	}
-	
 
 	public void setScale(float sx, float sy) {
 		Matrix.scaleM(mMMatrix, 0, sx, sy, 1);

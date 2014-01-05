@@ -5,26 +5,23 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+import android.opengl.GLES20;
+import android.opengl.Matrix;
+
 import com.amphibian.ffz.R;
-import com.amphibian.ffz.R.drawable;
 import com.amphibian.ffz.engine.Viewport;
 import com.amphibian.ffz.engine.world.Tile;
 import com.amphibian.ffz.opengl.StandardProgram;
 
-import android.content.Context;
-import android.opengl.GLES20;
-import android.opengl.Matrix;
-import android.util.Log;
-
 public class Water {
+
+	private final static int texture = R.drawable.blank;
 
 	private final static int BYTES_PER_FLOAT = 4;
 
 	private static final int TILE_SIZE = 100;
 
 	private Tile[][] oTiles;
-
-	//private static TextureManager tm;
 
 	private final float[] mMMatrix = new float[16];
 	private final float[] mvpMatrix = new float[16];
@@ -286,7 +283,7 @@ public class Water {
         
         mTextureUniformHandle = prog.getUniformLocation("u_Texture");
         mTextureCoordinateHandle = prog.getAttributeLocation("a_TexCoordinate");
-        prog.useTexture(R.drawable.blank);
+        prog.useTexture(texture);
         GLES20.glUniform1i(mTextureUniformHandle, 0);
 
         GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
@@ -330,6 +327,15 @@ public class Water {
         
     }    
 
+	/**
+	 * Get the references to any textures used by this class.
+	 * 
+	 * @return array integer texture references (from R.drawable)
+	 */
+	public int[] getTextures() {
+		return new int[] { texture };
+	}
+
 	public int getWidth() {
 		return width;
 	}
@@ -337,18 +343,5 @@ public class Water {
 	public int getHeight() {
 		return height;
 	}
-
-//	public static void unloadGLTexture() {
-//		if (tm != null) tm.clearTextures();
-//	}
-//
-//	public static void loadGLTexture(Context context) {
-//
-//		tm = new TextureManager(context);
-//		tm.add(R.drawable.blank);
-//		tm.loadTextures();
-//
-//	}
-    
     
 }

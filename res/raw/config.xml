@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-    <glTextureLoaders>com.amphibian.ffz.Ground,com.amphibian.ffz.InfoLayer,com.amphibian.ffz.Drawinator,com.amphibian.ffz.Water</glTextureLoaders>
+    <glTextureLoaders>
+        <name>com.amphibian.ffz.Ground</name>
+        <name>com.amphibian.ffz.InfoLayer</name>
+        <name>com.amphibian.ffz.Drawinator</name>
+        <name>com.amphibian.ffz.Water</name>
+    </glTextureLoaders>
 </config>
