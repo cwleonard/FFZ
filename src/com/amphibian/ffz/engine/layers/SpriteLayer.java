@@ -331,5 +331,19 @@ public class SpriteLayer {
         GLES20.glDrawElements(GLES20.GL_TRIANGLES, DRAW_ORDER_DATA_SIZE, GLES20.GL_UNSIGNED_SHORT, 0);
         
 	}
-    
+
+	public void performDraw(float[] oMatrix) {
+		
+    	// set up the view matrix and projection matrix
+    	Matrix.multiplyMM(eyeMatrix, 0, viewMatrix, 0, oMatrix, 0);
+    	Matrix.multiplyMM(mvpMatrix, 0, projMatrix, 0, eyeMatrix, 0);
+    	
+    	// Apply the projection and view transformation
+    	GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mvpMatrix, 0);
+    	
+    	// Draw 
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, DRAW_ORDER_DATA_SIZE, GLES20.GL_UNSIGNED_SHORT, 0);
+        
+	}
+
 }

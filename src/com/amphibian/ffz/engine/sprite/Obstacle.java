@@ -2,10 +2,14 @@ package com.amphibian.ffz.engine.sprite;
 
 import java.util.List;
 
+import android.opengl.Matrix;
+
 import com.amphibian.ffz.engine.layers.SpriteLayer;
 import com.amphibian.ffz.geometry.ConvexPolygon;
 
 public class Obstacle implements Sprite {
+
+	public final static float SHADOW_SCALE = 0.7f;
 
 	private int id;
 	
@@ -19,6 +23,20 @@ public class Obstacle implements Sprite {
 	private float hh;
 	private float hw;
 	
+	private float[] nMatrix = new float[16];
+	private float[] sMatrix = new float[16];
+	
+    protected static float skewMatrix[] = {
+    	1f,    0f, 0f, 0f,
+      0.5f,    1f, 0f, 0f,
+    	0f,    0f, 1f, 0f,
+    	0f,    0f, 0f, 1f
+    };
+    
+    protected float normalColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    protected float shadowColor[] = { 0.0f, 0.0f, 0.0f, 0.2f };
+
+
 	private List<ConvexPolygon> blockers;
 	
 	public Obstacle(String t, float x, float y) {
@@ -33,7 +51,17 @@ public class Obstacle implements Sprite {
 		this.hw = w / 2.0f;
 		this.x = x;
 		this.y = y;
-		
+
+		// set up the "normal" draw matrix
+        Matrix.setIdentityM(nMatrix, 0);
+    	Matrix.translateM(nMatrix, 0, x, y, 0);
+
+    	// set up the shadow draw matrix
+        Matrix.setIdentityM(sMatrix, 0);
+    	Matrix.translateM(sMatrix, 0, x + (this.hw * SpriteLayer.SHADOW_SCALE), this.y - (this.hh * (1f - SpriteLayer.SHADOW_SCALE)), 0);
+        Matrix.scaleM(sMatrix, 0, 1f, SHADOW_SCALE, 1f); // half the y axis, leave x and z alone
+        Matrix.multiplyMM(sMatrix, 0, sMatrix, 0, skewMatrix, 0);
+    	
 		blockers = fdm.getPolygons(x, y, type);
 		
 	}
@@ -75,17 +103,13 @@ public class Obstacle implements Sprite {
 	@Override
 	public void draw(SpriteLayer d) {
 
-		float z = -1f - (this.getBottom() / 999999f);
-
 		d.setBufferPosition(this.id);
 		
-		d.setDrawPosition(this.getShadowX(), this.getShadowY(), z - 0.00001f);
-		d.setMode(SpriteLayer.SHADOW_MODE);
-		d.performDraw();
+		d.setColor(shadowColor);
+		d.performDraw(sMatrix);
 		
-		d.setMode(SpriteLayer.NORMAL_MODE);
-		d.setDrawPosition(x, y, z);
-		d.performDraw();
+		d.setColor(normalColor);
+		d.performDraw(nMatrix);
 		
 	}
 	
@@ -98,7 +122,7 @@ public class Obstacle implements Sprite {
 	}
 	
 	public float getShadowX() {
-		return this.x + (this.hw * 0.7f);
+		return this.x + (this.hw * SpriteLayer.SHADOW_SCALE);
 	}
 	
 	public List<ConvexPolygon> getBlockers() {

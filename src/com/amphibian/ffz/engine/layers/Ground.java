@@ -588,7 +588,9 @@ public class Ground implements Layer {
 				for (int j = 0; j < tiles[i].length; j++) {
 				
 					//int pos = SQUARE_DATA_SIZE + ((tiles[i][j].getId() - 1) * TEXTURE_STRIDE);
-					int pos = 14 * FLOATS_PER_UNIT;
+					int x = 20 + (int)(Math.random() * 4);
+					int pos = x * FLOATS_PER_UNIT;
+					//pos += (Math.random() * 4);
 					
 					System.arraycopy(positions, 0, alldata, index, 3); // first coords (x, y, z);
 					alldata[index++] += offsetX;

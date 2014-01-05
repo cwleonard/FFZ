@@ -1,19 +1,17 @@
 package com.amphibian.ffz.geometry;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import com.amphibian.ffz.engine.sprite.Sprite;
-
 import android.util.Log;
+
+import com.amphibian.ffz.App;
+import com.amphibian.ffz.engine.sprite.Sprite;
 
 public class ConvexPolygon {
 
 	private final static int x = 0;
 	private final static int y = 1;
 	
-	private List<float[]> points = new ArrayList<float[]>();
+	private float[] fpoints;
+	private int numSides = 0;;
 	
 	private float[] center = new float[2];
 	
@@ -38,13 +36,10 @@ public class ConvexPolygon {
 		
 		this.center[x] = c[x];
 		this.center[y] = c[y];
-		
-		for (int i = 0; i < p.length; i = i + 2) {
-			float[] q = new float[2];
-			q[x] = p[i];
-			q[y] = p[i+1];
-			points.add(q);
-		}
+
+		fpoints = new float[p.length];
+		System.arraycopy(p, 0, fpoints, 0, p.length);
+		numSides = p.length / 2;
 		
 	}
 
@@ -61,11 +56,13 @@ public class ConvexPolygon {
 
 	public ConvexPolygon(float[] p, float offsetX, float offsetY, boolean b) {
 
-		if (b) Log.i("ffz", "offset " + offsetX + ", " + offsetY);
+		if (b) Log.i(App.name, "offset " + offsetX + ", " + offsetY);
 
 		float cx = 0.0f;
 		float cy = 0.0f;
 
+		fpoints = new float[p.length];
+		
 		// create new points relative to the origin
 		float[] pp = new float[p.length];
 		for (int i = 0; i < p.length; i = i + 2) {
@@ -75,22 +72,22 @@ public class ConvexPolygon {
 		
 		// find the centroid
 		for (int i = 0; i < pp.length; i = i + 2) {
-			if (b) Log.i("ffz", "point " + pp[i] +", " + pp[i+1]);
+			if (b) Log.i(App.name, "point " + pp[i] +", " + pp[i+1]);
 			cx += pp[i];
 			cy += pp[i+1];
 		}
 		float k = (pp.length / 2.0f);
 		this.center[x] = cx / k;
 		this.center[y] = cy / k;
-		if (b) Log.i("ffz", "centeroid at " + center[x] + ", " + center[y]);
+		if (b) Log.i(App.name, "centeroid at " + center[x] + ", " + center[y]);
 
 		// create new points relative to the centroid
+		int f = 0;
 		for (int i = 0; i < pp.length; i = i + 2) {
-			float[] q = new float[2];
-			q[x] = pp[i] - this.center[x];
-			q[y] = pp[i+1] - this.center[y];
-			points.add(q);
+			fpoints[f++] = pp[i] - this.center[x];
+			fpoints[f++] = pp[i+1] - this.center[y];
 		}
+		numSides = p.length / 2;
 	
 	}
 	
@@ -111,17 +108,15 @@ public class ConvexPolygon {
 	
 	public void rotate(float rads) {
 		
-		Iterator<float[]> i = this.points.iterator();
-		while (i.hasNext()) {
-			float[] p = i.next();
-    		p[x] = (float) (Math.cos(rads) * p[x] - Math.sin(rads) * p[y]);
-    		p[y] = (float) (Math.sin(rads) * p[x] + Math.cos(rads) * p[y]);
-    	}
+		for (int i = 0; i < fpoints.length; i = i + 2) {
+			fpoints[i]   = (float) (Math.cos(rads) * fpoints[i] - Math.sin(rads) * fpoints[i+1]);
+			fpoints[i+1] = (float) (Math.sin(rads) * fpoints[i] + Math.cos(rads) * fpoints[i+1]);
+		}
 		
 	}
 	
 	public int getNumberOfSides() {
-		return points.size();
+		return numSides;
 	}
 	
 	/**
@@ -147,8 +142,8 @@ public class ConvexPolygon {
     	
     	if (this == other) return smallest;
     	
-    	int myNumSides = this.getNumberOfSides();
-    	int otherNumSides = other.getNumberOfSides();
+    	int myNumSides = numSides;
+    	int otherNumSides = other.numSides;
 
     	/* test polygon A's sides */
     	for (int side = 0; side < myNumSides; side++)
@@ -156,13 +151,13 @@ public class ConvexPolygon {
     		/* get the axis that we will project onto */
     		if (side == 0)
     		{
-    			axis[x] = this.points.get(myNumSides - 1)[y] - this.points.get(0)[y];
-    			axis[y] = this.points.get(0)[x] - this.points.get(myNumSides - 1)[x];
+    			axis[x] = this.fpoints[myNumSides] - this.fpoints[1];
+    			axis[y] = this.fpoints[0] - this.fpoints[myNumSides - 1];
     		}
     		else
     		{
-    			axis[x] = this.points.get(side - 1)[y] - this.points.get(side)[y];
-    			axis[y] = this.points.get(side)[x] - this.points.get(side - 1)[x];
+    			axis[x] = this.fpoints[((side - 1)*2) + 1] - this.fpoints[(side*2)+1];
+    			axis[y] = this.fpoints[side*2] - this.fpoints[(side - 1)*2];
     		}
 
     		/* normalize the axis */
@@ -171,11 +166,11 @@ public class ConvexPolygon {
     		axis[y] /= tmp;
 
     		/* project polygon A onto axis to determine the min/max */
-    		minA = this.points.get(0)[x] * axis[x] + this.points.get(0)[y] * axis[y];
+    		minA = this.fpoints[0] * axis[x] + this.fpoints[1] * axis[y];
     		maxA = minA;
     		for (int i = 1; i < myNumSides; i++)
     		{
-    			tmp = this.points.get(i)[x] * axis[x] + this.points.get(i)[y] * axis[y];
+    			tmp = this.fpoints[i*2] * axis[x] + this.fpoints[(i*2)+1] * axis[y];
     			if (tmp > maxA)
     				maxA = tmp;
     			else if (tmp < minA)
@@ -188,11 +183,11 @@ public class ConvexPolygon {
     		maxA += tmp;
 
     		// project polygon B onto axis to determine the min/max
-    		minB = other.points.get(0)[x] * axis[x] + other.points.get(0)[y] * axis[y];
+    		minB = other.fpoints[0] * axis[x] + other.fpoints[1] * axis[y];
     		maxB = minB;
     		for (int i = 1; i < otherNumSides; i++)
     		{
-    			tmp = other.points.get(i)[x] * axis[x] + other.points.get(i)[y] * axis[y];
+    			tmp = other.fpoints[i*2] * axis[x] + other.fpoints[(i*2)+1] * axis[y];
     			if (tmp > maxB)
     				maxB = tmp;
     			else if (tmp < minB)
@@ -230,13 +225,13 @@ public class ConvexPolygon {
     		/* get the axis that we will project onto */
     		if (side == 0)
     		{
-    			axis[x] = other.points.get(otherNumSides - 1)[y] - other.points.get(0)[y];
-    			axis[y] = other.points.get(0)[x] - other.points.get(otherNumSides - 1)[x];
+    			axis[x] = other.fpoints[otherNumSides] - other.fpoints[1];
+    			axis[y] = other.fpoints[0] - other.fpoints[otherNumSides - 1];
     		}
     		else
     		{
-    			axis[x] = other.points.get(side - 1)[y] - other.points.get(side)[y];
-    			axis[y] = other.points.get(side)[x] - other.points.get(side - 1)[x];
+    			axis[x] = other.fpoints[((side - 1)*2)+1] - other.fpoints[(side*2)+1];
+    			axis[y] = other.fpoints[side*2] - other.fpoints[(side - 1)*2];
     		}
 
     		/* normalize the axis */
@@ -247,11 +242,11 @@ public class ConvexPolygon {
     		//Log.i("ffz", "poly B, side " + side + ": axis is " + axis[x] + ", " + axis[y]);
 
     		/* project polygon A onto axis to determine the min/max */
-    		minA = this.points.get(0)[x] * axis[x] + this.points.get(0)[y] * axis[y];
+    		minA = this.fpoints[0] * axis[x] + this.fpoints[1] * axis[y];
     		maxA = minA;
     		for (int i = 1; i < myNumSides; i++)
     		{
-    			tmp = this.points.get(i)[x] * axis[x] + this.points.get(i)[y] * axis[y];
+    			tmp = this.fpoints[i*2] * axis[x] + this.fpoints[(i*2)+1] * axis[y];
     			if (tmp > maxA)
     				maxA = tmp;
     			else if (tmp < minA)
@@ -265,11 +260,11 @@ public class ConvexPolygon {
     		//Log.i("ffz", "minA = " + minA + ", maxA = " + maxA);
 
     		/* project polygon B onto axis to determine the min/max */
-    		minB = other.points.get(0)[x] * axis[x] + other.points.get(0)[y] * axis[y];
+    		minB = other.fpoints[0] * axis[x] + other.fpoints[1] * axis[y];
     		maxB = minB;
     		for (int i = 1; i < otherNumSides; i++)
     		{
-    			tmp = other.points.get(i)[x] * axis[x] + other.points.get(i)[y] * axis[y];
+    			tmp = other.fpoints[i*2] * axis[x] + other.fpoints[(i*2)+1] * axis[y];
     			if (tmp > maxB)
     				maxB = tmp;
     			else if (tmp < minB)
