@@ -15,7 +15,6 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.json.JSONObject;
 
-import android.media.MediaPlayer;
 import android.os.SystemClock;
 import android.util.Log;
 
@@ -105,11 +104,6 @@ public class Engine {
 		
 		spriteSorter = new SpriteSorter();
 
-		sprites = new ArrayList<Sprite>(100);
-		newSprites = new ArrayList<Sprite>(50);
-		remSprites = new ArrayList<Sprite>(50);
-
-		
 	}
 	
 	/**
@@ -190,6 +184,9 @@ public class Engine {
 		}
 		
 		blockers = new ArrayList<ConvexPolygon>();
+		sprites = new ArrayList<Sprite>(100);
+		newSprites = new ArrayList<Sprite>(50);
+		remSprites = new ArrayList<Sprite>(50);
 
 		try {
 
