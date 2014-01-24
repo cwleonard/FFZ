@@ -71,6 +71,17 @@ public class FFZSurfaceView extends GLSurfaceView {
     			}
     		}
     		break;
+    	case MotionEvent.ACTION_MOVE:
+    		handled = true;
+    		if (path != null) {
+    			path.setEnd(event.getX(), -event.getY());
+    			if (this.tis != null) {
+    				this.tis.addToPath(path);
+    			}
+        		path = new FrogPath();
+        		path.setStart(event.getX(), -event.getY());
+    		}
+    		break;
     	}
     	return handled || super.onTouchEvent(event);
     	

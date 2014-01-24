@@ -19,6 +19,8 @@ public class FrogPath {
 	
 	private float dist = 0f;
 	
+	private boolean done = false;
+	
 	public void setStart(float x, float y) {
 		this.x1 = x;
 		this.y1 = y;
@@ -61,7 +63,10 @@ public class FrogPath {
 	
 	public float[] getDeltaToNextPoint(float dist) {
 		
-		if (distMoved >= this.dist) return new float[]{0,0};
+		if (distMoved >= this.dist) {
+			done = true;
+			return new float[]{0,0};
+		}
 		
 		float[] p = new float[]{cx, cy};
 		float[] m = getNextPoint(new float[]{cx, cy}, dist);
@@ -93,6 +98,7 @@ public class FrogPath {
 		
 		distMoved += dist;
 		if (distMoved >= this.dist) {
+			done = true;
 			ret[2] = 1f;
 		}
 		
@@ -108,6 +114,8 @@ public class FrogPath {
 		return yIntercept;
 	}
 
-	
+	public boolean isDone() {
+		return done;
+	}
 	
 }
