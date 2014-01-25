@@ -12,6 +12,7 @@ public class FrogPath {
 	private float cy;
 	
 	private float slope;
+	private boolean vertical = false;
 	
 	private float yIntercept;
 	
@@ -51,6 +52,7 @@ public class FrogPath {
 	
 	private void calculateSlope() {
 		if (x1 - x2 == 0) { // don't divide by 0! no!
+			vertical = true;
 			slope = 1;
 			return;
 		}
@@ -83,18 +85,33 @@ public class FrogPath {
 		
 		float[] ret = new float[3];
 		
-		float b = yIntercept(cp[0], cp[1], slope);
-		
-		float xp = 0f;
-		if (x2 < x1) {
-			xp = (float) (cp[0] - (dist / (Math.sqrt(1+Math.pow(slope, 2)))));
+		if (vertical) {
+			
+			float yp = cp[1];
+			if (y2 < y1) {
+				yp -= dist;
+			} else {
+				yp += dist;
+			}
+			ret[0] = cp[0];
+			ret[1] = yp;
+			
 		} else {
-			xp = (float) (cp[0] + (dist / (Math.sqrt(1+Math.pow(slope, 2)))));
+
+			float b = yIntercept(cp[0], cp[1], slope);
+
+			float xp = 0f;
+			if (x2 < x1) {
+				xp = (float) (cp[0] - (dist / (Math.sqrt(1+Math.pow(slope, 2)))));
+			} else {
+				xp = (float) (cp[0] + (dist / (Math.sqrt(1+Math.pow(slope, 2)))));
+			}
+			float yp = (slope * xp) + b;
+
+			ret[0] = xp;
+			ret[1] = yp;
+
 		}
-		float yp = (slope * xp) + b;
-		
-		ret[0] = xp;
-		ret[1] = yp;
 		
 		distMoved += dist;
 		if (distMoved >= this.dist) {
