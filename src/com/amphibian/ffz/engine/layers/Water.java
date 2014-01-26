@@ -246,7 +246,7 @@ public class Water {
     	//TODO: fix index out of bounds
     	int xi = (int) (x / 100);
     	int yi = (int) (-y / 100);
-    	if (xi < 0 || yi < 0) return false;
+    	if (xi < 0 || yi < 0 || yi > wgrid.length - 1 || xi > wgrid[yi].length - 1) return false;
     	return wgrid[yi][xi];
     	
     }
