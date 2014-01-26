@@ -213,9 +213,6 @@ public class Engine {
 		addSprite(frog);
 		addSprite(rabbit);
 		updateSprites();
-
-		blockers.addAll(getBlockers());
-		
 		
 	}
 	
@@ -402,6 +399,7 @@ public class Engine {
 					for (int j = 0; j < blockers.size(); j++) {
 						ConvexPolygon cp = blockers.get(j);
 						mtv = poly.intersectsWith(cp);
+						
 						if (mtv[0] != 0 || mtv[1] != 0) {
 							if (cp.getOwner() != null) {
 								s.hurt();
@@ -412,7 +410,7 @@ public class Engine {
 						correction[0] += mtv[0] * mtv[2];
 						correction[1] += mtv[1] * mtv[2];
 					}
-
+					
 					s.move(correction[0], correction[1]);
 
 				}
@@ -486,16 +484,6 @@ public class Engine {
 		frameCounter++;
 		
 	}
-
-    public List<ConvexPolygon> getBlockers() {
-    	
-    	List<ConvexPolygon> blockers = new ArrayList<ConvexPolygon>();
-    	for (Sprite s : sprites) {
-    		blockers.addAll(s.getBlockers());
-    	}
-    	return blockers;
-    	
-    }
 
     public List<ConvexPolygon> getBlockers(List<Obstacle> obs) {
     	
