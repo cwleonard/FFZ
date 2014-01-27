@@ -19,7 +19,7 @@ public class Area {
 	
 	private List<Obstacle> obstacles;
 	
-	private int worldId;
+	private String worldId;
 	
 	
 	
@@ -99,14 +99,14 @@ public class Area {
 	/**
 	 * @return the worldId
 	 */
-	public int getWorldId() {
+	public String getWorldId() {
 		return worldId;
 	}
 
 	/**
 	 * @param worldId the worldId to set
 	 */
-	public void setWorldId(int worldId) {
+	public void setWorldId(String worldId) {
 		this.worldId = worldId;
 	}
 
