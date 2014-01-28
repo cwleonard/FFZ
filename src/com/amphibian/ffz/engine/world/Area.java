@@ -1,5 +1,6 @@
 package com.amphibian.ffz.engine.world;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.amphibian.ffz.engine.sprite.Obstacle;
@@ -7,7 +8,7 @@ import com.amphibian.ffz.engine.sprite.Obstacle;
 
 public class Area {
 
-	private int id;
+	private String id;
 	
 	private String name;
 	
@@ -21,27 +22,24 @@ public class Area {
 	
 	private String worldId;
 	
+	private List<Portal> portals;
 	
+	public Area() {
+		obstacles = new ArrayList<Obstacle>();
+		portals = new ArrayList<Portal>();
+	}
 	
-	public List<Obstacle> getObstacles() {
-		return obstacles;
-	}
-
-	public void setObstacles(List<Obstacle> obstacles) {
-		this.obstacles = obstacles;
-	}
-
 	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -110,7 +108,12 @@ public class Area {
 		this.worldId = worldId;
 	}
 
-	
-	
+	public List<Portal> getPortals() {
+		return portals;
+	}
+
+	public List<Obstacle> getObstacles() {
+		return obstacles;
+	}
 	
 }

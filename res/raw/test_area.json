@@ -1,7 +1,30 @@
 {
+  "id": "05e58813-3262-4c3a-97f5-bff8955ccb2a",
   "name": "test_area",
   "description": "ffz test area",
   "musicId": 2,
+  "portals":[
+  {
+    "id": "c81772c2-eb39-409b-903b-b9a4d60f8bbd",
+    "type": 1,
+    "name": "portal 1",
+    "x": -50,
+    "y": 300,
+    "width": 100,
+    "height": 600,
+    "linkId": "b6404f4f-885b-4631-a28e-798267c4a6c6"
+  },
+  {
+    "id": "b6404f4f-885b-4631-a28e-798267c4a6c6",
+    "type": 1,
+    "name": "portal 2",
+    "x": 2000,
+    "y": 300,
+    "width": 100,
+    "height": 600,
+    "linkId": "c81772c2-eb39-409b-903b-b9a4d60f8bbd"
+  }
+],
   "ground": [
     [
       {
