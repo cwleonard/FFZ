@@ -30,6 +30,7 @@ public class SpriteLayer {
 
 	public static final int SHADOW_MODE = 0;
 	public static final int NORMAL_MODE = 1;
+	public static final int HURT_MODE   = 2;
 	
 	public final static float SHADOW_SCALE = 0.7f;
 	
@@ -79,7 +80,7 @@ public class SpriteLayer {
 	 
     // Set color with red, green, blue and alpha (opacity) values
     float normalColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-    
+    float hurtColor[]   = { 1.0f, 1.0f, 1.0f, 0.5f };
     float shadowColor[] = { 0.0f, 0.0f, 0.0f, 0.2f };
     
     private int[] buffers = new int[2];
@@ -293,6 +294,10 @@ public class SpriteLayer {
 		} else if (m == NORMAL_MODE) {
 			
 			this.setColor(normalColor);
+			
+		} else if (m == HURT_MODE) {
+			
+			this.setColor(hurtColor);
 			
 		} else {
 			Log.e("ffz", "unknown drawing mode " + m);

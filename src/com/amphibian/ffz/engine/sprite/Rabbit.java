@@ -42,7 +42,11 @@ public class Rabbit implements Sprite {
 	private static int[] rightFrames;
 	private static int[] leftFrames;
 	
+	private final static long HURT_LENGTH = 300;
+	
 	private long elapsed;
+	private long hurtTimer = 0;
+	private boolean hurting = false;
 	private boolean moving = false;
 	private int frameIndex = 0;
 	private float distanceMoved = 0f;
@@ -79,11 +83,15 @@ public class Rabbit implements Sprite {
     }
     
     public void hurt() {
-    	this.life -= 0.1f;
-    	if (this.life <= 0.0f) {
-    		this.dead = true;
+    	if (!this.hurting) {
+    		this.hurting = true;
+    		this.hurtTimer = 0;
+    		this.life -= 1f;
+    		if (this.life <= 0.0f) {
+    			this.dead = true;
+    		}
+    		Log.d("ffz", "rabbit hurt!");
     	}
-    	Log.d("ffz", "rabbit hurt!");
     }
     
 	public Engine getEngine() {
@@ -101,6 +109,14 @@ public class Rabbit implements Sprite {
 		float[] m = new float[2];
 
 		float move = delta * BASE_SPEED;
+
+		if (this.hurting) {
+			this.hurtTimer += delta;
+			move = -move * 1.2f;
+			if (this.hurtTimer > HURT_LENGTH) {
+				this.hurting = false;
+			}
+		}
 		
 		if (this.direction == LEFT) {
 			m[0] = -move;
@@ -199,17 +215,18 @@ public class Rabbit implements Sprite {
 	@Override
 	public void draw(SpriteLayer d) {
 
-		float z = -1f - (this.getBottom() / 999999f);
-
-		
 		d.setBufferPosition(this.getBufferIndex());
 		
-		d.setDrawPosition(this.getShadowX(), this.getShadowY(), z - 0.00001f);
+		d.setDrawPosition(this.getShadowX(), this.getShadowY());
 		d.setMode(SpriteLayer.SHADOW_MODE);
 		d.performDraw();
-		
-		d.setMode(SpriteLayer.NORMAL_MODE);
-		d.setDrawPosition(this.getDrawX(), this.getDrawY(), z);
+
+		if (this.hurting) {
+			d.setMode(SpriteLayer.HURT_MODE);
+		} else {
+			d.setMode(SpriteLayer.NORMAL_MODE);
+		}
+		d.setDrawPosition(this.getDrawX(), this.getDrawY());
 		d.performDraw();
 		
 
