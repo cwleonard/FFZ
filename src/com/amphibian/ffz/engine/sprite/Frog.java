@@ -434,6 +434,8 @@ public class Frog implements Sprite {
 		return false;
 	}
 	
-
-    
+	public int getProperties() {
+		return SpriteProperties.NONHOSTILE;
+	}
+	
 }

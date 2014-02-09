@@ -246,5 +246,8 @@ public class Tongue implements Sprite {
 		return false;
 	}
 	
+	public int getProperties() {
+		return SpriteProperties.HURTS_HOSTILE;
+	}
 
 }

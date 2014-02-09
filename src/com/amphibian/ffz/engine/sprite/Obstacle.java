@@ -154,6 +154,8 @@ public class Obstacle implements Sprite {
 		return false;
 	}
 	
-	
+	public int getProperties() {
+		return 0;
+	}
 
 }

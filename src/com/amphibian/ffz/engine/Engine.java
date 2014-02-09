@@ -31,6 +31,7 @@ import com.amphibian.ffz.engine.sprite.Frog;
 import com.amphibian.ffz.engine.sprite.Obstacle;
 import com.amphibian.ffz.engine.sprite.Rabbit;
 import com.amphibian.ffz.engine.sprite.Sprite;
+import com.amphibian.ffz.engine.sprite.SpriteProperties;
 import com.amphibian.ffz.engine.world.Area;
 import com.amphibian.ffz.engine.world.Tile;
 import com.amphibian.ffz.geometry.ConvexPolygon;
@@ -52,7 +53,6 @@ public class Engine {
 	private MusicManager music;
 	
 	private Frog frog = null;
-	private Frog frog2 = null;
 	private Rabbit rabbit = null;
 	private Ground ground;
 	private InfoLayer infoLayer;
@@ -356,19 +356,6 @@ public class Engine {
 		long delta = now - lastUpdate;
 		lastUpdate = now;
 		
-//		if (input2 == null) {
-//			OuyaController oc2 = OuyaController.getControllerByPlayer(1);
-//			if (oc2 != null) {
-//				if (frog2 == null) {
-//					frog2 = new Frog();
-//					input2 = new OuyaInputSource(oc2);
-//					frog2.setInputSource(input2);
-//					addSprite(frog2);
-//				}
-//			}
-//		}
-		
-		
 		// move things that might move
 		for (Sprite s : sprites) {
 			s.update(delta);
@@ -387,38 +374,75 @@ public class Engine {
 				
 				List<ConvexPolygon> blist = s.getBlockers();
 				Iterator<ConvexPolygon> pi = blist.iterator();
+				
+
+				int props1 = s.getProperties();
+				
 				while (pi.hasNext()) {
+					
 					
 					ConvexPolygon poly = pi.next();
 					
-					//TODO: put the ground blockers in the same array as below...
-					float[] mtv = new float[3];//poly.intersectsWith(testBlock);
-					correction[0] = 0f;//mtv[0] * mtv[2];
-					correction[1] = 0f;//mtv[1] * mtv[2];//= new float[] { mtv[0] * mtv[2], mtv[1] * mtv[2] };
-					
-					for (int j = 0; j < blockers.size(); j++) {
-						ConvexPolygon cp = blockers.get(j);
-						mtv = poly.intersectsWith(cp);
+					for (Sprite os: sprites) {
 						
-						if (mtv[0] != 0 || mtv[1] != 0) {
-							if (cp.getOwner() != null) {
-								s.hurt();
-								mtv[0] = 0f;
-								mtv[1] = 0f;
+						//TODO: put the ground blockers in the same array as below...
+						float[] mtv = new float[3];//poly.intersectsWith(testBlock);
+						correction[0] = 0f;//mtv[0] * mtv[2];
+						correction[1] = 0f;//mtv[1] * mtv[2];//= new float[] { mtv[0] * mtv[2], mtv[1] * mtv[2] };
+						
+						int props2 = os.getProperties();
+
+						List<ConvexPolygon> oblist = os.getBlockers();
+						
+						for (int j = 0; j < oblist.size(); j++) {
+							ConvexPolygon cp = oblist.get(j);
+							
+							// override the default who-pushes-who in the case of a hostile vs. a non-hostile
+							if (((props1 & SpriteProperties.HOSTILE) == SpriteProperties.HOSTILE && (props2 & SpriteProperties.NONHOSTILE) == SpriteProperties.NONHOSTILE)) {
+								mtv = cp.intersectsWith(poly);
+							} else {
+								mtv = poly.intersectsWith(cp); // this was the old way
 							}
+
+							if (mtv[0] != 0 || mtv[1] != 0) {
+								//Log.d(App.name, "props1 = " + props1 + "; props2 = " + props2);
+								if ((props1 & SpriteProperties.HOSTILE) == SpriteProperties.HOSTILE && (props2 & SpriteProperties.HURTS_HOSTILE) == SpriteProperties.HURTS_HOSTILE) {
+									Log.d(App.name, "1. sprite " + os + " hurts sprite " + s);
+									s.hurt();
+								}
+								if ((props2 & SpriteProperties.HOSTILE) == SpriteProperties.HOSTILE && (props1 & SpriteProperties.HURTS_HOSTILE) == SpriteProperties.HURTS_HOSTILE) {
+									Log.d(App.name, "2. sprite " + s + " hurts sprite " + os);
+									os.hurt();
+								}
+								if ((props1 & SpriteProperties.NONHOSTILE) == SpriteProperties.NONHOSTILE && (props2 & SpriteProperties.HURTS_NONHOSTILE) == SpriteProperties.HURTS_NONHOSTILE) {
+									Log.d(App.name, "3. sprite " + os + " hurts sprite " + s);
+									s.hurt();
+								}
+								if ((props2 & SpriteProperties.NONHOSTILE) == SpriteProperties.NONHOSTILE && (props1 & SpriteProperties.HURTS_NONHOSTILE) == SpriteProperties.HURTS_NONHOSTILE) {
+									Log.d(App.name, "4. sprite " + s + " hurts sprite " + os);
+									os.hurt();
+								}
+								//Log.d(App.name, "mtv[0] = " + mtv[0] + "; mtv[1] = " + mtv[1] + "; mtv[2] = " + mtv[2]);
+							}
+							correction[0] += mtv[0] * mtv[2];
+							correction[1] += mtv[1] * mtv[2];
 						}
-						correction[0] += mtv[0] * mtv[2];
-						correction[1] += mtv[1] * mtv[2];
+
+						// override the default who-pushes-who in the case of a hostile vs. a non-hostile
+						if (((props1 & SpriteProperties.HOSTILE) == SpriteProperties.HOSTILE && (props2 & SpriteProperties.NONHOSTILE) == SpriteProperties.NONHOSTILE)) {
+							os.move(correction[0], correction[1]);
+						} else {
+							s.move(correction[0], correction[1]); // this was the old way
+						}
+
+						
 					}
-					
-					s.move(correction[0], correction[1]);
 
 				}
 				
 			}
 			
 		}
-		
 		
 		if (water.isWater(frog.getDrawX(), frog.getDrawY())) {
 			frog.hydrate(delta);

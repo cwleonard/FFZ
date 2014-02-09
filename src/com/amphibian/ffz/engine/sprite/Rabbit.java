@@ -24,7 +24,7 @@ public class Rabbit implements Sprite {
 	
 	float x =  800f;
 	float y = -500f;
-
+	
     private int sprite;
     
     private int direction;
@@ -255,6 +255,8 @@ public class Rabbit implements Sprite {
 		return true;
 	}
 	
+	public int getProperties() {
+		return SpriteProperties.HOSTILE | SpriteProperties.HURTS_NONHOSTILE;
+	}
 
-    
 }

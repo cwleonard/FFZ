@@ -7,6 +7,8 @@ import com.amphibian.ffz.geometry.ConvexPolygon;
 
 public interface Sprite {
 
+	public int getProperties();
+	
 	public float getDrawX();
 	
 	public float getDrawY();
@@ -16,7 +18,7 @@ public interface Sprite {
 	public float getBottom();
 	
 	public void move(float dx, float dy);
-	
+
 	public boolean checkMovement();
 	
 	public float getShadowX();
