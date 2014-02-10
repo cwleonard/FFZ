@@ -408,19 +408,19 @@ public class Engine {
 								//Log.d(App.name, "props1 = " + props1 + "; props2 = " + props2);
 								if ((props1 & SpriteProperties.HOSTILE) == SpriteProperties.HOSTILE && (props2 & SpriteProperties.HURTS_HOSTILE) == SpriteProperties.HURTS_HOSTILE) {
 									Log.d(App.name, "1. sprite " + os + " hurts sprite " + s);
-									s.hurt();
+									s.hurt(mtv);
 								}
 								if ((props2 & SpriteProperties.HOSTILE) == SpriteProperties.HOSTILE && (props1 & SpriteProperties.HURTS_HOSTILE) == SpriteProperties.HURTS_HOSTILE) {
 									Log.d(App.name, "2. sprite " + s + " hurts sprite " + os);
-									os.hurt();
+									os.hurt(mtv);
 								}
 								if ((props1 & SpriteProperties.NONHOSTILE) == SpriteProperties.NONHOSTILE && (props2 & SpriteProperties.HURTS_NONHOSTILE) == SpriteProperties.HURTS_NONHOSTILE) {
 									Log.d(App.name, "3. sprite " + os + " hurts sprite " + s);
-									s.hurt();
+									s.hurt(mtv);
 								}
 								if ((props2 & SpriteProperties.NONHOSTILE) == SpriteProperties.NONHOSTILE && (props1 & SpriteProperties.HURTS_NONHOSTILE) == SpriteProperties.HURTS_NONHOSTILE) {
 									Log.d(App.name, "4. sprite " + s + " hurts sprite " + os);
-									os.hurt();
+									os.hurt(mtv);
 								}
 								//Log.d(App.name, "mtv[0] = " + mtv[0] + "; mtv[1] = " + mtv[1] + "; mtv[2] = " + mtv[2]);
 							}

@@ -80,10 +80,6 @@ public class Tongue implements Sprite {
 		this.y = y;
 	}
 	
-	public void hurt() {
-		// nothing
-	}
-	
 	private float getPolyX() {
 		float fx = frog.getDrawX();
 		if (frog.getDirection() == Frog.LEFT) {
@@ -249,5 +245,6 @@ public class Tongue implements Sprite {
 	public int getProperties() {
 		return SpriteProperties.HURTS_HOSTILE;
 	}
+	public void hurt(float[] vector) {}
 
 }

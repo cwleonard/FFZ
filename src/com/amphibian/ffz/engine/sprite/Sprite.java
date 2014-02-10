@@ -28,7 +28,7 @@ public interface Sprite {
 	
 	public void update(long delta);
 	
-	public void hurt();
+	public void hurt(float[] vector);
 	
 	public boolean remove();
 	

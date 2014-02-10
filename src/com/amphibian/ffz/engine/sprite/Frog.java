@@ -19,6 +19,8 @@ public class Frog implements Sprite {
 	
 	private static float BASE_SPEED = 0.25f;
 	
+	private final static long HURT_LENGTH = 200;
+
 	private float moisture;
 	private float life;
 	
@@ -89,7 +91,10 @@ public class Frog implements Sprite {
 	private static int[] upFramesSci;
 	private static int[] downFramesSci;
 	
-	
+	private boolean dead = false;
+	private long hurtTimer = 0;
+	private boolean hurting = false;
+
 	private long elapsed;
 	private boolean moving = false;
 	private int frameIndex = 0;
@@ -188,6 +193,14 @@ public class Frog implements Sprite {
 	}
 
 	public void update(long delta) {
+		
+		if (this.hurting) {
+			this.hurtTimer += delta;
+			if (this.hurtTimer > HURT_LENGTH) {
+				this.hurting = false;
+			}
+		}
+
 		
 		if (inputSource != null) {
 			this.ribbit(this.inputSource.isButton3Pressed());
@@ -293,11 +306,20 @@ public class Frog implements Sprite {
     	return this.moisture;
     }
     
-    public void hurt() {
-    	this.life -= 0.05f;
-    	Log.d("ffz", "ouch!");
-    }
-    
+	public void hurt(float[] vector) {
+		
+    	if (!this.hurting) {
+    		this.hurting = true;
+    		this.hurtTimer = 0;
+    		this.life -= 0.25f;
+    		if (this.life <= 0.0f) {
+    			this.dead = true;
+    		}
+    		Log.d("ffz", "ouch!");
+    	}
+		
+	}
+
     public void faceDown() {
     	if (swimming) {
     		this.sprite = WATER_FACE_DOWN;
@@ -398,7 +420,11 @@ public class Frog implements Sprite {
 		d.setMode(SpriteLayer.SHADOW_MODE);
 		d.performDraw();
 		
-		d.setMode(SpriteLayer.NORMAL_MODE);
+		if (this.hurting) {
+			d.setMode(SpriteLayer.HURT_MODE);
+		} else {
+			d.setMode(SpriteLayer.NORMAL_MODE);
+		}
 		d.setDrawPosition(this.getDrawX(), this.getDrawY(), z);
 		d.performDraw();
 		

@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.amphibian.ffz.FrogPath;
 import com.amphibian.ffz.engine.Engine;
 import com.amphibian.ffz.engine.layers.SpriteLayer;
 import com.amphibian.ffz.geometry.ConvexPolygon;
@@ -29,7 +30,7 @@ public class Rabbit implements Sprite {
     
     private int direction;
     
-    private Engine engine;
+    private FrogPath hurtPath = null;
     
     private ConvexPolygon mainBlocker;
     private List<ConvexPolygon> blockPolys;
@@ -82,26 +83,18 @@ public class Rabbit implements Sprite {
 
     }
     
-    public void hurt() {
+	public void hurt(float[] vector) {
     	if (!this.hurting) {
+    		hurtPath = new FrogPath();
+    		hurtPath.setStart(x, y);
+    		hurtPath.setEnd(x + (vector[0] * vector[2] * 2 * BASE_SPEED * HURT_LENGTH), y + (vector[1] * vector[2] * 2 * BASE_SPEED * HURT_LENGTH));
     		this.hurting = true;
     		this.hurtTimer = 0;
-    		this.life -= 1f;
-    		if (this.life <= 0.0f) {
-    			this.dead = true;
-    		}
     		Log.d("ffz", "rabbit hurt!");
     	}
-    }
+	}
+
     
-	public Engine getEngine() {
-		return engine;
-	}
-
-	public void setEngine(Engine engine) {
-		this.engine = engine;
-	}
-
 	public void update(long delta) {
 		
 		if (dead) return;
@@ -112,28 +105,33 @@ public class Rabbit implements Sprite {
 
 		if (this.hurting) {
 			this.hurtTimer += delta;
-			move = -move * 1.2f;
+			m = hurtPath.getDeltaToNextPoint(move * 2);
 			if (this.hurtTimer > HURT_LENGTH) {
 				this.hurting = false;
+	    		this.life -= 1f;
+	    		if (this.life <= 0.0f) {
+	    			this.dead = true;
+	    		}
 			}
-		}
-		
-		if (this.direction == LEFT) {
-			m[0] = -move;
-		} else if (this.direction == RIGHT) {
-			m[0] = move;
-		}
-		m[1] = 0f;
-		
-		
-		distanceMoved += move;
-		if (distanceMoved >= MAX_TRAVEL) {
-			distanceMoved = 0f;
+		} else {
+
 			if (this.direction == LEFT) {
-				faceRight();
+				m[0] = -move;
 			} else if (this.direction == RIGHT) {
-				faceLeft();
+				m[0] = move;
 			}
+			m[1] = 0f;
+
+			distanceMoved += move;
+			if (distanceMoved >= MAX_TRAVEL) {
+				distanceMoved = 0f;
+				if (this.direction == LEFT) {
+					faceRight();
+				} else if (this.direction == RIGHT) {
+					faceLeft();
+				}
+			}
+			
 		}
 		
 		this.move(m[0], m[1]);
