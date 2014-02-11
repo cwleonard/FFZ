@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.util.Log;
 
+import com.amphibian.ffz.FrogPath;
 import com.amphibian.ffz.engine.Engine;
 import com.amphibian.ffz.engine.layers.SpriteLayer;
 import com.amphibian.ffz.geometry.ConvexPolygon;
@@ -34,6 +35,8 @@ public class Frog implements Sprite {
     private int direction;
     
     private Engine engine;
+    
+    private FrogPath hurtPath = null;
     
     private ConvexPolygon mainBlocker;
     private List<ConvexPolygon> blockPolys;
@@ -195,26 +198,35 @@ public class Frog implements Sprite {
 	public void update(long delta) {
 		
 		if (this.hurting) {
+			
 			this.hurtTimer += delta;
+			float[] m = hurtPath.getDeltaToNextPoint(delta * BASE_SPEED * 2);
 			if (this.hurtTimer > HURT_LENGTH) {
 				this.hurting = false;
+	    		this.life -= 0.25f;
+	    		if (this.life <= 0.0f) {
+	    			this.dead = true;
+	    		}
 			}
-		}
+			this.move(m[0], m[1]);
+			
+		} else {
 
-		
-		if (inputSource != null) {
-			this.ribbit(this.inputSource.isButton3Pressed());
-			if (this.inputSource.isLeftTriggerPressed()) {
-				this.hydrate(delta);
-				if (mode == 0) {
-					mode = 1;
-				} else {
-					mode = 0;
+			if (inputSource != null) {
+				this.ribbit(this.inputSource.isButton3Pressed());
+				if (this.inputSource.isLeftTriggerPressed()) {
+					this.hydrate(delta);
+					if (mode == 0) {
+						mode = 1;
+					} else {
+						mode = 0;
+					}
+				}
+				if (t == null && !om) {
+					getMovement(delta);
 				}
 			}
-			if (t == null && !om) {
-				getMovement(delta);
-			}
+			
 		}
 		
 	}
@@ -310,11 +322,10 @@ public class Frog implements Sprite {
 		
     	if (!this.hurting) {
     		this.hurting = true;
+    		hurtPath = new FrogPath();
+    		hurtPath.setStart(x, y);
+    		hurtPath.setEnd(x + (vector[0] * vector[2] * 2 * BASE_SPEED * HURT_LENGTH), y + (vector[1] * vector[2] * 2 * BASE_SPEED * HURT_LENGTH));
     		this.hurtTimer = 0;
-    		this.life -= 0.25f;
-    		if (this.life <= 0.0f) {
-    			this.dead = true;
-    		}
     		Log.d("ffz", "ouch!");
     	}
 		
