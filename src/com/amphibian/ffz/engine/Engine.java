@@ -349,12 +349,18 @@ public class Engine {
 	
 	public void update() {
 		
+		
 		this.updateSprites();
 		
 		// how long has it been?
 		long now = SystemClock.elapsedRealtime();
 		long delta = now - lastUpdate;
 		lastUpdate = now;
+
+		// might need to update the input source
+		if (this.inputSource != null) {
+			this.inputSource.update(delta);
+		}
 		
 		// move things that might move
 		for (Sprite s : sprites) {

@@ -7,6 +7,10 @@ import com.amphibian.ffz.FrogPath;
 
 public class TouchInputSource implements InputSource {
 
+	private final static float TLEN = 500;
+	
+	private float timer = 0.0f;
+	private boolean pressed = false;
 	private boolean going = false;
 	private List<FrogPath> paths = new ArrayList<FrogPath>();
 	
@@ -21,6 +25,14 @@ public class TouchInputSource implements InputSource {
 			this.going = false;
 		}
 		this.paths.add(p);
+	}
+	
+	public FrogPath getFirstPath() {
+		if (paths.size() > 0) {
+			return paths.get(0);
+		} else {
+			return null;
+		}
 	}
 	
 	@Override
@@ -49,8 +61,7 @@ public class TouchInputSource implements InputSource {
 
 	@Override
 	public boolean isButton3Pressed() {
-		// TODO Auto-generated method stub
-		return false;
+		return pressed;
 	}
 
 	@Override
@@ -77,9 +88,18 @@ public class TouchInputSource implements InputSource {
 		return false;
 	}
 
+	public void update(float delta) {
+		
+		this.timer += delta;
+		if (this.timer >= TLEN) {
+			this.pressed = false;
+		}
+		
+	}
+	
 	@Override
 	public float[] getMovement(float speed, float delta) {
-
+		
 		if (going && paths.size() > 0 && paths.get(0) != null) {
 			float[] m = paths.get(0).getDeltaToNextPoint(speed * delta);
 			if (paths.get(0).isDone()) {
@@ -92,4 +112,9 @@ public class TouchInputSource implements InputSource {
 		
 	}
 
+	public void buttonPress() {
+		this.pressed = true;
+		this.timer = 0.0f;
+	}
+	
 }

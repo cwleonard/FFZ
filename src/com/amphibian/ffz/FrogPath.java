@@ -135,4 +135,20 @@ public class FrogPath {
 		return done;
 	}
 	
+	public float getDistance() {
+		return dist;
+	}
+	
+	public float distanceTo(FrogPath other) {
+		
+		float a = (this.x1 - other.x2);
+		float b = (this.y1 - other.y2);
+		
+		float d = (float) Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+		
+		return d;
+
+		
+	}
+	
 }

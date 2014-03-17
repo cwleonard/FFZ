@@ -67,7 +67,18 @@ public class FFZSurfaceView extends GLSurfaceView {
     		if (path != null) {
     			path.setEnd(event.getX(), -event.getY());
     			if (this.tis != null) {
-    				this.tis.setPath(path);
+    				FrogPath first = this.tis.getFirstPath();
+    				if (first != null) {
+    					float d = first.distanceTo(path);
+    					if (d > 15) {
+    						this.tis.setPath(path);
+    					} else {
+    						this.tis.buttonPress();
+    					}
+    				} else {
+    					//this.tis.setPath(path);
+    					this.tis.buttonPress();
+    				}
     			}
     		}
     		break;

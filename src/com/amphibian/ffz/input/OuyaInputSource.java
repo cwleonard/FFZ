@@ -131,5 +131,8 @@ public class OuyaInputSource implements InputSource {
 		return (c != null ? c.getButton(OuyaController.BUTTON_L1) : false);
 	}
 
+	public void update(float delta) {
+		// ouya don't care
+	}
 
 }

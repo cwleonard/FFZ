@@ -22,4 +22,6 @@ public interface InputSource {
 	
 	public float getStick2Y();
 	
+	public void update(float delta);
+	
 }
